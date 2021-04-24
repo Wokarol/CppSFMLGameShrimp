@@ -1,13 +1,18 @@
 #include <iostream>
+#include <fstream>
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
 #include "console.h"
 
+#include <filesystem>
+namespace fs = std::filesystem;
+
 int main()
 {
-    HideConsole();
+    //HideConsole();
+    ShowConsole();
 
     std::vector<sf::Color> palette
     {
@@ -23,7 +28,8 @@ int main()
 
     sf::CircleShape circle(50.0);
 
-    circle.setPosition(400 - 50, 300 - 50);
+    circle.setPosition(400, 300);
+    circle.setOrigin(25, 25);
     circle.setFillColor(palette[1]);
 
     while (window.isOpen())
@@ -38,6 +44,16 @@ int main()
         }
 
         window.clear(palette[0]);
+
+        std::ifstream file("assets/foo.data");
+        if (!file.good())
+        {
+            std::cout << "imma die" << std::endl;
+        }
+        float r = 0;
+        file >> r;
+        file.close();
+        circle.setRadius(r);
 
         window.draw(circle);
 
