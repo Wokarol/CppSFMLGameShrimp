@@ -1,4 +1,4 @@
-workspace "The Game or some shit"
+workspace "ThePremakeGame"
     architecture "x64"
     language "C++"
 
@@ -10,7 +10,7 @@ workspace "The Game or some shit"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}"
 
-project "Cool Game"
+project "CoolGame"
     location "game"
     kind "ConsoleApp"
 
@@ -43,7 +43,10 @@ project "Cool Game"
         "ogg.lib", 
         "ws2_32.lib",
     }
-
+    postbuildcommands {
+        "{DELETE} %{cfg.targetdir}/assets/**",
+        "{COPY} %{prj.location}/assets %{cfg.targetdir}/assets/",
+    }
     
     filter "configurations:Debug"
         symbols "On"
