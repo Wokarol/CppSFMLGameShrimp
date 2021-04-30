@@ -75,6 +75,15 @@ int main()
 	rectcentre.setOutlineColor(sf::Color::Green);
 	rectcentre.setOutlineThickness(1);
 
+	sf::Font font;
+	if (!font.loadFromFile("assets/arial.ttf"))
+	{
+		cs::Print("it kinda broke!");
+	}
+	sf::Text text("H", font, 50U);
+	auto bounds = text.getLocalBounds();
+	text.setOrigin(sf::Vector2f(bounds.width / 2.0f, bounds.height / 2.0f));
+
 	sf::Clock clock;
 	float t = -4.0f;
 
@@ -168,6 +177,24 @@ int main()
 				mainCamera = sf::View(visibleArea);
 				window.setView(mainCamera);
 			}
+
+			if (event.type == sf::Event::TextEntered)
+			{
+				if (event.text.unicode == 8)
+				{
+					text.setString(text.getString().substring(0, text.getString().getSize() - 1));
+					auto bounds = text.getLocalBounds();
+					text.setOrigin(sf::Vector2f(bounds.width / 2.0f, bounds.height / 2.0f));
+				}
+				else 
+				{
+					text.setString(text.getString() + (char)event.text.unicode);
+					auto bounds = text.getLocalBounds();
+					text.setOrigin(sf::Vector2f(bounds.width / 2.0f, bounds.height / 2.0f));
+				}
+
+
+			}
 		}
 
 		float dt = clock.restart().asSeconds();
@@ -211,6 +238,8 @@ int main()
 		shader.setUniform("o_ratio", 1.0f);
 		window.draw(circle, shaderState);
 		//window.draw(rectcentre);
+
+		window.draw(text);
 
 		auto screenState = sf::RenderStates::Default;
 		screenState.shader = &screenShader;
