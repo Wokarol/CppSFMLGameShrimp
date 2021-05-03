@@ -78,8 +78,21 @@ namespace math
         return n * mag;
     }
 
-    inline sf::Vector2f lerp(const sf::Vector2f& a, const sf::Vector2f& b, float t)
+    template <typename T>
+    inline T lerp(const T& a, const T& b, float t)
     {
         return a + (b - a) * t;
+    }
+
+    inline sf::Color lerp(const sf::Color& a, const sf::Color& b, float t)
+    {
+        t = std::clamp(t, 0.f, 1.f);
+
+        return sf::Color(
+            a.r + (b.r - a.r) * t,
+            a.g + (b.g - a.g) * t,
+            a.b + (b.b - a.b) * t,
+            a.a + (b.a - a.a) * t
+        );
     }
 }

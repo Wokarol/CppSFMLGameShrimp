@@ -93,6 +93,9 @@ int main()
 		caster.move(casterVelocity * dt * 100.f);
 		caster.rotate(rotationVelocity * dt * 90.f);
 
+		line.setColor(math::lerp(white, yellow, std::sin(t * 5.f) * 0.5f + 0.5f));
+		line.setThickness(math::lerp(1.f, 3.f, std::sin(t * 5.f + 216.37) * 0.5f + 0.5f));
+
 		line.setStart(caster.getPosition());
 		line.setEnd(caster.getPosition() + math::rotate(sf::Vector2f(10000.f, 0.f), caster.getRotation()));
 
@@ -100,8 +103,8 @@ int main()
 		window.clear(background);
 
 		window.draw(box);
-		window.draw(caster);
 		window.draw(line);
+		window.draw(caster);
 
 		window.display();
 	}
