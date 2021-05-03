@@ -1,4 +1,4 @@
-workspace "ThePremakeGame"
+workspace "CactusShrimp"
     architecture "x64"
     language "C++"
 
@@ -10,7 +10,7 @@ workspace "ThePremakeGame"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}"
 
-project "CoolGame"
+project "Game"
     location "game"
     kind "ConsoleApp"
 
