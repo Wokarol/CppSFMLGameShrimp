@@ -3,7 +3,7 @@
 #include <cmath>
 #include <SFML/Graphics.hpp>
 
-namespace math
+namespace m
 {
     constexpr auto PI = 3.14159f;
 

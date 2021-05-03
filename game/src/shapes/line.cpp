@@ -1,5 +1,5 @@
 #include "line.h"
-#include "../math.h"
+#include <mathUtils.h>
 
 sf::LineShape::LineShape(float thickness)
 {
@@ -65,11 +65,11 @@ void sf::LineShape::updateShape() const
 {
 	isDirty = false;
 
-	auto size = sf::Vector2f(math::dist(start, end), thickness);
-	auto angle = math::angle(end - start);
+	auto size = sf::Vector2f(m::dist(start, end), thickness);
+	auto angle = m::angle(end - start);
 
 	body.setSize(size);
 	body.setOrigin(size / 2.f);
-	body.setPosition(math::lerp(start, end, 0.5f));
+	body.setPosition(m::lerp(start, end, 0.5f));
 	body.setRotation(angle);
 }
