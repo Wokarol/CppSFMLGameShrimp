@@ -18,9 +18,9 @@ public:
         noiseX = FastNoiseLite(seed + 178998);
         noiseY = FastNoiseLite(seed + 127612);
 
-        noiseR.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-        noiseX.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-        noiseY.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+        noiseR.SetNoiseType(FastNoiseLite::NoiseType::Perlin);
+        noiseX.SetNoiseType(FastNoiseLite::NoiseType::Perlin);
+        noiseY.SetNoiseType(FastNoiseLite::NoiseType::Perlin);
     }
 
     sf::Transform getShake(float t, float s)

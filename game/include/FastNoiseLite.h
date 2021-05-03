@@ -55,57 +55,57 @@
 class FastNoiseLite
 {
 public:
-    enum NoiseType
+    enum class NoiseType
     {
-        NoiseType_OpenSimplex2,
-        NoiseType_OpenSimplex2S,
-        NoiseType_Cellular,
-        NoiseType_Perlin,
-        NoiseType_ValueCubic,
-        NoiseType_Value
+        OpenSimplex2,
+        OpenSimplex2S,
+        Cellular,
+        Perlin,
+        ValueCubic,
+        Value
     };
 
-    enum RotationType3D
+    enum class RotationType3D
     {
-        RotationType3D_None,
-        RotationType3D_ImproveXYPlanes,
-        RotationType3D_ImproveXZPlanes
+        None,
+        ImproveXYPlanes,
+        ImproveXZPlanes
     };
 
-    enum FractalType
+    enum class FractalType
     {
-        FractalType_None,
-        FractalType_FBm,
-        FractalType_Ridged,
-        FractalType_PingPong,
-        FractalType_DomainWarpProgressive,
-        FractalType_DomainWarpIndependent
+        None,
+        FBm,
+        Ridged,
+        PingPong,
+        DomainWarpProgressive,
+        DomainWarpIndependent
     };
 
-    enum CellularDistanceFunction
+    enum class CellularDistanceFunction
     {
-        CellularDistanceFunction_Euclidean,
-        CellularDistanceFunction_EuclideanSq,
-        CellularDistanceFunction_Manhattan,
-        CellularDistanceFunction_Hybrid
+        Euclidean,
+        EuclideanSq,
+        Manhattan,
+        Hybrid
     };
 
-    enum CellularReturnType
+    enum class CellularReturnType
     {
-        CellularReturnType_CellValue,
-        CellularReturnType_Distance,
-        CellularReturnType_Distance2,
-        CellularReturnType_Distance2Add,
-        CellularReturnType_Distance2Sub,
-        CellularReturnType_Distance2Mul,
-        CellularReturnType_Distance2Div
+        CellValue,
+        Distance,
+        Distance2,
+        Distance2Add,
+        Distance2Sub,
+        Distance2Mul,
+        Distance2Div
     };
 
-    enum DomainWarpType
+    enum class DomainWarpType
     {
-        DomainWarpType_OpenSimplex2,
-        DomainWarpType_OpenSimplex2Reduced,
-        DomainWarpType_BasicGrid
+        OpenSimplex2,
+        OpenSimplex2Reduced,
+        BasicGrid
     };
 
     /// <summary>
@@ -115,11 +115,11 @@ public:
     {
         mSeed = seed;
         mFrequency = 0.01f;
-        mNoiseType = NoiseType_OpenSimplex2;
-        mRotationType3D = RotationType3D_None;
-        mTransformType3D = TransformType3D_DefaultOpenSimplex2;
+        mNoiseType = NoiseType::OpenSimplex2;
+        mRotationType3D = RotationType3D::None;
+        mTransformType3D = TransformType3D::DefaultOpenSimplex2;
 
-        mFractalType = FractalType_None;
+        mFractalType = FractalType::None;
         mOctaves = 3;
         mLacunarity = 2.0f;
         mGain = 0.5f;
@@ -128,12 +128,12 @@ public:
 
         mFractalBounding = 1 / 1.75f;
 
-        mCellularDistanceFunction = CellularDistanceFunction_EuclideanSq;
-        mCellularReturnType = CellularReturnType_Distance;
+        mCellularDistanceFunction = CellularDistanceFunction::EuclideanSq;
+        mCellularReturnType = CellularReturnType::Distance;
         mCellularJitterModifier = 1.0f;
 
-        mDomainWarpType = DomainWarpType_OpenSimplex2;
-        mWarpTransformType3D = TransformType3D_DefaultOpenSimplex2;
+        mDomainWarpType = DomainWarpType::OpenSimplex2;
+        mWarpTransformType3D = TransformType3D::DefaultOpenSimplex2;
         mDomainWarpAmp = 1.0f;
     }
 
@@ -301,14 +301,14 @@ public:
 
         switch (mFractalType)
         {
+        case FractalType::FBm:
+            return GenFractalFBm(x, y);
+        case FractalType::Ridged:
+            return GenFractalRidged(x, y);
+        case FractalType::PingPong:
+            return GenFractalPingPong(x, y);
         default:
             return GenNoiseSingle(mSeed, x, y);
-        case FractalType_FBm:
-            return GenFractalFBm(x, y);
-        case FractalType_Ridged:
-            return GenFractalRidged(x, y);
-        case FractalType_PingPong:
-            return GenFractalPingPong(x, y);
         }
     }
 
@@ -397,12 +397,12 @@ private:
     template <typename T>
     struct Arguments_must_be_floating_point_values;
 
-    enum TransformType3D
+    enum class TransformType3D
     {
-        TransformType3D_None,
-        TransformType3D_ImproveXYPlanes,
-        TransformType3D_ImproveXZPlanes,
-        TransformType3D_DefaultOpenSimplex2
+        None,
+        ImproveXYPlanes,
+        ImproveXZPlanes,
+        DefaultOpenSimplex2
     };
 
     int mSeed;
@@ -618,17 +618,17 @@ private:
     {
         switch (mNoiseType)
         {
-        case NoiseType_OpenSimplex2:
+        case NoiseType::OpenSimplex2:
             return SingleSimplex(seed, x, y);
-        case NoiseType_OpenSimplex2S:
+        case NoiseType::OpenSimplex2S:
             return SingleOpenSimplex2S(seed, x, y);
-        case NoiseType_Cellular:
+        case NoiseType::Cellular:
             return SingleCellular(seed, x, y);
-        case NoiseType_Perlin:
+        case NoiseType::Perlin:
             return SinglePerlin(seed, x, y);
-        case NoiseType_ValueCubic:
+        case NoiseType::ValueCubic:
             return SingleValueCubic(seed, x, y);
-        case NoiseType_Value:
+        case NoiseType::Value:
             return SingleValue(seed, x, y);
         default:
             return 0;
@@ -640,17 +640,17 @@ private:
     {
         switch (mNoiseType)
         {
-        case NoiseType_OpenSimplex2:
+        case NoiseType::OpenSimplex2:
             return SingleOpenSimplex2(seed, x, y, z);
-        case NoiseType_OpenSimplex2S:
+        case NoiseType::OpenSimplex2S:
             return SingleOpenSimplex2S(seed, x, y, z);
-        case NoiseType_Cellular:
+        case NoiseType::Cellular:
             return SingleCellular(seed, x, y, z);
-        case NoiseType_Perlin:
+        case NoiseType::Perlin:
             return SinglePerlin(seed, x, y, z);
-        case NoiseType_ValueCubic:
+        case NoiseType::ValueCubic:
             return SingleValueCubic(seed, x, y, z);
-        case NoiseType_Value:
+        case NoiseType::Value:
             return SingleValue(seed, x, y, z);
         default:
             return 0;
@@ -668,8 +668,8 @@ private:
 
         switch (mNoiseType)
         {
-        case NoiseType_OpenSimplex2:
-        case NoiseType_OpenSimplex2S:
+        case NoiseType::OpenSimplex2:
+        case NoiseType::OpenSimplex2S:
             {
                 const FNfloat SQRT3 = (FNfloat)1.7320508075688772935274463415059;
                 const FNfloat F2 = 0.5f * (SQRT3 - 1);
@@ -730,21 +730,21 @@ private:
     {
         switch (mRotationType3D)
         {
-        case RotationType3D_ImproveXYPlanes:
-            mTransformType3D = TransformType3D_ImproveXYPlanes;
+        case RotationType3D::ImproveXYPlanes:
+            mTransformType3D = TransformType3D::ImproveXYPlanes;
             break;
-        case RotationType3D_ImproveXZPlanes:
-            mTransformType3D = TransformType3D_ImproveXZPlanes;
+        case RotationType3D::ImproveXZPlanes:
+            mTransformType3D = TransformType3D::ImproveXZPlanes;
             break;
         default:
             switch (mNoiseType)
             {
-            case NoiseType_OpenSimplex2:
-            case NoiseType_OpenSimplex2S:
-                mTransformType3D = TransformType3D_DefaultOpenSimplex2;
+            case NoiseType::OpenSimplex2:
+            case NoiseType::OpenSimplex2S:
+                mTransformType3D = TransformType3D::DefaultOpenSimplex2;
                 break;
             default:
-                mTransformType3D = TransformType3D_None;
+                mTransformType3D = TransformType3D::None;
                 break;
             }
             break;
@@ -817,21 +817,21 @@ private:
     {
         switch (mRotationType3D)
         {
-        case RotationType3D_ImproveXYPlanes:
-            mWarpTransformType3D = TransformType3D_ImproveXYPlanes;
+        case RotationType3D::ImproveXYPlanes:
+            mWarpTransformType3D = TransformType3D::ImproveXYPlanes;
             break;
-        case RotationType3D_ImproveXZPlanes:
-            mWarpTransformType3D = TransformType3D_ImproveXZPlanes;
+        case RotationType3D::ImproveXZPlanes:
+            mWarpTransformType3D = TransformType3D::ImproveXZPlanes;
             break;
         default:
             switch (mDomainWarpType)
             {
-            case DomainWarpType_OpenSimplex2:
-            case DomainWarpType_OpenSimplex2Reduced:
-                mWarpTransformType3D = TransformType3D_DefaultOpenSimplex2;
+            case DomainWarpType::OpenSimplex2:
+            case DomainWarpType::OpenSimplex2Reduced:
+                mWarpTransformType3D = TransformType3D::DefaultOpenSimplex2;
                 break;
             default:
-                mWarpTransformType3D = TransformType3D_None;
+                mWarpTransformType3D = TransformType3D::None;
                 break;
             }
             break;
@@ -1497,8 +1497,8 @@ private:
         switch (mCellularDistanceFunction)
         {
         default:
-        case CellularDistanceFunction_Euclidean:
-        case CellularDistanceFunction_EuclideanSq:
+        case CellularDistanceFunction::Euclidean:
+        case CellularDistanceFunction::EuclideanSq:
             for (int xi = xr - 1; xi <= xr + 1; xi++)
             {
                 int yPrimed = yPrimedBase;
@@ -1524,7 +1524,7 @@ private:
                 xPrimed += PrimeX;
             }
             break;
-        case CellularDistanceFunction_Manhattan:
+        case CellularDistanceFunction::Manhattan:
             for (int xi = xr - 1; xi <= xr + 1; xi++)
             {
                 int yPrimed = yPrimedBase;
@@ -1550,7 +1550,7 @@ private:
                 xPrimed += PrimeX;
             }
             break;
-        case CellularDistanceFunction_Hybrid:
+        case CellularDistanceFunction::Hybrid:
             for (int xi = xr - 1; xi <= xr + 1; xi++)
             {
                 int yPrimed = yPrimedBase;
@@ -1578,11 +1578,11 @@ private:
             break;
         }
 
-        if (mCellularDistanceFunction == CellularDistanceFunction_Euclidean && mCellularReturnType >= CellularReturnType_Distance)
+        if (mCellularDistanceFunction == CellularDistanceFunction::Euclidean && mCellularReturnType >= CellularReturnType::Distance)
         {
             distance0 = FastSqrt(distance0);
 
-            if (mCellularReturnType >= CellularReturnType_Distance2)
+            if (mCellularReturnType >= CellularReturnType::Distance2)
             {
                 distance1 = FastSqrt(distance1);
             }
@@ -1590,19 +1590,19 @@ private:
 
         switch (mCellularReturnType)
         {
-        case CellularReturnType_CellValue:
+        case CellularReturnType::CellValue:
             return closestHash * (1 / 2147483648.0f);
-        case CellularReturnType_Distance:
+        case CellularReturnType::Distance:
             return distance0 - 1;
-        case CellularReturnType_Distance2:
+        case CellularReturnType::Distance2:
             return distance1 - 1;
-        case CellularReturnType_Distance2Add:
+        case CellularReturnType::Distance2Add:
             return (distance1 + distance0) * 0.5f - 1;
-        case CellularReturnType_Distance2Sub:
+        case CellularReturnType::Distance2Sub:
             return distance1 - distance0 - 1;
-        case CellularReturnType_Distance2Mul:
+        case CellularReturnType::Distance2Mul:
             return distance1 * distance0 * 0.5f - 1;
-        case CellularReturnType_Distance2Div:
+        case CellularReturnType::Distance2Div:
             return distance0 / distance1 - 1;
         default:
             return 0;
@@ -1628,8 +1628,8 @@ private:
 
         switch (mCellularDistanceFunction)
         {
-        case CellularDistanceFunction_Euclidean:
-        case CellularDistanceFunction_EuclideanSq:
+        case CellularDistanceFunction::Euclidean:
+        case CellularDistanceFunction::EuclideanSq:
             for (int xi = xr - 1; xi <= xr + 1; xi++)
             {
                 int yPrimed = yPrimedBase;
@@ -1662,7 +1662,7 @@ private:
                 xPrimed += PrimeX;
             }
             break;
-        case CellularDistanceFunction_Manhattan:
+        case CellularDistanceFunction::Manhattan:
             for (int xi = xr - 1; xi <= xr + 1; xi++)
             {
                 int yPrimed = yPrimedBase;
@@ -1695,7 +1695,7 @@ private:
                 xPrimed += PrimeX;
             }
             break;
-        case CellularDistanceFunction_Hybrid:
+        case CellularDistanceFunction::Hybrid:
             for (int xi = xr - 1; xi <= xr + 1; xi++)
             {
                 int yPrimed = yPrimedBase;
@@ -1732,11 +1732,11 @@ private:
             break;
         }
 
-        if (mCellularDistanceFunction == CellularDistanceFunction_Euclidean && mCellularReturnType >= CellularReturnType_Distance)
+        if (mCellularDistanceFunction == CellularDistanceFunction::Euclidean && mCellularReturnType >= CellularReturnType::Distance)
         {
             distance0 = FastSqrt(distance0);
 
-            if (mCellularReturnType >= CellularReturnType_Distance2)
+            if (mCellularReturnType >= CellularReturnType::Distance2)
             {
                 distance1 = FastSqrt(distance1);
             }
@@ -1744,19 +1744,19 @@ private:
 
         switch (mCellularReturnType)
         {
-        case CellularReturnType_CellValue:
+        case CellularReturnType::CellValue:
             return closestHash * (1 / 2147483648.0f);
-        case CellularReturnType_Distance:
+        case CellularReturnType::Distance:
             return distance0 - 1;
-        case CellularReturnType_Distance2:
+        case CellularReturnType::Distance2:
             return distance1 - 1;
-        case CellularReturnType_Distance2Add:
+        case CellularReturnType::Distance2Add:
             return (distance1 + distance0) * 0.5f - 1;
-        case CellularReturnType_Distance2Sub:
+        case CellularReturnType::Distance2Sub:
             return distance1 - distance0 - 1;
-        case CellularReturnType_Distance2Mul:
+        case CellularReturnType::Distance2Mul:
             return distance1 * distance0 * 0.5f - 1;
-        case CellularReturnType_Distance2Div:
+        case CellularReturnType::Distance2Div:
             return distance0 / distance1 - 1;
         default:
             return 0;

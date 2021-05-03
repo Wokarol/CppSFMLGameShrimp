@@ -89,10 +89,10 @@ namespace m
         t = std::clamp(t, 0.f, 1.f);
 
         return sf::Color(
-            a.r + (b.r - a.r) * t,
-            a.g + (b.g - a.g) * t,
-            a.b + (b.b - a.b) * t,
-            a.a + (b.a - a.a) * t
+            (sf::Uint8)(a.r + (b.r - a.r) * t),
+            (sf::Uint8)(a.g + (b.g - a.g) * t),
+            (sf::Uint8)(a.b + (b.b - a.b) * t),
+            (sf::Uint8)(a.a + (b.a - a.a) * t)
         );
     }
 }
