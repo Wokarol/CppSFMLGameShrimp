@@ -14,6 +14,7 @@ int main()
 	// Initialization
 	cs::HideConsole();
 
+
 	sf::Color background(0x333333FF);
 	sf::Color white(0xFFFFFFFF);
 	sf::Color blue(0x90CBFBFF);
@@ -36,6 +37,7 @@ int main()
 	sf::RectangleShape boxCollider(box.getSize() + sf::Vector2f(2.f, 2.f) * box.getOutlineThickness());
 	boxCollider.setPosition(box.getPosition());
 	boxCollider.setOrigin(boxCollider.getSize() / 2.f);
+	boxCollider.setRotation(box.getRotation());
 
 	sf::CircleShape caster(10.f);
 	caster.setOrigin(sf::Vector2f(1.f, 1.f) * caster.getRadius());
@@ -49,6 +51,7 @@ int main()
 
 
 	sf::LineShape line(3);
+	sf::LineShape reflection(3);
 
 	// Loop
 	sf::Clock clock;
@@ -107,24 +110,43 @@ int main()
 
 		auto rayDir = m::rotate(sf::Vector2f(1.f, 0.f), caster.getRotation());
 
-		float dist = inter::rayAABB(caster.getPosition(), rayDir, boxCollider);
-		sf::Vector2f point = caster.getPosition() + m::normalize(rayDir) * dist;
+		auto intersect = inter::rayAABB(caster.getPosition(), rayDir, boxCollider);
+		sf::Vector2f point;
+		if (intersect.hit)
+		{
+			point = caster.getPosition() + m::normalize(rayDir) * intersect.dist;
+			float dirAngle = m::angle(-rayDir, intersect.normal);
+
+			reflection.setStart(point);
+			reflection.setEnd(point + m::rotate(intersect.normal * 10000.f, dirAngle));
+		}
+		else
+		{
+			point = caster.getPosition() + m::normalize(rayDir) * 10000.f;
+		}
 
 		hit.setPosition(point);
 
 		line.setColor(m::lerp(white, yellow, std::sin(t * 5.f) * 0.5f + 0.5f));
 		line.setThickness(m::lerp(1.f, 3.f, std::sin((t * 5.f) + 216.37f) * 0.5f + 0.5f));
 
+		reflection.setColor(line.getColor());
+		reflection.setThickness(line.getThickness());
+
 		line.setStart(caster.getPosition());
-		line.setEnd(caster.getPosition() + rayDir * dist);
+		line.setEnd(point);
 
 		// Drawing
 		window.clear(background);
 
 		window.draw(box);
 		window.draw(line);
+		if (intersect.hit)
+		{
+			window.draw(reflection);
+		}
 		window.draw(caster);
-		window.draw(hit);
+		//window.draw(hit);
 
 		window.display();
 	}

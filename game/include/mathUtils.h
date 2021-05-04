@@ -51,6 +51,11 @@ namespace m
                 return 180.f + atan(-v.y / -v.x) * 180.f / PI;
     }
 
+    inline float angle(const sf::Vector2f& a, const sf::Vector2f& b)
+    {
+        return m::angle(m::rotate(b, -m::angle(a)));
+    }
+
     inline float length(const sf::Vector2f& v)
     {
         return std::sqrt(v.x * v.x + v.y * v.y);

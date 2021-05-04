@@ -7,8 +7,18 @@
 
 namespace inter
 {
+	struct Intersection
+	{
+		bool hit;
+		float dist;
+		sf::Vector2f normal;
+
+		Intersection() : hit(false), dist(0), normal(sf::Vector2f(0.f, 0.f)) {}
+		Intersection(float d, sf::Vector2f n) : hit(true), dist(d), normal(n) {}
+	};
+
 	/// <param name="AABB"> Rectangle has to be AABB </param>
-	inline float rayAABB(sf::Vector2f origin, sf::Vector2f dir, sf::RectangleShape aabb)
+	inline Intersection rayAABB(sf::Vector2f origin, sf::Vector2f dir, sf::RectangleShape aabb)
 	{
 		origin += aabb.getOrigin();
 		dir = m::normalize(dir);
@@ -23,7 +33,7 @@ namespace inter
 
 			if (yOnWall >= 0 && yOnWall <= size.y)
 			{
-				return distanceToWall;
+				return Intersection(distanceToWall, sf::Vector2f(-1.f, 0.f));
 			}
 		}
 
@@ -36,7 +46,7 @@ namespace inter
 
 			if (yOnWall >= 0 && yOnWall <= size.y)
 			{
-				return distanceToWall;
+				return Intersection(distanceToWall, sf::Vector2f(1.f, 0.f));
 			}
 		}
 
@@ -49,7 +59,7 @@ namespace inter
 
 			if (xOnWall >= 0 && xOnWall <= size.x)
 			{
-				return distanceToWall;
+				return Intersection(distanceToWall, sf::Vector2f(0.f, -1.f));
 			}
 		}
 
@@ -62,10 +72,10 @@ namespace inter
 
 			if (xOnWall >= 0 && xOnWall <= size.x)
 			{
-				return distanceToWall;
+				return Intersection(distanceToWall, sf::Vector2f(0.f, 1.f));
 			}
 		}
 
-		return 100000;
+		return {};
 	}
 }
