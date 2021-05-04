@@ -105,4 +105,28 @@ namespace m
             (sf::Uint8)(a.a + (b.a - a.a) * t)
         );
     }
+
+    struct Ray
+    {
+        sf::Vector2f origin;
+        sf::Vector2f dir;
+
+        Ray(sf::Vector2f _origin, sf::Vector2f _direction) : origin(_origin), dir(m::normalize(_direction)) {}
+
+        void rotateAround(sf::Vector2f pivot, float degrees)
+        {
+            auto diff = origin - pivot;
+            origin = m::rotate(diff, degrees);
+            dir = m::rotate(dir, degrees);
+        }
+        void rotate(float degrees)
+        {
+            dir = m::rotate(dir, degrees);
+        }
+
+        sf::Vector2f getPoint(float distance)
+        {
+            return origin + dir * distance;
+        }
+    };
 }

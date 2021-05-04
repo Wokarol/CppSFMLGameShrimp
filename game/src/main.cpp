@@ -34,6 +34,8 @@ int main()
 	box.setOutlineColor(blue);
 	box.setOutlineThickness(4);
 
+	box.rotate(45);
+
 	sf::RectangleShape boxCollider(box.getSize() + sf::Vector2f(2.f, 2.f) * box.getOutlineThickness());
 	boxCollider.setPosition(box.getPosition());
 	boxCollider.setOrigin(boxCollider.getSize() / 2.f);
@@ -103,26 +105,30 @@ int main()
 		t += dt;
 
 		// Logic
+		//box.rotate(20 * dt);
+		boxCollider.setRotation(box.getRotation());
+
 		caster.move(casterVelocity * dt * 200.f);
 		
 		sf::Vector2f m = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 		caster.setRotation(m::angle(m - caster.getPosition()));
 
-		auto rayDir = m::rotate(sf::Vector2f(1.f, 0.f), caster.getRotation());
+		auto ray = m::Ray(caster.getPosition(), sf::Vector2f(1.f, 0.f));
+		ray.rotate(caster.getRotation());
 
-		auto intersect = inter::rayAABB(caster.getPosition(), rayDir, boxCollider);
+		auto intersect = inter::rayOBB(ray, boxCollider);
 		sf::Vector2f point;
 		if (intersect.hit)
 		{
-			point = caster.getPosition() + m::normalize(rayDir) * intersect.dist;
-			float dirAngle = m::angle(-rayDir, intersect.normal);
+			point = ray.getPoint(intersect.dist);
+			float dirAngle = m::angle(-ray.dir, intersect.normal);
 
 			reflection.setStart(point);
 			reflection.setEnd(point + m::rotate(intersect.normal * 10000.f, dirAngle));
 		}
 		else
 		{
-			point = caster.getPosition() + m::normalize(rayDir) * 10000.f;
+			point = ray.getPoint(10000.f);
 		}
 
 		hit.setPosition(point);
@@ -133,7 +139,7 @@ int main()
 		reflection.setColor(line.getColor());
 		reflection.setThickness(line.getThickness());
 
-		line.setStart(caster.getPosition());
+		line.setStart(ray.origin);
 		line.setEnd(point);
 
 		// Drawing
@@ -146,7 +152,7 @@ int main()
 			window.draw(reflection);
 		}
 		window.draw(caster);
-		//window.draw(hit);
+		window.draw(hit);
 
 		window.display();
 	}
