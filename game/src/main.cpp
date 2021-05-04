@@ -6,6 +6,7 @@
 #include <console.h>
 #include <shaker.h>
 #include <mathUtils.h>
+#include <intersections.h>
 #include "shapes/line.h"
 
 int main()
@@ -32,10 +33,19 @@ int main()
 	box.setOutlineColor(blue);
 	box.setOutlineThickness(4);
 
+	sf::RectangleShape boxCollider(box.getSize() + sf::Vector2f(2.f, 2.f) * box.getOutlineThickness());
+	boxCollider.setPosition(box.getPosition());
+	boxCollider.setOrigin(boxCollider.getSize() / 2.f);
+
 	sf::CircleShape caster(10.f);
 	caster.setOrigin(sf::Vector2f(1.f, 1.f) * caster.getRadius());
 	caster.setFillColor(white);
 	caster.setPosition(-200, 150);
+
+	sf::CircleShape hit(5.f);
+	hit.setOrigin(sf::Vector2f(1.f, 1.f) * hit.getRadius());
+	hit.setFillColor(blue);
+	hit.setPosition(-200, 150);
 
 
 	sf::LineShape line(3);
@@ -90,14 +100,23 @@ int main()
 		t += dt;
 
 		// Logic
-		caster.move(casterVelocity * dt * 100.f);
-		caster.rotate(rotationVelocity * dt * 90.f);
+		caster.move(casterVelocity * dt * 200.f);
+		
+		sf::Vector2f m = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+		caster.setRotation(m::angle(m - caster.getPosition()));
+
+		auto rayDir = m::rotate(sf::Vector2f(1.f, 0.f), caster.getRotation());
+
+		float dist = inter::rayAABB(caster.getPosition(), rayDir, boxCollider);
+		sf::Vector2f point = caster.getPosition() + m::normalize(rayDir) * dist;
+
+		hit.setPosition(point);
 
 		line.setColor(m::lerp(white, yellow, std::sin(t * 5.f) * 0.5f + 0.5f));
 		line.setThickness(m::lerp(1.f, 3.f, std::sin((t * 5.f) + 216.37f) * 0.5f + 0.5f));
 
 		line.setStart(caster.getPosition());
-		line.setEnd(caster.getPosition() + m::rotate(sf::Vector2f(10000.f, 0.f), caster.getRotation()));
+		line.setEnd(caster.getPosition() + rayDir * dist);
 
 		// Drawing
 		window.clear(background);
@@ -105,6 +124,7 @@ int main()
 		window.draw(box);
 		window.draw(line);
 		window.draw(caster);
+		window.draw(hit);
 
 		window.display();
 	}

@@ -61,6 +61,11 @@ namespace m
         return length(a - b);
     }
 
+    inline float dot(const sf::Vector2f& a, const sf::Vector2f& b)
+    {
+        return a.x * b.x + a.y * b.y;
+    }
+
     inline sf::Vector2f limit(const sf::Vector2f& v, float maxLength)
     {
         if (length(v) <= maxLength)
