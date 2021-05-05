@@ -158,7 +158,7 @@ namespace intersect
 		Intersection closestIntersection;
 		float smallestDistance = std::numeric_limits<float>::infinity();
 
-		for (auto it = start; it < end; it++)
+		for (auto it = start; it != end; it++)
 		{
 			auto shape = *it;
 			auto raycastResult = rayWithAny(ray, *shape);
