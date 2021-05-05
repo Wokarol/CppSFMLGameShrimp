@@ -36,28 +36,16 @@ int main()
 	box.setOrigin(box.getSize() / 2.f);
 	box.setFillColor(sf::Color(0));
 	box.setOutlineColor(blue);
-	box.setOutlineThickness(1);
-
-	//box.rotate(45);
-
-	sf::RectangleShape boxCollider(box.getSize() + sf::Vector2f(2.f, 2.f) * box.getOutlineThickness());
-	boxCollider.setPosition(box.getPosition());
-	boxCollider.setOrigin(boxCollider.getSize() / 2.f);
-	boxCollider.setRotation(box.getRotation());
-	colliders.push_back(&boxCollider);
+	box.setOutlineThickness(-2);
+	colliders.push_back(&box);
 
 	sf::CircleShape circle(30.f);
 	circle.setPosition(50, 30);
 	circle.setOrigin(sf::Vector2f(1.f, 1.f) * circle.getRadius());
 	circle.setFillColor(sf::Color(0));
 	circle.setOutlineColor(blue);
-	circle.setOutlineThickness(1);
-
-	sf::CircleShape circleCollider(circle.getRadius() + circle.getOutlineThickness());
-	circleCollider.setPosition(circle.getPosition() - sf::Vector2f(1.f, 1.f));
-	circleCollider.setOrigin(sf::Vector2f(1.f, 1.f) * circleCollider.getRadius());
-	circleCollider.setRotation(circle.getRotation()); 
-	colliders.push_back(&circleCollider);
+	circle.setOutlineThickness(-2);
+	colliders.push_back(&circle);
 
 	sf::CircleShape caster(5.f);
 	caster.setOrigin(sf::Vector2f(1.f, 1.f) * caster.getRadius());
@@ -119,14 +107,11 @@ int main()
 			std::sin(t * 2.f) * 20.f,
 			std::sin(t * 1.f + 2134.f) * 15.f
 		);
-		boxCollider.setPosition(box.getPosition());
-		boxCollider.setRotation(box.getRotation());
 
 		circle.setPosition(
 			std::sin(t * 1.f) * 10.f + 40.f,
 			std::sin(t * 2.f + 223.6f) * 5.f + 50.f
 		);
-		circleCollider.setPosition(circle.getPosition());
 
 		caster.move(casterVelocity * dt * 200.f);
 		
