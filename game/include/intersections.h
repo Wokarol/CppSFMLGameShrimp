@@ -81,8 +81,10 @@ namespace inter
 
 	inline Intersection rayOBB(m::Ray ray, const sf::RectangleShape& obb)
 	{
+		ray.move(-obb.getPosition());
+
 		auto angle = -obb.getRotation();
-		ray.rotateAround(obb.getPosition(), angle);
+		ray.rotateAround(sf::Vector2f(0, 0), angle);
 
 		auto res = rayAABB(ray, obb);
 		res.normal = m::rotate(res.normal, -angle);

@@ -25,28 +25,30 @@ int main()
 	sf::RenderWindow& window = sf::RenderWindow(sf::VideoMode(600, 600), "Shrimp Cactus Mate", 7U, settings);
 
 	sf::View mainCamera(sf::Vector2f(0.f, 0.f), (sf::Vector2f)window.getSize());
+	mainCamera.zoom(0.5);
 	window.setView(mainCamera);
 
 	// Objects
-	sf::RectangleShape box(sf::Vector2f(200, 100));
+	sf::RectangleShape box(sf::Vector2f(80, 60));
+	box.setPosition(0, 0);
 	box.setOrigin(box.getSize() / 2.f);
 	box.setFillColor(sf::Color(0));
 	box.setOutlineColor(blue);
-	box.setOutlineThickness(4);
+	box.setOutlineThickness(1);
 
-	box.rotate(45);
+	//box.rotate(45);
 
 	sf::RectangleShape boxCollider(box.getSize() + sf::Vector2f(2.f, 2.f) * box.getOutlineThickness());
 	boxCollider.setPosition(box.getPosition());
 	boxCollider.setOrigin(boxCollider.getSize() / 2.f);
 	boxCollider.setRotation(box.getRotation());
 
-	sf::CircleShape caster(10.f);
+	sf::CircleShape caster(5.f);
 	caster.setOrigin(sf::Vector2f(1.f, 1.f) * caster.getRadius());
 	caster.setFillColor(white);
-	caster.setPosition(-200, 150);
+	caster.setPosition(-60, 0);
 
-	sf::CircleShape hit(5.f);
+	sf::CircleShape hit(2.f);
 	hit.setOrigin(sf::Vector2f(1.f, 1.f) * hit.getRadius());
 	hit.setFillColor(blue);
 	hit.setPosition(-200, 150);
@@ -72,17 +74,8 @@ int main()
 			}
 		}
 
-		float rotationVelocity = 0;
-		sf::Vector2f casterVelocity;
 		// Input
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-		{
-			rotationVelocity -= 1.f;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
-		{
-			rotationVelocity += 1.f;
-		}
+		sf::Vector2f casterVelocity;
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
@@ -105,8 +98,12 @@ int main()
 		t += dt;
 
 		// Logic
-		//box.rotate(20 * dt);
-		boxCollider.setRotation(box.getRotation());
+		box.rotate(10 * dt);
+		box.setPosition(
+			std::sin(t * 2.f) * 40.f,
+			std::sin(t * 1.f + 2134.f) * 30.f
+		);
+		boxCollider.setPosition(box.getPosition());
 
 		caster.move(casterVelocity * dt * 200.f);
 		
@@ -115,6 +112,7 @@ int main()
 
 		auto ray = m::Ray(caster.getPosition(), sf::Vector2f(1.f, 0.f));
 		ray.rotate(caster.getRotation());
+		boxCollider.setRotation(box.getRotation());
 
 		auto intersect = inter::rayOBB(ray, boxCollider);
 		sf::Vector2f point;
@@ -124,7 +122,7 @@ int main()
 			float dirAngle = m::angle(-ray.dir, intersect.normal);
 
 			reflection.setStart(point);
-			reflection.setEnd(point + m::rotate(intersect.normal * 10000.f, dirAngle));
+			reflection.setEnd(point + m::rotate(intersect.normal * 50.f, dirAngle));
 		}
 		else
 		{
@@ -134,7 +132,7 @@ int main()
 		hit.setPosition(point);
 
 		line.setColor(m::lerp(white, yellow, std::sin(t * 5.f) * 0.5f + 0.5f));
-		line.setThickness(m::lerp(1.f, 3.f, std::sin((t * 5.f) + 216.37f) * 0.5f + 0.5f));
+		line.setThickness(m::lerp(0.5f, 2.f, std::sin((t * 6.f) + 216.37f) * 0.5f + 0.5f));
 
 		reflection.setColor(line.getColor());
 		reflection.setThickness(line.getThickness());
@@ -146,13 +144,14 @@ int main()
 		window.clear(background);
 
 		window.draw(box);
+		//window.draw(boxCollider);
 		window.draw(line);
 		if (intersect.hit)
 		{
 			window.draw(reflection);
 		}
 		window.draw(caster);
-		window.draw(hit);
+		//window.draw(hit);
 
 		window.display();
 	}

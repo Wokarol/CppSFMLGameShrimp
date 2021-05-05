@@ -116,12 +116,16 @@ namespace m
         void rotateAround(sf::Vector2f pivot, float degrees)
         {
             auto diff = origin - pivot;
-            origin = m::rotate(diff, degrees);
+            origin = m::rotate(diff, degrees) + pivot;
             dir = m::rotate(dir, degrees);
         }
         void rotate(float degrees)
         {
             dir = m::rotate(dir, degrees);
+        }
+        void move(sf::Vector2f v)
+        {
+            origin += v;
         }
 
         sf::Vector2f getPoint(float distance)
