@@ -17,6 +17,40 @@ namespace inter
 		Intersection(float d, sf::Vector2f n) : hit(true), dist(d), normal(n) {}
 	};
 
+	inline Intersection rayCircle(m::Ray ray, const sf::CircleShape& circle)
+	{
+		sf::Vector2f optimalPivot = sf::Vector2f(1.f, 1.f) * circle.getRadius();
+		sf::Vector2f pivotOffset = circle.getOrigin() - optimalPivot;
+
+		ray.move(-circle.getPosition() + pivotOffset);
+		ray.dir = m::normalize(ray.dir);
+
+		sf::Vector2f L = -ray.origin;
+		float r = circle.getRadius();
+
+		float tca = m::dot(L, ray.dir);
+		if (tca < 0)
+		{
+			// We point away from the circle
+			return {};
+		}
+
+		float d = std::sqrt(m::dot(L, L) - (tca * tca));
+		if (d > r)
+		{
+			// We do not hit the circle
+			return {};
+		}
+
+		float thc = std::sqrt(r * r - d * d);
+		float distToHit = tca - thc;
+
+		sf::Vector2f hitPoint = ray.getPoint(distToHit);
+		sf::Vector2f normal = m::normalize(hitPoint);
+
+		return Intersection(distToHit, normal);
+	}
+
 	/// <param name="AABB"> Rectangle has to be AABB </param>
 	inline Intersection rayAABB(m::Ray ray, const sf::RectangleShape& aabb)
 	{
