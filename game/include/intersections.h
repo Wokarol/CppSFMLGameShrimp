@@ -59,7 +59,7 @@ namespace intersect
 		return Intersection(distToHit, normal);
 	}
 
-	/// <param name="AABB"> Rectangle has to be AABB </param>
+	/// <param name="AABB"> Rectangle's rotation will be ignored </param>
 	inline Intersection rayWithAABB(m::Ray ray, const sf::RectangleShape& aabb)
 	{
 		// We offset it so the aabb's top left corner is at [0, 0]
@@ -152,6 +152,7 @@ namespace intersect
 		return {};
 	}
 
+	/// Expected FwdIt has to be deferencable into sf::Shape* or equivalent and has to support ++ operator
 	template <typename FwdIt>
 	inline Intersection raycastAllShapes(m::Ray ray, FwdIt start, FwdIt end)
 	{
