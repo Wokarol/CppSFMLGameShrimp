@@ -29,19 +29,22 @@ int main()
 	window.setView(mainCamera);
 
 	// Objects
-	//sf::RectangleShape box(sf::Vector2f(80, 60));
-	//box.setPosition(0, 0);
-	//box.setOrigin(box.getSize() / 2.f);
-	//box.setFillColor(sf::Color(0));
-	//box.setOutlineColor(blue);
-	//box.setOutlineThickness(1);
+	std::vector<sf::Shape*> colliders;
 
-	////box.rotate(45);
+	sf::RectangleShape box(sf::Vector2f(80, 60));
+	box.setPosition(0, 0);
+	box.setOrigin(box.getSize() / 2.f);
+	box.setFillColor(sf::Color(0));
+	box.setOutlineColor(blue);
+	box.setOutlineThickness(1);
 
-	//sf::RectangleShape boxCollider(box.getSize() + sf::Vector2f(2.f, 2.f) * box.getOutlineThickness());
-	//boxCollider.setPosition(box.getPosition());
-	//boxCollider.setOrigin(boxCollider.getSize() / 2.f);
-	//boxCollider.setRotation(box.getRotation());
+	//box.rotate(45);
+
+	sf::RectangleShape boxCollider(box.getSize() + sf::Vector2f(2.f, 2.f) * box.getOutlineThickness());
+	boxCollider.setPosition(box.getPosition());
+	boxCollider.setOrigin(boxCollider.getSize() / 2.f);
+	boxCollider.setRotation(box.getRotation());
+	colliders.push_back(&boxCollider);
 
 	sf::CircleShape circle(30.f);
 	circle.setPosition(50, 30);
@@ -53,7 +56,8 @@ int main()
 	sf::CircleShape circleCollider(circle.getRadius() + circle.getOutlineThickness());
 	circleCollider.setPosition(circle.getPosition() - sf::Vector2f(1.f, 1.f));
 	circleCollider.setOrigin(sf::Vector2f(1.f, 1.f) * circleCollider.getRadius());
-	circleCollider.setRotation(circle.getRotation());
+	circleCollider.setRotation(circle.getRotation()); 
+	colliders.push_back(&circleCollider);
 
 	sf::CircleShape caster(5.f);
 	caster.setOrigin(sf::Vector2f(1.f, 1.f) * caster.getRadius());
@@ -109,14 +113,14 @@ int main()
 		float dt = clock.restart().asSeconds();
 		t += dt;
 
-		//// Logic
-		//box.rotate(10 * dt);
-		//box.setPosition(
-		//	std::sin(t * 2.f) * 20.f,
-		//	std::sin(t * 1.f + 2134.f) * 15.f
-		//);
-		//boxCollider.setPosition(box.getPosition());
-		//boxCollider.setRotation(box.getRotation());
+		// Logic
+		box.rotate(10 * dt);
+		box.setPosition(
+			std::sin(t * 2.f) * 20.f,
+			std::sin(t * 1.f + 2134.f) * 15.f
+		);
+		boxCollider.setPosition(box.getPosition());
+		boxCollider.setRotation(box.getRotation());
 
 		circle.setPosition(
 			std::sin(t * 1.f) * 10.f + 40.f,
@@ -132,7 +136,7 @@ int main()
 		auto ray = m::Ray(caster.getPosition(), sf::Vector2f(1.f, 0.f));
 		ray.rotate(caster.getRotation());
 
-		auto intersect = inter::rayCircle(ray, circleCollider);
+		auto intersect = inter::rayAll(ray, colliders.begin(), colliders.end());
 		sf::Vector2f point;
 		if (intersect.hit)
 		{
@@ -161,7 +165,7 @@ int main()
 		// Drawing
 		window.clear(background);
 
-		//window.draw(box);
+		window.draw(box);
 		//window.draw(boxCollider);
 
 		window.draw(circle);
@@ -170,10 +174,10 @@ int main()
 		window.draw(line);
 		if (intersect.hit)
 		{
-			window.draw(reflection);
+			//window.draw(reflection);
+			window.draw(hit);
 		}
 		window.draw(caster);
-		//window.draw(hit);
 
 		window.display();
 	}

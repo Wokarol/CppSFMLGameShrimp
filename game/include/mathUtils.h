@@ -56,14 +56,24 @@ namespace m
         return m::angle(m::rotate(b, -m::angle(a)));
     }
 
+    inline float sqrLength(const sf::Vector2f& v)
+    {
+        return v.x * v.x + v.y * v.y;
+    }
+
     inline float length(const sf::Vector2f& v)
     {
-        return std::sqrt(v.x * v.x + v.y * v.y);
+        return std::sqrt(sqrLength(v));
     }
 
     inline float dist(const sf::Vector2f& a, const sf::Vector2f& b)
     {
         return length(a - b);
+    }
+
+    inline float sqrDist(const sf::Vector2f& a, const sf::Vector2f& b)
+    {
+        return sqrLength(a - b);
     }
 
     inline float dot(const sf::Vector2f& a, const sf::Vector2f& b)

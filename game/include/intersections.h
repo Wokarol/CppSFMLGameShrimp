@@ -125,4 +125,42 @@ namespace inter
 
 		return res;
 	}
+
+	inline Intersection rayUniversal(m::Ray ray, const sf::Shape& s)
+	{
+		if (auto circle = dynamic_cast<const sf::CircleShape*>(&s))
+		{
+			return rayCircle(ray, *circle);
+		}
+
+		if (auto obb = dynamic_cast<const sf::RectangleShape*>(&s))
+		{
+			return rayOBB(ray, *obb);
+		}
+
+		return {};
+	}
+
+	template <typename FwdIt>
+	inline Intersection rayAll(m::Ray ray, FwdIt start, FwdIt end)
+	{
+		Intersection closestIntersection;
+		float dist = std::numeric_limits<float>::infinity();
+
+		for (auto i = start; i < end; i++)
+		{
+			auto s = *i;
+			Intersection inter = rayUniversal(ray, *s);
+			if (inter.hit)
+			{
+				if (inter.dist < dist)
+				{
+					closestIntersection = inter;
+					dist = inter.dist;
+				}
+			}
+		}
+
+		return closestIntersection;
+	}
 }
