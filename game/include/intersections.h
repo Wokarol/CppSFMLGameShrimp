@@ -3,32 +3,40 @@
 #include <mathUtils.h>
 #include <SFML/Graphics.hpp>
 
-#include <console.h>
-
-namespace inter
+namespace intersect
 {
 	struct Intersection
 	{
 		bool hit;
-		float dist;
+		float distance;
 		sf::Vector2f normal;
 
-		Intersection() : hit(false), dist(0), normal(sf::Vector2f(0.f, 0.f)) {}
-		Intersection(float d, sf::Vector2f n) : hit(true), dist(d), normal(n) {}
+		Intersection() : hit(false), distance(0), normal(sf::Vector2f(0.f, 0.f)) {}
+		Intersection(float d, sf::Vector2f n) : hit(true), distance(d), normal(n) {}
 	};
 
-	inline Intersection rayCircle(m::Ray ray, const sf::CircleShape& circle)
+	inline Intersection rayWithCircle(m::Ray ray, const sf::CircleShape& circle)
 	{
+
+		// We offset it so the centre of the circle is in the middle
 		sf::Vector2f optimalPivot = sf::Vector2f(1.f, 1.f) * circle.getRadius();
 		sf::Vector2f pivotOffset = circle.getOrigin() - optimalPivot;
 
 		ray.move(-circle.getPosition() + pivotOffset);
-		ray.dir = m::normalize(ray.dir);
+		ray.direction = m::normalize(ray.direction);
 
+		// Algorithm is based on this article:
+		// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
 		sf::Vector2f L = -ray.origin;
 		float r = circle.getRadius();
 
-		float tca = m::dot(L, ray.dir);
+		if (m::sqrLength(L) < (r * r))
+		{
+			// We are inside the circle
+			return {};
+		}
+
+		float tca = m::dot(L, ray.direction);
 		if (tca < 0)
 		{
 			// We point away from the circle
@@ -52,18 +60,19 @@ namespace inter
 	}
 
 	/// <param name="AABB"> Rectangle has to be AABB </param>
-	inline Intersection rayAABB(m::Ray ray, const sf::RectangleShape& aabb)
+	inline Intersection rayWithAABB(m::Ray ray, const sf::RectangleShape& aabb)
 	{
-		auto localOrigin = ray.origin + aabb.getOrigin();
-		auto nDir = m::normalize(ray.dir);
+		// We offset it so the aabb's top left corner is at [0, 0]
+		ray.move(aabb.getOrigin());
+		ray.direction = m::normalize(ray.direction);
 		auto size = aabb.getSize();
 
-		if (nDir.x > 0 && localOrigin.x < 0)
+		if (ray.direction.x > 0 && ray.origin.x < 0)
 		{
 			// Ray from left onto left wall
-			float diff = -localOrigin.x;
-			float distanceToWall = diff / nDir.x;
-			float yOnWall = nDir.y * distanceToWall + localOrigin.y;
+			float distanceToWallOnXAxis = -ray.origin.x;
+			float distanceToWall = distanceToWallOnXAxis / ray.direction.x;
+			float yOnWall = ray.getPoint(distanceToWall).y;
 
 			if (yOnWall >= 0 && yOnWall <= size.y)
 			{
@@ -71,12 +80,12 @@ namespace inter
 			}
 		}
 
-		if (nDir.x < 0 && localOrigin.x > size.x)
+		if (ray.direction.x < 0 && ray.origin.x > size.x)
 		{
 			// Ray from right onto right wall
-			float diff = localOrigin.x - size.x;
-			float distanceToWall = -diff / nDir.x;
-			float yOnWall = nDir.y * distanceToWall + localOrigin.y;
+			float distanceToWallOnXAxis = ray.origin.x - size.x;
+			float distanceToWall = -distanceToWallOnXAxis / ray.direction.x;
+			float yOnWall = ray.getPoint(distanceToWall).y;
 
 			if (yOnWall >= 0 && yOnWall <= size.y)
 			{
@@ -84,12 +93,12 @@ namespace inter
 			}
 		}
 
-		if (nDir.y > 0 && localOrigin.y < 0)
+		if (ray.direction.y > 0 && ray.origin.y < 0)
 		{
 			// Ray from up onto upper wall
-			float diff = -localOrigin.y;
-			float distanceToWall = diff / nDir.y;
-			float xOnWall = nDir.x * distanceToWall + localOrigin.x;
+			float distanceOnWallOnYAxis = -ray.origin.y;
+			float distanceToWall = distanceOnWallOnYAxis / ray.direction.y;
+			float xOnWall = ray.getPoint(distanceToWall).x;
 
 			if (xOnWall >= 0 && xOnWall <= size.x)
 			{
@@ -97,12 +106,12 @@ namespace inter
 			}
 		}
 
-		if (nDir.y < 0 && localOrigin.y > size.y)
+		if (ray.direction.y < 0 && ray.origin.y > size.y)
 		{
-			// Ray from right onto right wall
-			float diff = localOrigin.y - size.y;
-			float distanceToWall = -diff / nDir.y;
-			float xOnWall = nDir.x * distanceToWall + localOrigin.x;
+			// Ray from down onto bottom wall
+			float distanceOnWallOnYAxis = ray.origin.y - size.y;
+			float distanceToWall = -distanceOnWallOnYAxis / ray.direction.y;
+			float xOnWall = ray.getPoint(distanceToWall).x;
 
 			if (xOnWall >= 0 && xOnWall <= size.x)
 			{
@@ -113,52 +122,55 @@ namespace inter
 		return {};
 	}
 
-	inline Intersection rayOBB(m::Ray ray, const sf::RectangleShape& obb)
+	inline Intersection rayWithOBB(m::Ray ray, const sf::RectangleShape& obb)
 	{
+		// We convert this scenario into Ray and AABB to simplify calculations
 		ray.move(-obb.getPosition());
 
 		auto angle = -obb.getRotation();
 		ray.rotateAround(sf::Vector2f(0, 0), angle);
 
-		auto res = rayAABB(ray, obb);
+		auto res = rayWithAABB(ray, obb);
 		res.normal = m::rotate(res.normal, -angle);
 
 		return res;
 	}
 
-	inline Intersection rayUniversal(m::Ray ray, const sf::Shape& s)
+	inline Intersection rayWithAny(m::Ray ray, const sf::Shape& s)
 	{
 		if (auto circle = dynamic_cast<const sf::CircleShape*>(&s))
 		{
-			return rayCircle(ray, *circle);
+			return rayWithCircle(ray, *circle);
 		}
 
 		if (auto obb = dynamic_cast<const sf::RectangleShape*>(&s))
 		{
-			return rayOBB(ray, *obb);
+			return rayWithOBB(ray, *obb);
 		}
 
+		// Our shape is unsupported
 		return {};
 	}
 
 	template <typename FwdIt>
-	inline Intersection rayAll(m::Ray ray, FwdIt start, FwdIt end)
+	inline Intersection raycastAllShapes(m::Ray ray, FwdIt start, FwdIt end)
 	{
 		Intersection closestIntersection;
-		float dist = std::numeric_limits<float>::infinity();
+		float smallestDistance = std::numeric_limits<float>::infinity();
 
-		for (auto i = start; i < end; i++)
+		for (auto it = start; it < end; it++)
 		{
-			auto s = *i;
-			Intersection inter = rayUniversal(ray, *s);
-			if (inter.hit)
-			{
-				if (inter.dist < dist)
-				{
-					closestIntersection = inter;
-					dist = inter.dist;
-				}
-			}
+			auto shape = *it;
+			auto raycastResult = rayWithAny(ray, *shape);
+
+			if (!raycastResult.hit)
+				continue;
+
+			if (raycastResult.distance > smallestDistance)
+				continue;
+
+			closestIntersection = raycastResult;
+			smallestDistance = raycastResult.distance;
 		}
 
 		return closestIntersection;

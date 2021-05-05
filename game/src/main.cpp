@@ -121,12 +121,12 @@ int main()
 		auto ray = m::Ray(caster.getPosition(), sf::Vector2f(1.f, 0.f));
 		ray.rotate(caster.getRotation());
 
-		auto intersect = inter::rayAll(ray, colliders.begin(), colliders.end());
+		auto intersect = intersect::raycastAllShapes(ray, colliders.begin(), colliders.end());
 		sf::Vector2f point;
 		if (intersect.hit)
 		{
-			point = ray.getPoint(intersect.dist);
-			float dirAngle = m::angle(-ray.dir, intersect.normal);
+			point = ray.getPoint(intersect.distance);
+			float dirAngle = m::angle(-ray.direction, intersect.normal);
 
 			reflection.setStart(point);
 			reflection.setEnd(point + m::rotate(intersect.normal * 50.f, dirAngle));

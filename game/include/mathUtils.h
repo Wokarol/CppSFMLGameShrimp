@@ -119,19 +119,19 @@ namespace m
     struct Ray
     {
         sf::Vector2f origin;
-        sf::Vector2f dir;
+        sf::Vector2f direction;
 
-        Ray(sf::Vector2f _origin, sf::Vector2f _direction) : origin(_origin), dir(m::normalize(_direction)) {}
+        Ray(sf::Vector2f _origin, sf::Vector2f _direction) : origin(_origin), direction(m::normalize(_direction)) {}
 
         void rotateAround(sf::Vector2f pivot, float degrees)
         {
             auto diff = origin - pivot;
             origin = m::rotate(diff, degrees) + pivot;
-            dir = m::rotate(dir, degrees);
+            direction = m::rotate(direction, degrees);
         }
         void rotate(float degrees)
         {
-            dir = m::rotate(dir, degrees);
+            direction = m::rotate(direction, degrees);
         }
         void move(sf::Vector2f v)
         {
@@ -140,7 +140,7 @@ namespace m
 
         sf::Vector2f getPoint(float distance)
         {
-            return origin + dir * distance;
+            return origin + direction * distance;
         }
     };
 }
