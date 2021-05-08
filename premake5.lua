@@ -1,4 +1,4 @@
-workspace "CactusShrimp"
+workspace "SurvivingTheHeat"
     architecture "x64"
     language "C++"
 
