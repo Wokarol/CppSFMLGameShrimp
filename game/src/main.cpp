@@ -5,6 +5,7 @@
 #include "shapes/line.h"
 #include "windowManagement.h"
 
+#include "actorHandle.h"
 #include "actorManagement/world.h"
 #include "actors.h"
 
@@ -33,7 +34,7 @@ int main()
 
 	auto logger = world.createActor<LoggerActor>();
 	auto box = logger.as<Box>();
-	//dauto box = world.createNamedActor<Box>("The Box", 50);
+	//auto box = world.createNamedActor<Box>("The Box", 50);
 
 	while (window.isOpen())
 	{

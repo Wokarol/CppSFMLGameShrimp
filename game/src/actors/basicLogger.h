@@ -36,6 +36,11 @@ public:
 
 			logsSpitOut++;
 			cs::Print("Boop!");
+
+			if (logsSpitOut >= 10)
+			{
+				handle.destroy();
+			}
 		}
 	}
 

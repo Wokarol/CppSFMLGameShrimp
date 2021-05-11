@@ -3,12 +3,15 @@
 #include <gameClock.h>
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <actorHandle.h>
 
 class World;
 
 class Actor
 {
+public:
 	bool startCalled = false;
+	ActorHandle<Actor> handle;
 
 public:
 	std::string name;
@@ -17,6 +20,8 @@ public:
 	virtual void update(const GameClock& time) {};
 
 	virtual ~Actor() {};
+
+	ActorHandle<Actor> getHandle() { return handle; }
 
 	friend World;
 };

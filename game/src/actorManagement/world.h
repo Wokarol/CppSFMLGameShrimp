@@ -2,65 +2,15 @@
 
 #include <map>
 #include <memory>
+#include <actorHandle.h>
 #include <actor.h>
 #include <gameClock.h>
 #include <exception>
 
 #include <console.h>
 
-typedef uint32_t actor_id;
-
-class World;
-
-template <class T>
-class ActorHandle
-{
-	actor_id id;
-	World* world;
-
-	ActorHandle(actor_id id_, World* world_) :
-		id(id_),
-		world(world_)
-	{}
-
-public:
-	bool isValid() const
-	{
-		return world->isActorAliveAndMatchesType<T>(id);
-	}
-
-	operator T* () const
-	{
-		return world->getActorPointer<T>(id);
-	}
-
-	T& operator*() const
-	{
-		return world->getActor<T>(id);
-	}
-
-	T* operator->() const
-	{
-		return &world->getActor<T>(id);
-	}
-
-	template <class NewT>
-	ActorHandle<NewT> as()
-	{
-		return *(ActorHandle<NewT>*)(void*)this;
-	}
-
-	void destroy() const
-	{
-		world->destroyActor(id);
-	}
-
-	friend World;
-};
-
 class World
 {
-
 	std::map<actor_id, std::unique_ptr<Actor>> actors;
 	std::vector<actor_id> actorsToRemove;
 	actor_id nextID = 0;
@@ -79,13 +29,12 @@ public:
 		);
 		Actor& actor = *result.first->second;
 		actor.name = name;
+		actor.handle = { id, this };
 
 		if (logging)
 		{
 			cs::Print("Creating actor: ", name, " [", id, "]");
 		}
-
-
 
 		return { id, this };
 	}
