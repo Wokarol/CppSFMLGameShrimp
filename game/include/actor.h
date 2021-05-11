@@ -4,16 +4,41 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <actorHandle.h>
+#include <console.h>
 
 class World;
 
+class Group
+{
+	std::string name;
+
+public:
+	Group(std::string name_) :
+		name(name_)
+	{
+		cs::Print("Created group ", name);
+	}
+
+	~Group()
+	{
+		cs::Print("Removed group ", name);
+	}
+
+	static std::shared_ptr<Group> create(std::string name_)
+	{
+		return std::make_shared<Group>(name_);
+	}
+};
+
 class Actor
 {
-public:
 	bool startCalled = false;
+
+protected:
 	ActorHandle<Actor> handle;
 
 public:
+	std::shared_ptr<Group> group;
 	std::string name;
 
 	virtual void start() {};
@@ -22,6 +47,7 @@ public:
 	virtual ~Actor() {};
 
 	ActorHandle<Actor> getHandle() { return handle; }
+	World& getWorld() { return handle.getWorld(); }
 
 	friend World;
 };

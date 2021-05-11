@@ -97,4 +97,15 @@ public:
 	{
 		actorsToRemove.push_back(id);
 	}
+
+	void destroyGroup(std::shared_ptr<Group>& group)
+	{
+		for (auto& actor : actors)
+		{
+			if (actor.second->group == group)
+			{
+				destroyActor(actor.first);
+			}
+		}
+	}
 };

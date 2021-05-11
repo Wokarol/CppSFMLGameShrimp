@@ -31,20 +31,17 @@ public:
 		return world->isActorAliveAndMatchesType<T>(id);
 	}
 
+	World& getWorld() const
+	{ return *world; }
+
 	operator T* () const
-	{
-		return world->getActorPointer<T>(id);
-	}
+	{ return world->getActorPointer<T>(id); }
 
 	T& operator*() const
-	{
-		return world->getActor<T>(id);
-	}
+	{ return world->getActor<T>(id); }
 
 	T* operator->() const
-	{
-		return &world->getActor<T>(id);
-	}
+	{ return &world->getActor<T>(id); }
 
 	template <class NewT>
 	ActorHandle<NewT> as()
