@@ -32,7 +32,8 @@ int main()
 	//world.logging = true;
 
 	auto logger = world.createActor<LoggerActor>();
-	auto box = world.createNamedActor<Box>("The Box", 50);
+	auto box = logger.as<Box>();
+	//dauto box = world.createNamedActor<Box>("The Box", 50);
 
 	while (window.isOpen())
 	{
@@ -41,7 +42,7 @@ int main()
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		{
-			if(logger.isAlive())
+			if(logger.isValid())
 			{
 				logger.destroy();
 			}
@@ -49,7 +50,7 @@ int main()
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
 		{
-			if (box.isAlive())
+			if (box.isValid())
 			{
 				box.destroy();
 			}

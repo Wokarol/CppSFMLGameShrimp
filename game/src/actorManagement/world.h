@@ -24,9 +24,14 @@ class ActorHandle
 	{}
 
 public:
-	bool isAlive() const
+	bool isValid() const
 	{
-		return world->isActorAlive(id);
+		return world->isActorAliveAndMatchesType<T>(id);
+	}
+
+	operator T* () const
+	{
+		return world->getActorPointer<T>(id);
 	}
 
 	T& operator*() const
@@ -37,6 +42,12 @@ public:
 	T* operator->() const
 	{
 		return &world->getActor<T>(id);
+	}
+
+	template <class NewT>
+	ActorHandle<NewT> as()
+	{
+		return *(ActorHandle<NewT>*)(void*)this;
 	}
 
 	void destroy() const
@@ -88,9 +99,30 @@ public:
 	void update(const GameClock& time);
 	void draw(sf::RenderTarget& target);
 
-	bool isActorAlive(const actor_id& id) const
+
+	template< class T >
+	bool isActorAliveAndMatchesType(const actor_id& id) const
 	{
-		return actors.find(id) != actors.end();
+		auto& pair = actors.find(id);
+		if (pair == actors.end())
+		{
+			return false;
+		}
+
+		return dynamic_cast<T*>(pair->second.get()) != nullptr;
+	}
+
+
+	template< class T >
+	T* getActorPointer(actor_id id) const
+	{
+		auto& pair = actors.find(id);
+		if (pair == actors.end())
+		{
+			throw std::out_of_range("There is no actor with given id");
+		}
+
+		return dynamic_cast<T*>(pair->second.get());
 	}
 
 	template< class T >
