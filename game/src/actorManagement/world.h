@@ -102,10 +102,13 @@ public:
 	{
 		for (auto& actor : actors)
 		{
-			if (actor.second->group == group)
+			auto actorGroup = actor.second->group;
+			if (actorGroup == group)
 			{
 				destroyActor(actor.first);
 			}
 		}
 	}
+
+	void dumpActors() const;
 };

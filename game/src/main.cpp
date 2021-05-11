@@ -38,29 +38,34 @@ int main()
 	{
 		float x = rand() % 500 - 250;
 		float y = rand() % 500 - 250;
-		auto& handle = world.createActor<Box>(
+		auto& handle = world.createNamedActor<Box>("Box",
 			50, 
 			sf::Vector2f(x, y),
 			colors.darkBlue,
 			colors.blue
 		);
-		handle->group = x > 0 ? rightBoxes : leftBoxes;
+		if (y > 0)
+		{
+			handle->group = x > 0 ? rightBoxes : leftBoxes;
+		}
 	}
 
 	while (window.isOpen())
 	{
-		handleEvents(window);
+		handleEvents(window, world);
 		time.Tick();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
 			world.destroyGroup(rightBoxes);
-			rightBoxes = {};
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		{
 			world.destroyGroup(leftBoxes);
-			leftBoxes = {};
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		{
+			world.destroyGroup(std::shared_ptr<Group>());
 		}
 
 		world.update(time);
