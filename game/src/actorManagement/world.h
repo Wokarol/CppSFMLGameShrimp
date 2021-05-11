@@ -23,4 +23,5 @@ public:
 	}
 
 	void update(const GameClock& time);
+	void draw(sf::RenderTarget& target);
 };

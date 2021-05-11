@@ -1,6 +1,7 @@
 #pragma once
 
 #include <gameClock.h>
+#include <SFML/Graphics.hpp>
 
 class World;
 
@@ -18,5 +19,5 @@ public:
 class Drawable
 {
 public:
-	virtual void draw() {};
+	virtual void draw(sf::RenderTarget& target) = 0;
 };

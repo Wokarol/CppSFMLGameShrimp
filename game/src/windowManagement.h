@@ -16,6 +16,12 @@ namespace
 		return sf::RenderWindow(sf::VideoMode(600, 600), "Surviving The Heat", 7U, settings);
 	}
 
+	void centreCamera(sf::RenderTarget& target)
+	{
+		sf::View view(sf::Vector2f(0, 0), (sf::Vector2f)target.getSize());
+		target.setView(view);
+	}
+
 	void handleEvents(sf::Window& window)
 	{
 		sf::Event event;

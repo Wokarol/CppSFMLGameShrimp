@@ -20,12 +20,15 @@ int main()
 {
 	initializeBoilerplate();
 
-	Pallete colors;
 	auto& window = createWindow();
+	centreCamera(window);
+
+	Pallete colors;
 	GameClock time;
 	World world;
 
 	world.emplace<LoggerActor>();
+	world.emplace<Box>(50);
 
 	while (window.isOpen())
 	{
@@ -33,5 +36,9 @@ int main()
 		time.Tick();
 
 		world.update(time);
+
+		window.clear(sf::Color::Magenta);
+		world.draw(window);
+		window.display();
 	}
 }
