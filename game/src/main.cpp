@@ -21,6 +21,8 @@ struct Pallete
 
 int main()
 {
+	srand((unsigned int)time(NULL));
+
 	initializeBoilerplate();
 
 	auto& window = createWindow();
@@ -30,36 +32,24 @@ int main()
 	GameClock time;
 	World world;
 
-	//world.logging = true;
-
-	auto logger = world.createActor<LoggerActor>();
-	auto box = logger.as<Box>();
-	//auto box = world.createNamedActor<Box>("The Box", 50);
+	for (size_t i = 0; i < 30; i++)
+	{
+		world.createActor<Box>(
+			50, 
+			sf::Vector2f(rand() % 500 - 250, rand() % 500 - 250),
+			colors.darkBlue,
+			colors.blue
+		);
+	}
 
 	while (window.isOpen())
 	{
 		handleEvents(window);
 		time.Tick();
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		{
-			if(logger.isValid())
-			{
-				logger.destroy();
-			}
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-		{
-			if (box.isValid())
-			{
-				box.destroy();
-			}
-		}
-
 		world.update(time);
 
-		window.clear(sf::Color::Black);
+		window.clear(colors.background);
 		world.draw(window);
 		window.display();
 	}

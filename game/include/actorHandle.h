@@ -14,6 +14,7 @@ class ActorHandle
 
 public:
 	ActorHandle() :
+		id(-1),
 		world(nullptr)
 	{}
 
