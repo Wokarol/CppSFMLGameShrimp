@@ -17,6 +17,7 @@ struct Pallete
 	sf::Color yellow = sf::Color(0xFFD432FF);
 };
 
+
 int main()
 {
 	initializeBoilerplate();
@@ -28,8 +29,10 @@ int main()
 	GameClock time;
 	World world;
 
-	auto logger = world.emplace<LoggerActor>();
-	auto box = world.emplace<Box>(50);
+	//world.logging = true;
+
+	auto logger = world.createActor<LoggerActor>();
+	auto box = world.createNamedActor<Box>("The Box", 50);
 
 	while (window.isOpen())
 	{

@@ -1,4 +1,5 @@
 #include "world.h"
+#include <console.h>
 
 void World::update(const GameClock& time)
 {
@@ -8,11 +9,26 @@ void World::update(const GameClock& time)
 
 		if (!actor->startCalled)
 		{
+			if (logging)
+			{
+				cs::Print("Starting ", actor->name, " [", pairs.first, "]");
+			}
 			actor->startCalled = true;
 			actor->start();
 		}
 		actor->update(time);
 	}
+
+	for (actor_id& id : actorsToRemove)
+	{
+		if (logging)
+		{
+			cs::Print("Destroying actor: ", getActor<Actor>(id).name, " [", id, "]");
+		}
+
+		actors.erase(id);
+	}
+	actorsToRemove.clear();
 }
 
 void World::draw(sf::RenderTarget& target)

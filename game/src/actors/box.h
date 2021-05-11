@@ -7,7 +7,7 @@ class Box : public Actor, public Drawable
 	sf::RectangleShape body;
 
 public:
-	Box(int size)
+	Box(float size)
 	{
 		body = sf::RectangleShape(sf::Vector2f(size, size));
 		body.setFillColor(sf::Color::White);
