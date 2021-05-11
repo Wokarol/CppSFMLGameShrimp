@@ -13,6 +13,8 @@ public:
 	virtual void start() {};
 	virtual void update(const GameClock& time) {};
 
+	virtual ~Actor() {};
+
 	friend World;
 };
 

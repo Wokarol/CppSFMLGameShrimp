@@ -16,7 +16,7 @@ public:
 		cs::Print("Constructed logger");
 	}
 
-	~LoggerActor()
+	virtual ~LoggerActor() override
 	{
 		cs::Print("Destructed logger");
 	}

@@ -48,7 +48,7 @@ public:
 class World
 {
 
-	std::map<actor_id, std::shared_ptr<Actor>> actors;
+	std::map<actor_id, std::unique_ptr<Actor>> actors;
 	actor_id lastId = 0;
 
 public:
@@ -59,7 +59,7 @@ public:
 
 		actors.emplace(
 			id,
-			std::make_shared<T>(args...)
+			std::make_unique<T>(args...)
 		);
 
 		return { id, this };
