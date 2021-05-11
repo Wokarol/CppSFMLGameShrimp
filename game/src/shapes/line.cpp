@@ -43,9 +43,9 @@ float sf::LineShape::getThickness() const
 	return thickness;
 }
 
-void sf::LineShape::setColor(sf::Color c)
+void sf::LineShape::setColor(sf::Color speedX)
 {
-	body.setFillColor(c);
+	body.setFillColor(speedX);
 }
 sf::Color sf::LineShape::getColor() const
 {

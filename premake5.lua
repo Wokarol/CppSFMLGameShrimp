@@ -24,7 +24,8 @@ project "Game"
     }
     includedirs { 
         "%{prj.location}/include",
-        "lib/SFML-2.5.1/include",
+        "%{wks.location}/lib/SFML-2.5.1/include",
+        "%{wks.location}/lib/json",
     }
 
     libdirs { 
