@@ -22,7 +22,7 @@ int main()
 	sf::Color yellow(0xFFD432FF);
 
 	auto settings = sf::ContextSettings::ContextSettings(0, 0, 8);
-	sf::RenderWindow& window = sf::RenderWindow(sf::VideoMode(600, 600), "Shrimp Cactus Mate", 7U, settings);
+	sf::RenderWindow& window = sf::RenderWindow(sf::VideoMode(600, 600), "Surviving The Heat", 7U, settings);
 
 	sf::View mainCamera(sf::Vector2f(0.f, 0.f), (sf::Vector2f)window.getSize());
 	mainCamera.zoom(0.5);
