@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include <gameClock.h>
+#include <console.h>
 #include "shapes/line.h"
 #include "windowManagement.h"
 
@@ -27,17 +28,33 @@ int main()
 	GameClock time;
 	World world;
 
-	world.emplace<LoggerActor>();
-	world.emplace<Box>(50);
+	auto logger = world.emplace<LoggerActor>();
+	auto box = world.emplace<Box>(50);
 
 	while (window.isOpen())
 	{
 		handleEvents(window);
 		time.Tick();
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		{
+			if(logger.isAlive())
+			{
+				logger.destroy();
+			}
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+		{
+			if (box.isAlive())
+			{
+				box.destroy();
+			}
+		}
+
 		world.update(time);
 
-		window.clear(sf::Color::Magenta);
+		window.clear(sf::Color::Black);
 		world.draw(window);
 		window.display();
 	}

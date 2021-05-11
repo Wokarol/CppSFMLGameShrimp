@@ -21,12 +21,14 @@ namespace cs
 #endif
     }
 
-    void Print(std::string p)
+    template <typename... Params>
+    void Print(Params&&... params)
     {
+#ifdef DEBUG
         ShowConsole();
-#if GAME_PLATFORM_WINDOWS
-        std::cout << p << std::endl;
-#endif
+        ((std::cout << std::forward<Params>(params)), ...);
+        std::cout << std::endl;
+#endif // DEBUG
     }
 
     bool IsConsoleVisible()
