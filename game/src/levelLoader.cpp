@@ -42,10 +42,6 @@ void createTilemap(nlohmann::json json, std::string_view name, World& world, std
 
 void levels::load(std::string_view levelPath, World& world)
 {
-	std::stringstream groupName;
-	groupName << "Level " << levelPath;
-
-	auto group = std::make_shared<Group>(groupName.str());
 
 	std::stringstream pathStream;
 	pathStream << "assets/" << levelPath << ".level";
@@ -61,6 +57,11 @@ void levels::load(std::string_view levelPath, World& world)
 		std::ifstream levelFile (path);
 		levelFile >> level;
 	}
+
+	std::stringstream groupName;
+	groupName << "Level " << level["Title"].get<std::string>();
+
+	auto group = std::make_shared<Group>(groupName.str());
 
 	try
 	{

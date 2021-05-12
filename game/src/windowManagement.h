@@ -47,6 +47,17 @@ static void handleEvents(sf::Window& window, World& world)
 			{
 				world.dumpActors();
 			}
+			if (event.key.code == sf::Keyboard::F3)
+			{
+				if (cs::IsConsoleVisible())
+				{
+					cs::HideConsole();
+				}
+				else
+				{
+					cs::ShowConsole();
+				}
+			}
 		}
 	}
 }
