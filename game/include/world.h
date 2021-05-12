@@ -19,7 +19,7 @@ public:
 	bool logging = false;
 
 	template< class T, class... Args >
-	ActorHandle<T> createNamedActor(std::string name, Args&&... args)
+	ActorHandle<T> createNamedActor(std::string_view name, Args&&... args)
 	{
 		actor_id id = nextID++;
 

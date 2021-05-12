@@ -68,7 +68,8 @@ int main()
 	initializeBoilerplate();
 
 	auto& window = createWindow();
-	centreCamera(window);
+	//centreCamera(window);
+	setCornerCam(window);
 
 	Pallete colors;
 	GameClock time;
