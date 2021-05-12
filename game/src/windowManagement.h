@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <console.h>
-#include "actorManagement/world.h"
+#include <world.h>
 
 static void initializeBoilerplate()
 {

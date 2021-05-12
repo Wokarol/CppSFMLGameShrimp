@@ -7,8 +7,14 @@
 #include <actorHandle.h>
 #include <actors.h>
 
+#include <filesystem>
+#include <json.hpp>
+#include <utils/jsonHelpers.h>
+
 #include "windowManagement.h"
-#include "actorManagement/world.h"
+#include <world.h>
+
+#include <levelLoader.h>
 
 struct Pallete
 {
@@ -19,6 +25,41 @@ struct Pallete
 	sf::Color yellow = sf::Color(0xFFD432FF);
 };
 
+bool startGame(World& world)
+{
+	std::string configPath = "assets/start.config";
+	if (!std::filesystem::exists(configPath))
+	{
+		cs::Print("start.config cannot be found in assets folder");
+		return false;
+	}
+
+	nlohmann::json config;
+	{
+		std::ifstream configFile(configPath);
+		configFile >> config;
+	}
+
+	try
+	{
+		std::string levelToLoad;
+
+		if(!tryGetString(config, "start_level", levelToLoad))
+		{
+			cs::Print("Key 'start_level' was not found");
+			return false;
+		}
+
+		levels::load(levelToLoad, world);
+	}
+	catch (const std::exception& e)
+	{
+		cs::Print(e.what());
+		return false;
+	}
+
+	return true;
+}
 
 int main()
 {
@@ -33,7 +74,12 @@ int main()
 	GameClock time;
 	World world;
 
-
+	if (!startGame(world))
+	{
+		window.close();
+		std::cout << std::endl;
+		system("pause");
+	}
 
 	while (window.isOpen())
 	{
