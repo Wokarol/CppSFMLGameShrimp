@@ -43,3 +43,34 @@ void World::draw(sf::RenderTarget& target)
 		}
 	}
 }
+
+void World::dumpActors() const
+{
+	std::map<std::shared_ptr<Group>, std::vector<Actor*>> actorsByGroups;
+
+	for (auto& pair : actors)
+	{
+		auto actor = pair.second.get();
+
+		actorsByGroups[actor->group].push_back(actor);
+	}
+
+	cs::Print("---------------- Actor Dump ----------------");
+	for (auto& group : actorsByGroups)
+	{
+		if (group.first)
+		{
+			cs::Print(group.first->getName());
+		}
+		else
+		{
+			cs::Print("[global]");
+		}
+
+		for (auto& actor : group.second)
+		{
+			cs::Print("    ", actor->name, " [", actor->handle.id, "]");
+		}
+	}
+	cs::Print("--------------------------------------------");
+}

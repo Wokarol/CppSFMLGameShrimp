@@ -1,5 +1,5 @@
-#include "line.h"
-#include <mathUtils.h>
+#include <customShapes/line.h>
+#include <utils/mathUtils.h>
 
 sf::LineShape::LineShape(float thickness)
 {

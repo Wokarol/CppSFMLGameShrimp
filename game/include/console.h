@@ -16,7 +16,9 @@ namespace cs
     static void ShowConsole()
     {
 #if GAME_PLATFORM_WINDOWS
+        auto window = ::GetActiveWindow();
         ::ShowWindow(::GetConsoleWindow(), SW_SHOW);
+        ::SetActiveWindow(window);
 #endif
     }
 

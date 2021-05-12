@@ -19,7 +19,7 @@ public:
 	bool logging = false;
 
 	template< class T, class... Args >
-	ActorHandle<T> createNamedActor(std::string name, Args&&... args)
+	ActorHandle<T> createNamedActor(std::string_view name, Args&&... args)
 	{
 		actor_id id = nextID++;
 
@@ -97,4 +97,18 @@ public:
 	{
 		actorsToRemove.push_back(id);
 	}
+
+	void destroyGroup(std::shared_ptr<Group>& group)
+	{
+		for (auto& actor : actors)
+		{
+			auto actorGroup = actor.second->group;
+			if (actorGroup == group)
+			{
+				destroyActor(actor.first);
+			}
+		}
+	}
+
+	void dumpActors() const;
 };
