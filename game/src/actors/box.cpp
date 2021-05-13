@@ -10,8 +10,8 @@ Box::Box(float size, sf::Vector2f position, sf::Color fill, sf::Color outline)
 	body.setOutlineColor(outline);
 	body.setOutlineThickness(-2);
 
-	offsetX = rand() % 200;
-	offsetY = rand() % 200;
+	offsetX = (float)(rand() % 200);
+	offsetY = (float)(rand() % 200);
 	speedX = (rand() % 1000) / 500.f + 1.f;
 	speedY = (rand() % 1000) / 500.f + 1.f;
 }

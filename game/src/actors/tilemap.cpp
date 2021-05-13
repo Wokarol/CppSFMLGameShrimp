@@ -6,8 +6,8 @@
 void Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
 {
 	sf::IntRect tileRect(
-		tilesetCoord.x * ppu,
-		tilesetCoord.y * ppu,
+		(int)(tilesetCoord.x * ppu),
+		(int)(tilesetCoord.y * ppu),
 		ppu,
 		ppu
 	);
