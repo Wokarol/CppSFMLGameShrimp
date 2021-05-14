@@ -7,7 +7,9 @@
 #include <fstream>
 #include <console.h>
 
-void createTilemap(const nlohmann::json& json, std::string_view name, World& world, std::shared_ptr<Group>& group)
+constexpr auto ppu = 16;
+
+void createTilemap(nlohmann::json& json, std::string_view name, World& world, std::shared_ptr<Group>& group)
 {
 	// TODO: FIX HARDCODING
 
@@ -17,7 +19,7 @@ void createTilemap(const nlohmann::json& json, std::string_view name, World& wor
 		cs::ShowConsole();
 	}
 
-	auto& tilemap = *world.createNamedActor<Tilemap>(name, ground, 16);
+	auto& tilemap = *world.createNamedActor<Tilemap>(name, ground, ppu);
 	tilemap.group = group;
 
 	if (!json.is_array())
@@ -40,6 +42,60 @@ void createTilemap(const nlohmann::json& json, std::string_view name, World& wor
 	}
 }
 
+void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& group)
+{
+	auto actors = std::make_shared<sf::Texture>();
+	if (!actors->loadFromFile("assets/actors/actors.png"))
+	{
+		cs::ShowConsole();
+	}
+
+	nlohmann::json& cacti = json["Cacti"];
+	if (cacti.is_array())
+	{
+		for (auto& cactus : cacti)
+		{
+			auto& prop = *world.createNamedActor<StaticProp>("Cactus", actors, sf::IntRect(0, 16, 16, 16));
+			prop.group = group;
+
+			nlohmann::json posJ = cactus["pos"];
+
+			sf::Vector2f pos(posJ[0], posJ[1]);
+
+			prop.setPosition(pos.x * ppu, pos.y * ppu);
+		}
+	}
+
+	nlohmann::json& tall_cacti = json["Tall_Cacti"];
+	if (tall_cacti.is_array())
+	{
+		for (auto& tall_cactus : tall_cacti)
+		{
+			auto& prop = *world.createNamedActor<StaticProp>("Tall Cactus", actors, sf::IntRect(16, 0, 16, 32));
+			prop.group = group;
+
+			nlohmann::json posJ = tall_cactus["pos"];
+
+			sf::Vector2f pos(posJ[0], posJ[1]);
+
+			prop.setPosition(pos.x * ppu, pos.y * ppu);
+		}
+	}
+
+	nlohmann::json& player = json["Player"];
+	if (player.is_object())
+	{
+		auto& prop = *world.createNamedActor<StaticProp>("Player", actors, sf::IntRect(0, 0, 16, 16));
+		prop.group = group;
+
+		nlohmann::json posJ = player["pos"];
+
+		sf::Vector2f pos(posJ[0], posJ[1]);
+
+		prop.setPosition(pos.x * ppu, pos.y * ppu);
+	}
+}
+
 void levels::load(std::string_view levelPath, World& world)
 {
 
@@ -52,12 +108,11 @@ void levels::load(std::string_view levelPath, World& world)
 		return;
 	}
 
-	nlohmann::json tempLevel;
+	nlohmann::json level;
 	{
 		std::ifstream levelFile (path);
-		levelFile >> tempLevel;
+		levelFile >> level;
 	}
-	const nlohmann::json level = tempLevel;
 
 
 
@@ -70,7 +125,7 @@ void levels::load(std::string_view levelPath, World& world)
 	{
 		createTilemap(level["Ground"], "Ground Tilemap", world, group);
 		createTilemap(level["Tiles"], "Free Tile Tilemap", world, group);
-
+		createActors(level["Actors"], world, group);
 	}
 	catch (const std::exception& e)
 	{
