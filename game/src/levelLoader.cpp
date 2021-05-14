@@ -7,7 +7,7 @@
 #include <fstream>
 #include <console.h>
 
-void createTilemap(nlohmann::json json, std::string_view name, World& world, std::shared_ptr<Group>& group)
+void createTilemap(const nlohmann::json& json, std::string_view name, World& world, std::shared_ptr<Group>& group)
 {
 	// TODO: FIX HARDCODING
 
@@ -52,11 +52,14 @@ void levels::load(std::string_view levelPath, World& world)
 		return;
 	}
 
-	nlohmann::json level;
+	nlohmann::json tempLevel;
 	{
 		std::ifstream levelFile (path);
-		levelFile >> level;
+		levelFile >> tempLevel;
 	}
+	const nlohmann::json level = tempLevel;
+
+
 
 	std::stringstream groupName;
 	groupName << "Level " << level["Title"].get<std::string>();
