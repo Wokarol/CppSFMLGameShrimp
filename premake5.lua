@@ -18,9 +18,9 @@ project "Game"
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
     files {
-        "%{prj.location}/src/**.cpp",
-        "%{prj.location}/src/**.hpp",
-        "%{prj.location}/src/**.h",
+        "%{prj.location}/**.cpp",
+        "%{prj.location}/**.hpp",
+        "%{prj.location}/**.h",
     }
     includedirs { 
         "%{prj.location}/include",

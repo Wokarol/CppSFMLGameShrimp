@@ -49,7 +49,7 @@ public:
 	virtual void start() {};
 	virtual void update(const GameClock& time) {};
 
-	virtual ~Actor() {};
+	virtual ~Actor() = default;
 
 	ActorHandle<Actor> getHandle() { return handle; }
 	World& getWorld() { return handle.getWorld(); }
