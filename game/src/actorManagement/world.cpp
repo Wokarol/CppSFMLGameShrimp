@@ -1,5 +1,9 @@
 #include "world.h"
 #include <console.h>
+#include <iomanip>
+#include <sstream>
+#include <ios>
+#include <algorithm>
 
 void World::update(const GameClock& time)
 {
@@ -67,9 +71,25 @@ void World::dumpActors() const
 			cs::Print("[global]");
 		}
 
+		std::vector<std::pair<Actor*, std::string>> namedActors;
+
 		for (auto& actor : group.second)
 		{
-			cs::Print("    ", actor->name, " [", actor->handle.id, "]");
+			std::stringstream s;
+			s << " [" << std::setw(3) << actor->handle.id << "] " << actor->name;
+
+			namedActors.emplace_back(actor, s.str());
+		}
+
+		int maxNameLength = std::max_element(namedActors.begin(), namedActors.end(), [](const auto& a, const auto& b)
+			{
+				return a.second.size() < b.second.size();
+			})->second.size();
+		int padding = maxNameLength + 3;
+
+		for (auto& namedActor : namedActors)
+		{
+			cs::Print("    ", std::left, std::setw(padding), namedActor.second, typeid(*namedActor.first).name());
 		}
 	}
 	cs::Print("--------------------------------------------");
