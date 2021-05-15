@@ -8,18 +8,20 @@ class Player : public Actor, public Drawable
 	std::shared_ptr<sf::Texture> texture;
 	sf::Sprite body;
 	sf::Sprite gun;
-	sf::Vector2f gunPivot;
+	sf::Vector2f gunOffset;
 
 public:
 	Player(std::shared_ptr<sf::Texture> texture, 
-		sf::IntRect playerSpriteRect, sf::IntRect gunSpriteRect, sf::Vector2f gunPivot):
+		sf::IntRect playerSpriteRect, sf::IntRect gunSpriteRect, 
+		sf::Vector2f gunOffset, sf::Vector2f gunOrigin):
 		texture(texture),
 		body(*texture, playerSpriteRect),
 		gun(*texture, gunSpriteRect)
 	{
 		sf::Vector2f pivot(playerSpriteRect.width / 2, playerSpriteRect.height);
-		this->gunPivot = gunPivot - pivot;
+		this->gunOffset = gunOffset - pivot;
 		body.setOrigin(pivot);
+		gun.setOrigin(gunOrigin);
 	}
 
 	void setPosition(float x, float y);

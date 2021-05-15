@@ -81,6 +81,13 @@ namespace m
         return a.x * b.x + a.y * b.y;
     }
 
+    template <typename T>
+    inline sf::Vector2<T> scale(const sf::Vector2<T>& a, const sf::Vector2<T>& b)
+    {
+        return { a.x * b.x, a.y * b.y };
+    }
+
+
     inline sf::Vector2f limit(const sf::Vector2f& v, float maxLength)
     {
         if (length(v) <= maxLength)

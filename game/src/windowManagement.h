@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <console.h>
 #include <world.h>
+#include <input.h>
 
 static void initializeBoilerplate()
 {
@@ -32,7 +33,26 @@ static void setCornerCam(sf::RenderTarget& target)
 	target.setView(view);
 }
 
-static void handleEvents(sf::Window& window, World& world)
+static void handleDebugKeys(const sf::Event& event, World& world)
+{
+	if (event.key.code == sf::Keyboard::F10)
+	{
+		world.dumpActors();
+	}
+	if (event.key.code == sf::Keyboard::F3)
+	{
+		if (cs::IsConsoleVisible())
+		{
+			cs::HideConsole();
+		}
+		else
+		{
+			cs::ShowConsole();
+		}
+	}
+}
+
+static void handleEventsAndInput(sf::RenderWindow& window, World& world)
 {
 	sf::Event event;
 	while (window.pollEvent(event))
@@ -43,21 +63,19 @@ static void handleEvents(sf::Window& window, World& world)
 		}
 		if (event.type == sf::Event::KeyPressed)
 		{
-			if (event.key.code == sf::Keyboard::F10)
-			{
-				world.dumpActors();
-			}
-			if (event.key.code == sf::Keyboard::F3)
-			{
-				if (cs::IsConsoleVisible())
-				{
-					cs::HideConsole();
-				}
-				else
-				{
-					cs::ShowConsole();
-				}
-			}
+			handleDebugKeys(event, world);
+			input::handleInputKeysPressed(event);
+		}		
+		if (event.type == sf::Event::KeyReleased)
+		{
+			input::handleInputKeysReleased(event);
+		}
+		if (event.type == sf::Event::MouseMoved)
+		{
+			sf::Vector2i mousePos;
+			mousePos.x = event.mouseMove.x;
+			mousePos.y = event.mouseMove.y;
+			input::mousePositionInWorld = window.mapPixelToCoords(mousePos);
 		}
 	}
 }

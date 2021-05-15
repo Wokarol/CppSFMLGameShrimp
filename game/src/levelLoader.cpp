@@ -118,7 +118,9 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 	if (player.is_object())
 	{
 		auto& playerActor = *world.createNamedActor<Player>("Player",
-			playerTexture, sf::IntRect(0, 0, 16, 16), sf::IntRect(0, 16, 4, 2), sf::Vector2f(9, 9)
+			playerTexture, 
+			sf::IntRect(0, 0, 13, 14), sf::IntRect(0, 16, 6, 4), 
+			sf::Vector2f(8, 10), sf::Vector2f(1, 1)
 		);
 		playerActor.group = group;
 
