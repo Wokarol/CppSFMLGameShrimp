@@ -84,7 +84,7 @@ int main()
 
 	while (window.isOpen())
 	{
-		handleEvents(window, world);
+		handleEventsAndInput(window, world);
 		time.Tick();
 
 		world.update(time);

@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"jsonVersion": "0.9.3",
-	"nextUid": 90,
+	"nextUid": 91,
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -1210,7 +1210,7 @@
 			"color": "#87D2FB",
 			"renderMode": "Tile",
 			"showName": false,
-			"tilesetId": 4,
+			"tilesetId": 90,
 			"tileId": 0,
 			"tileRenderMode": "FitInside",
 			"maxCount": 1,
@@ -1294,9 +1294,9 @@
 		{
 			"__cWid": 2,
 			"__cHei": 2,
-			"identifier": "Actors",
+			"identifier": "Cacti",
 			"uid": 4,
-			"relPath": "game/assets/actors/actors.png",
+			"relPath": "game/assets/actors/cacti.png",
 			"pxWid": 32,
 			"pxHei": 32,
 			"tileGridSize": 16,
@@ -1306,7 +1306,24 @@
 			"enumTags": [],
 			"customData": [],
 			"savedSelections": [],
-			"cachedPixelData": { "opaqueTiles": "0000", "averageColors": "5831519381937193" }
+			"cachedPixelData": { "opaqueTiles": "0000", "averageColors": "0000519381937193" }
+		},
+		{
+			"__cWid": 2,
+			"__cHei": 2,
+			"identifier": "Shrimp",
+			"uid": 90,
+			"relPath": "game/assets/actors/shrimp.png",
+			"pxWid": 32,
+			"pxHei": 32,
+			"tileGridSize": 16,
+			"spacing": 0,
+			"padding": 0,
+			"tagsSourceEnumUid": null,
+			"enumTags": [],
+			"customData": [],
+			"savedSelections": [],
+			"cachedPixelData": { "opaqueTiles": "0000", "averageColors": "5831000003330000" }
 		}
 	], "enums": [], "externalEnums": [], "levelFields": [] },
 	"levels": [
@@ -1356,7 +1373,7 @@
 							"__identifier": "Player",
 							"__grid": [7,8],
 							"__pivot": [0.5,1],
-							"__tile": { "tilesetUid": 4, "srcRect": [0,0,16,16] },
+							"__tile": { "tilesetUid": 90, "srcRect": [0,0,16,16] },
 							"width": 16,
 							"height": 16,
 							"defUid": 3,

@@ -7,7 +7,7 @@
 #include <fstream>
 #include <console.h>
 
-#include <tweeners/sineTweener.h>
+#include <tweeners.h>
 
 constexpr auto ppu = 16;
 
@@ -73,16 +73,14 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
 
-			SineTweener animation(
+			auto animation = std::make_shared<SineTweener<float>>(
+				propHandle.as<Actor>(),
 				[&prop](float v) { prop.setRotation(v); },
 				-5.0f, 5.f, 5.f
 			);
-			animation.addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
+			animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
 
-			world.addTween(
-				propHandle.as<Actor>(),
-				animation
-			);
+			world.addTween(animation);
 		}
 	}
 
@@ -101,30 +99,32 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
 
-			SineTweener animation(
+			auto animation = std::make_shared<SineTweener<float>>(
+				propHandle.as<Actor>(),
 				[&prop](float v) { prop.setRotation(v); },
 				-5.0f, 5.f, 5.f
-			);
-			animation.addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
+				);
+			animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
 
-			world.addTween(
-				propHandle.as<Actor>(),
-				animation
-			);
+			world.addTween(animation);
 		}
 	}
 
 	nlohmann::json& player = json["Player"];
 	if (player.is_object())
 	{
-		auto& prop = *world.createNamedActor<StaticProp>("Player", playerTexture, sf::IntRect(0, 0, 16, 16));
-		prop.group = group;
+		auto& playerActor = *world.createNamedActor<Player>("Player",
+			playerTexture, 
+			sf::IntRect(0, 0, 13, 14), sf::IntRect(0, 16, 6, 4), 
+			sf::Vector2f(8, 10), sf::Vector2f(1, 1)
+		);
+		playerActor.group = group;
 
 		nlohmann::json posJ = player["pos"];
 
 		sf::Vector2f pos(posJ[0], posJ[1]);
 
-		prop.setPosition(pos.x * ppu, pos.y * ppu);
+		playerActor.setPosition(pos.x * ppu, pos.y * ppu);
 	}
 }
 
