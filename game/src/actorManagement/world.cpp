@@ -27,7 +27,10 @@ void World::update(const GameClock& time)
 	// Updating tweeners
 	for (auto& tweener : tweeners)
 	{
-		tweener->tween(time);
+		if (tweener->isTweensActorAlive())
+		{
+			tweener->tween(time);
+		}
 	}
 
 	// Removing dead actors
