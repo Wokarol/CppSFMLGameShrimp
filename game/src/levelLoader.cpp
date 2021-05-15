@@ -46,8 +46,14 @@ void createTilemap(nlohmann::json& json, std::string_view name, World& world, st
 
 void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& group)
 {
-	auto actors = std::make_shared<sf::Texture>();
-	if (!actors->loadFromFile("assets/actors/actors.png"))
+	auto cactiTexture = std::make_shared<sf::Texture>();
+	if (!cactiTexture->loadFromFile("assets/actors/cacti.png"))
+	{
+		cs::ShowConsole();
+	}
+
+	auto playerTexture = std::make_shared<sf::Texture>();
+	if (!playerTexture->loadFromFile("assets/actors/shrimp.png"))
 	{
 		cs::ShowConsole();
 	}
@@ -57,7 +63,7 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 	{
 		for (auto& cactus : cacti)
 		{
-			auto& propHandle = world.createNamedActor<StaticProp>("Cactus", actors, sf::IntRect(0, 16, 16, 16));
+			auto& propHandle = world.createNamedActor<StaticProp>("Cactus", cactiTexture, sf::IntRect(0, 16, 16, 16));
 			auto& prop = *propHandle;
 			prop.group = group;
 
@@ -85,7 +91,7 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 	{
 		for (auto& tall_cactus : tall_cacti)
 		{
-			auto& propHandle = world.createNamedActor<StaticProp>("Tall Cactus", actors, sf::IntRect(16, 0, 16, 32));
+			auto& propHandle = world.createNamedActor<StaticProp>("Tall Cactus", cactiTexture, sf::IntRect(16, 0, 16, 32));
 			auto& prop = *propHandle;
 			prop.group = group;
 
@@ -111,7 +117,7 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 	nlohmann::json& player = json["Player"];
 	if (player.is_object())
 	{
-		auto& prop = *world.createNamedActor<StaticProp>("Player", actors, sf::IntRect(0, 0, 16, 16));
+		auto& prop = *world.createNamedActor<StaticProp>("Player", playerTexture, sf::IntRect(0, 0, 16, 16));
 		prop.group = group;
 
 		nlohmann::json posJ = player["pos"];
