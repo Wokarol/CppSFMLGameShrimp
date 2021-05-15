@@ -68,8 +68,8 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
 
 			SineTweener animation(
-				[&prop](float v) { prop.setScale(prop.getScale().x, v); },
-				1.0f, 1.1f, 5.f
+				[&prop](float v) { prop.setRotation(v); },
+				-5.0f, 5.f, 5.f
 			);
 			animation.addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
 
@@ -96,8 +96,8 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
 
 			SineTweener animation(
-				[&prop](float v) { prop.setScale(prop.getScale().x, v); },
-				1.0f, 1.1f, 5.f
+				[&prop](float v) { prop.setRotation(v); },
+				-5.0f, 5.f, 5.f
 			);
 			animation.addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
 
