@@ -7,6 +7,7 @@
 
 void World::update(const GameClock& time)
 {
+	// Updating actors
 	for (auto& pairs : actors)
 	{
 		auto& actor = pairs.second;
@@ -23,6 +24,13 @@ void World::update(const GameClock& time)
 		actor->update(time);
 	}
 
+	// Updating tweeners
+	for (auto& tweener : tweeners)
+	{
+		tweener->tween(time);
+	}
+
+	// Removing dead actors
 	for (actor_id& id : actorsToRemove)
 	{
 		if (logging)
@@ -33,6 +41,19 @@ void World::update(const GameClock& time)
 		actors.erase(id);
 	}
 	actorsToRemove.clear();
+
+	// Removing dead tweens
+	if (tweeners.size() > 0)
+	{
+		auto& toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const std::unique_ptr<Tweener>& t)
+			{
+				return !t->getIsRunning();
+			});
+		if (toErase != tweeners.end())
+		{
+			tweeners.erase(toErase);
+		}
+	}
 }
 
 void World::draw(sf::RenderTarget& target)

@@ -7,6 +7,8 @@
 #include <fstream>
 #include <console.h>
 
+#include <tweeners/sineTweener.h>
+
 constexpr auto ppu = 16;
 
 void createTilemap(nlohmann::json& json, std::string_view name, World& world, std::shared_ptr<Group>& group)
@@ -55,7 +57,8 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 	{
 		for (auto& cactus : cacti)
 		{
-			auto& prop = *world.createNamedActor<StaticProp>("Cactus", actors, sf::IntRect(0, 16, 16, 16));
+			auto& propHandle = world.createNamedActor<StaticProp>("Cactus", actors, sf::IntRect(0, 16, 16, 16));
+			auto& prop = *propHandle;
 			prop.group = group;
 
 			nlohmann::json posJ = cactus["pos"];
@@ -63,6 +66,17 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 			sf::Vector2f pos(posJ[0], posJ[1]);
 
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
+
+			SineTweener animation(
+				[&prop](float v) { prop.setScale(prop.getScale().x, v); },
+				1.0f, 1.1f, 5.f
+			);
+			animation.addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
+
+			world.addTween(
+				propHandle.as<Actor>(),
+				animation
+			);
 		}
 	}
 
@@ -71,7 +85,8 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 	{
 		for (auto& tall_cactus : tall_cacti)
 		{
-			auto& prop = *world.createNamedActor<StaticProp>("Tall Cactus", actors, sf::IntRect(16, 0, 16, 32));
+			auto& propHandle = world.createNamedActor<StaticProp>("Tall Cactus", actors, sf::IntRect(16, 0, 16, 32));
+			auto& prop = *propHandle;
 			prop.group = group;
 
 			nlohmann::json posJ = tall_cactus["pos"];
@@ -79,6 +94,17 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 			sf::Vector2f pos(posJ[0], posJ[1]);
 
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
+
+			SineTweener animation(
+				[&prop](float v) { prop.setScale(prop.getScale().x, v); },
+				1.0f, 1.1f, 5.f
+			);
+			animation.addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
+
+			world.addTween(
+				propHandle.as<Actor>(),
+				animation
+			);
 		}
 	}
 

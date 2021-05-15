@@ -8,10 +8,12 @@
 #include <exception>
 
 #include <console.h>
+#include <tweener.h>
 
 class World
 {
 	std::map<actor_id, std::unique_ptr<Actor>> actors;
+	std::vector<std::unique_ptr<Tweener>> tweeners;
 	std::vector<actor_id> actorsToRemove;
 	actor_id nextID = 0;
 
@@ -43,6 +45,18 @@ public:
 	ActorHandle<T> createActor(Args&&... args)
 	{
 		return createNamedActor<T>("", args...);
+	}
+
+	template <typename T>
+	void addTween(ActorHandle<Actor> actor, T& tweener)
+	{
+		tweener.actor = actor;
+		tweeners.push_back(std::make_unique<T>(tweener));
+
+		if (logging)
+		{
+			cs::Print("Added tween for ", tweener.actor->name);
+		}
 	}
 
 	void update(const GameClock& time);
