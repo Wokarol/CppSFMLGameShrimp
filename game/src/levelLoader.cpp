@@ -117,14 +117,16 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 	nlohmann::json& player = json["Player"];
 	if (player.is_object())
 	{
-		auto& prop = *world.createNamedActor<StaticProp>("Player", playerTexture, sf::IntRect(0, 0, 16, 16));
-		prop.group = group;
+		auto& playerActor = *world.createNamedActor<Player>("Player",
+			playerTexture, sf::IntRect(0, 0, 16, 16), sf::IntRect(0, 16, 4, 2), sf::Vector2f(9, 9)
+		);
+		playerActor.group = group;
 
 		nlohmann::json posJ = player["pos"];
 
 		sf::Vector2f pos(posJ[0], posJ[1]);
 
-		prop.setPosition(pos.x * ppu, pos.y * ppu);
+		playerActor.setPosition(pos.x * ppu, pos.y * ppu);
 	}
 }
 
