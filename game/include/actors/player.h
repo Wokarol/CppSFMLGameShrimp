@@ -2,6 +2,7 @@
 
 #include <actor.h>
 #include <memory>
+#include <tweeners.h>
 
 class Player : public Actor, public Drawable
 {
@@ -9,6 +10,9 @@ class Player : public Actor, public Drawable
 	sf::Sprite body;
 	sf::Sprite gun;
 	sf::Vector2f gunOffset;
+	std::shared_ptr<LerpTweener<float>> flipTween;
+
+	bool facingRight = true;
 
 public:
 	Player(std::shared_ptr<sf::Texture> texture, 

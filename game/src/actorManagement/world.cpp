@@ -27,7 +27,7 @@ void World::update(const GameClock& time)
 	// Updating tweeners
 	for (auto& tweener : tweeners)
 	{
-		if (tweener->isTweensActorAlive())
+		if (tweener->getIsRunning())
 		{
 			tweener->tween(time);
 		}
@@ -48,7 +48,7 @@ void World::update(const GameClock& time)
 	// Removing dead tweens
 	if (tweeners.size() > 0)
 	{
-		auto& toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const std::unique_ptr<Tweener>& t)
+		auto& toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const auto& t)
 			{
 				return !t->getIsRunning();
 			});

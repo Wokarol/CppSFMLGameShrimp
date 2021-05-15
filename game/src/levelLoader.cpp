@@ -7,7 +7,7 @@
 #include <fstream>
 #include <console.h>
 
-#include <tweeners/sineTweener.h>
+#include <tweeners.h>
 
 constexpr auto ppu = 16;
 
@@ -73,16 +73,14 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
 
-			SineTweener animation(
+			auto animation = std::make_shared<SineTweener<float>>(
+				propHandle.as<Actor>(),
 				[&prop](float v) { prop.setRotation(v); },
 				-5.0f, 5.f, 5.f
 			);
-			animation.addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
+			animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
 
-			world.addTween(
-				propHandle.as<Actor>(),
-				animation
-			);
+			world.addTween(animation);
 		}
 	}
 
@@ -101,16 +99,14 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
 
-			SineTweener animation(
+			auto animation = std::make_shared<SineTweener<float>>(
+				propHandle.as<Actor>(),
 				[&prop](float v) { prop.setRotation(v); },
 				-5.0f, 5.f, 5.f
-			);
-			animation.addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
+				);
+			animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
 
-			world.addTween(
-				propHandle.as<Actor>(),
-				animation
-			);
+			world.addTween(animation);
 		}
 	}
 

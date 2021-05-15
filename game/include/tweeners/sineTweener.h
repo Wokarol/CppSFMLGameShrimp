@@ -4,16 +4,17 @@
 #include <console.h>
 #include <utils/mathUtils.h>
 
-template <class T, typename Setter>
+template <class T>
 class SineTweener : public Tweener
 {
-	Setter setter;
+	std::function<void(T)> setter;
 	float elapsedTime = 0;
 	float speed;
 	T min, max;
 
 public:
-	SineTweener(Setter setter, T min, T max, float speed) :
+	SineTweener(ActorHandle<Actor> actor, std::function<void(T)> setter, T min, T max, float speed) :
+		Tweener(actor),
 		setter(setter),
 		speed(speed),
 		min(min), max(max)

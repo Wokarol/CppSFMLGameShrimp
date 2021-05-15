@@ -13,7 +13,7 @@
 class World
 {
 	std::map<actor_id, std::unique_ptr<Actor>> actors;
-	std::vector<std::unique_ptr<Tweener>> tweeners;
+	std::vector<std::shared_ptr<Tweener>> tweeners;
 	std::vector<actor_id> actorsToRemove;
 	actor_id nextID = 0;
 
@@ -48,14 +48,13 @@ public:
 	}
 
 	template <typename T>
-	void addTween(ActorHandle<Actor> actor, T& tweener)
+	void addTween(std::shared_ptr<T> tweener)
 	{
-		tweener.actor = actor;
-		tweeners.push_back(std::make_unique<T>(tweener));
+		tweeners.push_back(tweener);
 
 		if (logging)
 		{
-			cs::Print("Added tween for ", tweener.actor->name);
+			cs::Print("Added tween for ", tweener->actor->name);
 		}
 	}
 

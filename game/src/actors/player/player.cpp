@@ -1,6 +1,8 @@
 #include <actors/player.h>
 #include <input.h>
 #include <utils/mathUtils.h>
+#include <world.h>
+#include <tweeners.h>
 
 void Player::setPosition(float x, float y)
 {
@@ -16,14 +18,22 @@ void Player::update(const GameClock& time)
 {
 	auto mousePosition = input::mousePositionInWorld;
 
-	body.move(input::movement * time.delta * 30.f);
-	if (mousePosition.x < body.getPosition().x)
+	body.move(input::movement * time.delta * 50.f);
+	if (mousePosition.x < body.getPosition().x == facingRight)
 	{
-		body.setScale(-1, 1);
-	}
-	else
-	{
-		body.setScale(1, 1);
+		facingRight = !facingRight;
+
+		float nextScale = facingRight ? 1 : -1;
+
+		if (flipTween)
+			flipTween->kill();
+
+		flipTween = std::make_shared<LerpTweener<float>>(handle,
+			[this]() { return body.getScale().x; }, [this](float v) { body.setScale(v, 1); },
+			nextScale, 0.1f
+		);
+
+		handle.getWorld().addTween(flipTween);
 	}
 
 	auto globalGunPos = body.getPosition() + m::scale(gunOffset, body.getScale());
