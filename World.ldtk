@@ -1456,6 +1456,61 @@
 							"defUid": 87,
 							"px": [360,240],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Cactus",
+							"__grid": [16,11],
+							"__pivot": [0.5,1],
+							"__tile": { "tilesetUid": 4, "srcRect": [0,16,16,16] },
+							"width": 16,
+							"height": 16,
+							"defUid": 86,
+							"px": [264,192],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Cactus_Tall",
+							"__grid": [6,14],
+							"__pivot": [0.5,1],
+							"__tile": { "tilesetUid": 4, "srcRect": [0,16,16,16] },
+							"width": 16,
+							"height": 32,
+							"defUid": 87,
+							"px": [104,240],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Cactus_Tall",
+							"__grid": [1,9],
+							"__pivot": [0.5,1],
+							"__tile": { "tilesetUid": 4, "srcRect": [0,16,16,16] },
+							"width": 16,
+							"height": 32,
+							"defUid": 87,
+							"px": [24,160],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Cactus_Tall",
+							"__grid": [7,3],
+							"__pivot": [0.5,1],
+							"__tile": { "tilesetUid": 4, "srcRect": [0,16,16,16] },
+							"width": 16,
+							"height": 32,
+							"defUid": 87,
+							"px": [120,64],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Cactus_Tall",
+							"__grid": [16,2],
+							"__pivot": [0.5,1],
+							"__tile": { "tilesetUid": 4, "srcRect": [0,16,16,16] },
+							"width": 16,
+							"height": 32,
+							"defUid": 87,
+							"px": [264,48],
+							"fieldInstances": []
 						}
 					]
 				},

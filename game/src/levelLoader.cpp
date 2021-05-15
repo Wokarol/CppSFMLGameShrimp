@@ -102,7 +102,7 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 			auto animation = std::make_shared<SineTweener<float>>(
 				propHandle.as<Actor>(),
 				[&prop](float v) { prop.setRotation(v); },
-				-5.0f, 5.f, 5.f
+				-4.0f, 4.f, 4.f
 				);
 			animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
 
