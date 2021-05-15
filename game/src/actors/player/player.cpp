@@ -18,7 +18,7 @@ void Player::update(const GameClock& time)
 {
 	auto mousePosition = input::mousePositionInWorld;
 
-	body.move(input::movement * time.delta * 50.f);
+	body.move(m::normalize(input::movement) * time.delta * 50.f);
 	if (mousePosition.x < body.getPosition().x == facingRight)
 	{
 		facingRight = !facingRight;
