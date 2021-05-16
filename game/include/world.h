@@ -35,7 +35,7 @@ public:
 
 		if (logging)
 		{
-			cs::Print("Creating actor: ", name, " [", id, "]");
+			cs::Print("WORLD: ", "Creating actor: ", name, " [", id, "]");
 		}
 
 		return { id };
@@ -54,7 +54,7 @@ public:
 
 		if (logging)
 		{
-			cs::Print("Added tween for ", tweener->actor->name);
+			cs::Print("WORLD: ", "Added tween for ", tweener->actor->name);
 		}
 	}
 

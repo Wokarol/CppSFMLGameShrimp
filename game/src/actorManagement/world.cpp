@@ -23,7 +23,7 @@ void world::update(const GameClock& time)
 		{
 			if (logging)
 			{
-				cs::Print("Starting ", actor->name, " [", pairs.first, "]");
+				cs::Print("WORLD: ", "Starting ", actor->name, " [", pairs.first, "]");
 			}
 			actor->startCalled = true;
 			actor->start();
@@ -45,7 +45,7 @@ void world::update(const GameClock& time)
 	{
 		if (logging)
 		{
-			cs::Print("Destroying actor: ", getActor<Actor>(id).name, " [", id, "]");
+			cs::Print("WORLD: ", "Destroying actor: ", getActor<Actor>(id).name, " [", id, "]");
 		}
 
 		actors.erase(id);
@@ -60,7 +60,7 @@ void world::update(const GameClock& time)
 				bool noLongerRunning = !t->getIsRunning();
 				if (noLongerRunning && logging)
 				{
-					cs::Print("Tween for ", t->actor->name, " is no longer running");
+					cs::Print("WORLD: ", "Tween for ", t->actor->name, " is no longer running");
 				}
 				return noLongerRunning;
 			});
