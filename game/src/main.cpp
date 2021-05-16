@@ -15,6 +15,7 @@
 #include <world.h>
 
 #include <levelLoader.h>
+#include <assets/fonts.h>
 
 struct Pallete
 {
@@ -74,6 +75,8 @@ int main()
 	Pallete colors;
 	GameClock time;
 
+	world::logging = true;
+
 	if (!startGame())
 	{
 		window.close();
@@ -94,4 +97,5 @@ int main()
 	}
 
 	world::clear();
+	fonts::clear();
 }

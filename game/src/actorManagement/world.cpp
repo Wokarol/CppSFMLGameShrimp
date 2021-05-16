@@ -57,7 +57,12 @@ void world::update(const GameClock& time)
 	{
 		auto& toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const auto& t)
 			{
-				return !t->getIsRunning();
+				bool noLongerRunning = !t->getIsRunning();
+				if (noLongerRunning && logging)
+				{
+					cs::Print("Tween for ", t->actor->name, " is no longer running");
+				}
+				return noLongerRunning;
 			});
 		if (toErase != tweeners.end())
 		{

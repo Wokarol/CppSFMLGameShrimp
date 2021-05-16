@@ -5,6 +5,8 @@
 #include <world.h>
 #include <input.h>
 
+#include <actors.h>
+
 static void initializeBoilerplate()
 {
 	cs::HideConsole();
@@ -49,6 +51,11 @@ static void handleDebugKeys(const sf::Event& event)
 		{
 			cs::ShowConsole();
 		}
+	}
+
+	if (event.key.code == sf::Keyboard::F5)
+	{
+		DebugPopup::create("Hello world!");
 	}
 }
 

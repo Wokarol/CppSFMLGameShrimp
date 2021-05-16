@@ -4,3 +4,4 @@
 #include "actors/tilemap.h"
 #include "actors/staticProp.h"
 #include "actors/player.h"
+#include "actors/debugPopup.h"
