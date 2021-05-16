@@ -146,12 +146,12 @@ void levels::load(std::string_view levelPath)
 		levelFile >> level;
 	}
 
-
-
 	std::stringstream groupName;
 	groupName << "Level " << level["Title"].get<std::string>();
 
 	auto group = Group::create(groupName.str());
+
+	loadedLevels.push_back(group);
 
 	try
 	{
