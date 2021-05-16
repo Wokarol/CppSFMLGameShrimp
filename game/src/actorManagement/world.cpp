@@ -45,26 +45,20 @@ void world::update(const GameClock& time)
 	// Removing dead tweens
 	if (tweeners.size() > 0)
 	{
-		// Having std::remove_if here causes some bullshit that I was unable to debug :)
-		std::vector<std::shared_ptr<Tweener>> retainedTweeners{};
-		for (auto tweener : tweeners)
-		{
-			bool noLongerRunning = !tweener->getIsRunning();
-			if (noLongerRunning && logging)
+		auto toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const auto& t)
 			{
-				cs::Print("WORLD: ", "Tween for ", tweener->name, " is no longer running");
-			}
-			if (noLongerRunning)
-			{
-				tweener->afterKilled();
-			}
-			else
-			{
-				retainedTweeners.push_back(tweener);
-			}
-		}
+				bool noLongerRunning = !t->getIsRunning();
+				if (noLongerRunning && logging)
+				{
+					cs::Print("WORLD: ", "Tween for ", t->name, " is no longer running");
+				}
+				if (noLongerRunning)
+					t->afterKilled();
+				return noLongerRunning;
+			});
 
-		tweeners = retainedTweeners;
+		tweeners.erase(toErase, tweeners.end());
+
 		for (auto& tweener : tweeners)
 		{
 			assert(tweener);
