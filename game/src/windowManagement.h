@@ -42,6 +42,20 @@ static void handleDebugKeys(const sf::Event& event)
 		world::dumpActors();
 		DebugPopup::create("Actors dumped");
 	}
+	if (event.key.code == sf::Keyboard::F2)
+	{
+		if (cs::IsConsoleVisible())
+		{
+			cs::HideConsole();
+			cs::enableAutoShow = false;
+			DebugPopup::create("Console locked");
+		}
+		else
+		{
+			cs::enableAutoShow = true;
+			DebugPopup::create("Console unlocked");
+		}
+	}
 	if (event.key.code == sf::Keyboard::F3)
 	{
 		if (cs::IsConsoleVisible())
@@ -53,6 +67,11 @@ static void handleDebugKeys(const sf::Event& event)
 		{
 			cs::ShowConsole();
 			DebugPopup::create("Console shown");
+			if (!cs::enableAutoShow)
+			{
+				cs::enableAutoShow = true;
+				DebugPopup::create("Console unlocked");
+			}
 		}
 	}
 

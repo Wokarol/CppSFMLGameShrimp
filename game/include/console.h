@@ -6,6 +6,8 @@
 
 namespace cs
 {
+    inline bool enableAutoShow = true;
+
     static void HideConsole()
     {
 #if GAME_PLATFORM_WINDOWS
@@ -26,7 +28,10 @@ namespace cs
     static void Print(Params&&... params)
     {
 #ifdef DEBUG
-        ShowConsole();
+        if (enableAutoShow)
+        {
+            ShowConsole();
+        }
         ((std::cout << std::forward<Params>(params)), ...);
         std::cout << std::endl;
 #endif // DEBUG
