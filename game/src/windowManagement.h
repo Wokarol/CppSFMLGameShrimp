@@ -40,6 +40,7 @@ static void handleDebugKeys(const sf::Event& event)
 	if (event.key.code == sf::Keyboard::F10)
 	{
 		world::dumpActors();
+		DebugPopup::create("Actors dumped");
 	}
 	if (event.key.code == sf::Keyboard::F3)
 	{
