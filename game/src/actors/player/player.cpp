@@ -23,7 +23,7 @@ void Player::update(const GameClock& time)
 	{
 		facingRight = !facingRight;
 
-		float nextScale = facingRight ? 1 : -1;
+		float nextScale = facingRight ? 1.f : -1.f;
 
 		if (flipTween)
 			flipTween->kill();

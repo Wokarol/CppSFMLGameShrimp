@@ -12,7 +12,10 @@ public:
 		Sprite(*texture, textureRect),
 		texture(texture)
 	{
-		setOrigin(textureRect.width / 2, textureRect.height);
+		setOrigin(
+			(float)(textureRect.width / 2), 
+			(float)(textureRect.height)
+		);
 	}
 
 	virtual void draw(sf::RenderTarget& target) override

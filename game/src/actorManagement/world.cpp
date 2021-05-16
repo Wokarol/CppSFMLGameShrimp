@@ -112,11 +112,11 @@ void world::dumpActors()
 			namedActors.emplace_back(actor, s.str());
 		}
 
-		int maxNameLength = std::max_element(namedActors.begin(), namedActors.end(), [](const auto& a, const auto& b)
+		size_t maxNameLength = std::max_element(namedActors.begin(), namedActors.end(), [](const auto& a, const auto& b)
 			{
 				return a.second.size() < b.second.size();
 			})->second.size();
-		int padding = maxNameLength + 3;
+		std::streamsize padding = maxNameLength + 3;
 
 		for (auto& namedActor : namedActors)
 		{

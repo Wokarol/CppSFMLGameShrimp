@@ -10,7 +10,7 @@
 #include <console.h>
 #include <tweener.h>
 
-static class world
+class world
 {
 	static std::map<actor_id, std::unique_ptr<Actor>> actors;
 	static std::vector<std::shared_ptr<Tweener>> tweeners;

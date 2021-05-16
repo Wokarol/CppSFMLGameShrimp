@@ -22,7 +22,10 @@ public:
 		body(*texture, playerSpriteRect),
 		gun(*texture, gunSpriteRect)
 	{
-		sf::Vector2f pivot(playerSpriteRect.width / 2, playerSpriteRect.height);
+		sf::Vector2f pivot(
+			(float)(playerSpriteRect.width / 2), 
+			(float)(playerSpriteRect.height)
+		);
 		this->gunOffset = gunOffset - pivot;
 		body.setOrigin(pivot);
 		gun.setOrigin(gunOrigin);
