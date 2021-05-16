@@ -4,6 +4,7 @@
 #include <sstream>
 #include <ios>
 #include <algorithm>
+#include <cassert>
 
 std::map<actor_id, std::unique_ptr<Actor>> world::actors = {};
 std::vector<std::shared_ptr<Tweener>> world::tweeners = {};
@@ -23,7 +24,7 @@ void world::update(const GameClock& time)
 		{
 			if (logging)
 			{
-				cs::Print("Starting ", actor->name, " [", pairs.first, "]");
+				cs::Print("WORLD: ", "Starting ", actor->name, " [", pairs.first, "]");
 			}
 			actor->startCalled = true;
 			actor->start();
@@ -34,9 +35,39 @@ void world::update(const GameClock& time)
 	// Updating tweeners
 	for (auto& tweener : tweeners)
 	{
+		assert(tweener);
 		if (tweener->getIsRunning())
 		{
 			tweener->tween(time);
+		}
+	}
+
+	// Removing dead tweens
+	if (tweeners.size() > 0)
+	{
+		// Having std::remove_if here causes some bullshit that I was unable to debug :)
+		std::vector<std::shared_ptr<Tweener>> retainedTweeners{};
+		for (auto tweener : tweeners)
+		{
+			bool noLongerRunning = !tweener->getIsRunning();
+			if (noLongerRunning && logging)
+			{
+				cs::Print("WORLD: ", "Tween for ", tweener->name, " is no longer running");
+			}
+			if (noLongerRunning)
+			{
+				tweener->afterKilled();
+			}
+			else
+			{
+				retainedTweeners.push_back(tweener);
+			}
+		}
+
+		tweeners = retainedTweeners;
+		for (auto& tweener : tweeners)
+		{
+			assert(tweener);
 		}
 	}
 
@@ -45,25 +76,12 @@ void world::update(const GameClock& time)
 	{
 		if (logging)
 		{
-			cs::Print("Destroying actor: ", getActor<Actor>(id).name, " [", id, "]");
+			cs::Print("WORLD: ", "Destroying actor: ", getActor<Actor>(id).name, " [", id, "]");
 		}
 
 		actors.erase(id);
 	}
 	actorsToRemove.clear();
-
-	// Removing dead tweens
-	if (tweeners.size() > 0)
-	{
-		auto& toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const auto& t)
-			{
-				return !t->getIsRunning();
-			});
-		if (toErase != tweeners.end())
-		{
-			tweeners.erase(toErase);
-		}
-	}
 }
 
 void world::draw(sf::RenderTarget& target)
