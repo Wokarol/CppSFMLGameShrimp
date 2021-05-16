@@ -9,6 +9,7 @@
 
 #include <console.h>
 #include <tweener.h>
+#include <cassert>
 
 class world
 {
@@ -50,11 +51,13 @@ public:
 	template <typename T>
 	static void addTween(std::shared_ptr<T> tweener)
 	{
+		assert(tweener);
+
 		tweeners.push_back(tweener);
 
 		if (logging)
 		{
-			cs::Print("WORLD: ", "Added tween for ", tweener->actor->name);
+			cs::Print("WORLD: ", "Added tween ", tweener->name);
 		}
 	}
 

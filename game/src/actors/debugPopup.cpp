@@ -5,6 +5,8 @@
 #include <memory>
 
 auto color = 0xb03a2000;
+std::vector<DebugPopup*> popusActive;
+
 
 DebugPopup::DebugPopup(std::string message)
 {
@@ -16,7 +18,8 @@ DebugPopup::DebugPopup(std::string message)
 	text.setCharacterSize(8 * 2);
 	text.setScale(0.5f, 0.5f);
 
-	text.setPosition(5.f, 5.f);
+
+	popusActive.push_back(this);
 }
 
 void DebugPopup::start()
@@ -34,7 +37,37 @@ void DebugPopup::start()
 	world::addTween(fadeOut);
 }
 
+void DebugPopup::update(const GameClock& time)
+{
+	auto it = std::find(popusActive.begin(), popusActive.end(), this);
+	int pos = it - popusActive.begin();
+
+	if (lastPos == -1)
+	{
+		text.setPosition(5.f, 5.f + pos * 10);
+	}
+	else if (lastPos != pos)
+	{
+		auto slide = std::make_shared<LerpTweener<sf::Vector2f>>(handle,
+			[this]() { 
+				return text.getPosition(); 
+			}, 
+			[this](auto v) { 
+				return text.setPosition(v); 
+			},
+			sf::Vector2f(5.f, 5.f + pos * 10), 0.5f
+		);
+		world::addTween(slide);
+	}
+	lastPos = pos;
+}
+
 void DebugPopup::draw(sf::RenderTarget& target)
 {
 	target.draw(text);
+}
+
+DebugPopup::~DebugPopup()
+{
+	popusActive.erase(std::find(popusActive.begin(), popusActive.end(), this));
 }

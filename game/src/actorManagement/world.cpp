@@ -4,6 +4,7 @@
 #include <sstream>
 #include <ios>
 #include <algorithm>
+#include <cassert>
 
 std::map<actor_id, std::unique_ptr<Actor>> world::actors = {};
 std::vector<std::shared_ptr<Tweener>> world::tweeners = {};
@@ -34,6 +35,7 @@ void world::update(const GameClock& time)
 	// Updating tweeners
 	for (auto& tweener : tweeners)
 	{
+		assert(tweener);
 		if (tweener->getIsRunning())
 		{
 			tweener->tween(time);
@@ -43,20 +45,29 @@ void world::update(const GameClock& time)
 	// Removing dead tweens
 	if (tweeners.size() > 0)
 	{
-		auto& toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const auto& t)
-			{
-				bool noLongerRunning = !t->getIsRunning();
-				if (noLongerRunning && logging)
-				{
-					cs::Print("WORLD: ", "Tween for ", t->actor->name, " is no longer running");
-				}
-				if (noLongerRunning) 
-					t->afterKilled();
-				return noLongerRunning;
-			});
-		if (toErase != tweeners.end())
+		// Having std::remove_if here causes some bullshit that I was unable to debug :)
+		std::vector<std::shared_ptr<Tweener>> retainedTweeners{};
+		for (auto tweener : tweeners)
 		{
-			tweeners.erase(toErase);
+			bool noLongerRunning = !tweener->getIsRunning();
+			if (noLongerRunning && logging)
+			{
+				cs::Print("WORLD: ", "Tween for ", tweener->name, " is no longer running");
+			}
+			if (noLongerRunning)
+			{
+				tweener->afterKilled();
+			}
+			else
+			{
+				retainedTweeners.push_back(tweener);
+			}
+		}
+
+		tweeners = retainedTweeners;
+		for (auto& tweener : tweeners)
+		{
+			assert(tweener);
 		}
 	}
 

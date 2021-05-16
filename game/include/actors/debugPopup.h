@@ -9,11 +9,13 @@ class DebugPopup : public Actor, public Drawable
 {
 	std::shared_ptr<sf::Font> font;
 	sf::Text text;
+	int lastPos = -1;
 
 public:
 	DebugPopup(std::string message);
 
 	virtual void start() override;
+	virtual void update(const GameClock& time) override;
 
 	virtual void draw(sf::RenderTarget& target) override;
 
@@ -22,4 +24,6 @@ public:
 		std::string name = (std::stringstream() << message.substr(0, 10) << "...").str();
 		world::createNamedActor<DebugPopup>(name, message);
 	}
+
+	virtual ~DebugPopup();
 };
