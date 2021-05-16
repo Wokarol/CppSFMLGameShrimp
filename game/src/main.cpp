@@ -25,7 +25,7 @@ struct Pallete
 	sf::Color yellow = sf::Color(0xFFD432FF);
 };
 
-bool startGame(World& world)
+bool startGame()
 {
 	std::string configPath = "assets/start.config";
 	if (!std::filesystem::exists(configPath))
@@ -50,7 +50,7 @@ bool startGame(World& world)
 			return false;
 		}
 
-		levels::load(levelToLoad, world);
+		levels::load(levelToLoad);
 	}
 	catch (const std::exception& e)
 	{
@@ -73,9 +73,8 @@ int main()
 
 	Pallete colors;
 	GameClock time;
-	World world;
 
-	if (!startGame(world))
+	if (!startGame())
 	{
 		window.close();
 		std::cout << std::endl;
@@ -84,13 +83,15 @@ int main()
 
 	while (window.isOpen())
 	{
-		handleEventsAndInput(window, world);
+		handleEventsAndInput(window);
 		time.Tick();
 
-		world.update(time);
+		world::update(time);
 
 		window.clear(colors.background);
-		world.draw(window);
+		world::draw(window);
 		window.display();
 	}
+
+	world::clear();
 }

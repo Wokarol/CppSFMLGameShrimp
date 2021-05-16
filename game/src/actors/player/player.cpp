@@ -33,7 +33,7 @@ void Player::update(const GameClock& time)
 			nextScale, 0.1f
 		);
 
-		handle.getWorld().addTween(flipTween);
+		world::addTween(flipTween);
 	}
 
 	auto globalGunPos = body.getPosition() + m::scale(gunOffset, body.getScale());

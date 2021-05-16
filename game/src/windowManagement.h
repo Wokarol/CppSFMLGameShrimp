@@ -33,11 +33,11 @@ static void setCornerCam(sf::RenderTarget& target)
 	target.setView(view);
 }
 
-static void handleDebugKeys(const sf::Event& event, World& world)
+static void handleDebugKeys(const sf::Event& event)
 {
 	if (event.key.code == sf::Keyboard::F10)
 	{
-		world.dumpActors();
+		world::dumpActors();
 	}
 	if (event.key.code == sf::Keyboard::F3)
 	{
@@ -52,7 +52,7 @@ static void handleDebugKeys(const sf::Event& event, World& world)
 	}
 }
 
-static void handleEventsAndInput(sf::RenderWindow& window, World& world)
+static void handleEventsAndInput(sf::RenderWindow& window)
 {
 	sf::Event event;
 	while (window.pollEvent(event))
@@ -63,7 +63,7 @@ static void handleEventsAndInput(sf::RenderWindow& window, World& world)
 		}
 		if (event.type == sf::Event::KeyPressed)
 		{
-			handleDebugKeys(event, world);
+			handleDebugKeys(event);
 			input::handleInputKeysPressed(event);
 		}		
 		if (event.type == sf::Event::KeyReleased)

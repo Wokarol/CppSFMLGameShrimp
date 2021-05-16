@@ -10,18 +10,18 @@
 #include <console.h>
 #include <tweener.h>
 
-class World
+static class world
 {
-	std::map<actor_id, std::unique_ptr<Actor>> actors;
-	std::vector<std::shared_ptr<Tweener>> tweeners;
-	std::vector<actor_id> actorsToRemove;
-	actor_id nextID = 0;
+	static std::map<actor_id, std::unique_ptr<Actor>> actors;
+	static std::vector<std::shared_ptr<Tweener>> tweeners;
+	static std::vector<actor_id> actorsToRemove;
+	static actor_id nextID;
 
 public:
-	bool logging = false;
+	static bool logging;
 
 	template< class T, class... Args >
-	ActorHandle<T> createNamedActor(std::string_view name, Args&&... args)
+	static ActorHandle<T> createNamedActor(std::string_view name, Args&&... args)
 	{
 		actor_id id = nextID++;
 
@@ -31,24 +31,24 @@ public:
 		);
 		Actor& actor = *result.first->second;
 		actor.name = name;
-		actor.handle = { id, this };
+		actor.handle = { id };
 
 		if (logging)
 		{
 			cs::Print("Creating actor: ", name, " [", id, "]");
 		}
 
-		return { id, this };
+		return { id };
 	}
 
 	template< class T, class... Args >
-	ActorHandle<T> createActor(Args&&... args)
+	static ActorHandle<T> createActor(Args&&... args)
 	{
 		return createNamedActor<T>("", args...);
 	}
 
 	template <typename T>
-	void addTween(std::shared_ptr<T> tweener)
+	static void addTween(std::shared_ptr<T> tweener)
 	{
 		tweeners.push_back(tweener);
 
@@ -58,12 +58,12 @@ public:
 		}
 	}
 
-	void update(const GameClock& time);
-	void draw(sf::RenderTarget& target);
+	static void update(const GameClock& time);
+	static void draw(sf::RenderTarget& target);
 
 
 	template< class T >
-	bool isActorAliveAndMatchesType(const actor_id& id) const
+	static bool isActorAliveAndMatchesType(const actor_id& id)
 	{
 		auto& pair = actors.find(id);
 		if (pair == actors.end())
@@ -76,7 +76,7 @@ public:
 
 
 	template< class T >
-	T* getActorPointer(actor_id id) const
+	static T* getActorPointer(actor_id id)
 	{
 		auto& pair = actors.find(id);
 		if (pair == actors.end())
@@ -88,7 +88,7 @@ public:
 	}
 
 	template< class T >
-	T& getActor(actor_id id) const
+	static T& getActor(actor_id id)
 	{
 		auto& pair = actors.find(id);
 		if (pair == actors.end())
@@ -99,19 +99,12 @@ public:
 		return dynamic_cast<T&>(*pair->second.get());
 	}
 
-
-	template< class T >
-	T& getActor(actor_id id)
-	{
-		return const_cast<T&>(const_cast<const World*>(this)->getActor<T>(id));
-	}
-
-	void destroyActor(actor_id id)
+	static void destroyActor(actor_id id)
 	{
 		actorsToRemove.push_back(id);
 	}
 
-	void destroyGroup(std::shared_ptr<Group>& group)
+	static void destroyGroup(std::shared_ptr<Group>& group)
 	{
 		for (auto& actor : actors)
 		{
@@ -123,5 +116,6 @@ public:
 		}
 	}
 
-	void dumpActors() const;
+	static void dumpActors();
+	static void clear();
 };

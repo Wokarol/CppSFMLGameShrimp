@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-class World;
+class world;
 
 typedef uint32_t actor_id;
 
@@ -10,49 +10,43 @@ template <class T>
 class ActorHandle
 {
 	actor_id id;
-	World* world = nullptr;
 
 public:
 	ActorHandle() :
-		id(-1),
-		world(nullptr)
+		id(-1)
 	{}
 
-	ActorHandle(actor_id id_, World* world_) :
-		id(id_),
-		world(world_)
+	ActorHandle(actor_id id_) :
+		id(id_)
 	{}
 
 	bool isValid() const
 	{
-		if (world == nullptr)
+		if (id == -1)
 			return false;
 
-		return world->isActorAliveAndMatchesType<T>(id);
+		return world::isActorAliveAndMatchesType<T>(id);
 	}
 
-	World& getWorld() const
-	{ return *world; }
-
 	operator T* () const
-	{ return world->getActorPointer<T>(id); }
+	{ return world::getActorPointer<T>(id); }
 
 	T& operator*() const
-	{ return world->getActor<T>(id); }
+	{ return world::getActor<T>(id); }
 
 	T* operator->() const
-	{ return &world->getActor<T>(id); }
+	{ return &world::getActor<T>(id); }
 
 	template <class NewT>
 	ActorHandle<NewT> as()
 	{
-		return ActorHandle<NewT>(id, world);
+		return ActorHandle<NewT>(id);
 	}
 
 	void destroy() const
 	{
-		world->destroyActor(id);
+		world::destroyActor(id);
 	}
 
-	friend World;
+	friend world;
 };

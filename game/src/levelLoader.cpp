@@ -11,7 +11,7 @@
 
 constexpr auto ppu = 16;
 
-void createTilemap(nlohmann::json& json, std::string_view name, World& world, std::shared_ptr<Group>& group)
+void createTilemap(nlohmann::json& json, std::string_view name, std::shared_ptr<Group>& group)
 {
 	// TODO: FIX HARDCODING
 
@@ -21,7 +21,7 @@ void createTilemap(nlohmann::json& json, std::string_view name, World& world, st
 		cs::ShowConsole();
 	}
 
-	auto& tilemap = *world.createNamedActor<Tilemap>(name, ground, ppu);
+	auto& tilemap = *world::createNamedActor<Tilemap>(name, ground, ppu);
 	tilemap.group = group;
 
 	if (!json.is_array())
@@ -44,7 +44,7 @@ void createTilemap(nlohmann::json& json, std::string_view name, World& world, st
 	}
 }
 
-void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& group)
+void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 {
 	auto cactiTexture = std::make_shared<sf::Texture>();
 	if (!cactiTexture->loadFromFile("assets/actors/cacti.png"))
@@ -63,7 +63,7 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 	{
 		for (auto& cactus : cacti)
 		{
-			auto& propHandle = world.createNamedActor<StaticProp>("Cactus", cactiTexture, sf::IntRect(0, 16, 16, 16));
+			auto& propHandle = world::createNamedActor<StaticProp>("Cactus", cactiTexture, sf::IntRect(0, 16, 16, 16));
 			auto& prop = *propHandle;
 			prop.group = group;
 
@@ -80,7 +80,7 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 			);
 			animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
 
-			world.addTween(animation);
+			world::addTween(animation);
 		}
 	}
 
@@ -89,7 +89,7 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 	{
 		for (auto& tall_cactus : tall_cacti)
 		{
-			auto& propHandle = world.createNamedActor<StaticProp>("Tall Cactus", cactiTexture, sf::IntRect(16, 0, 16, 32));
+			auto& propHandle = world::createNamedActor<StaticProp>("Tall Cactus", cactiTexture, sf::IntRect(16, 0, 16, 32));
 			auto& prop = *propHandle;
 			prop.group = group;
 
@@ -106,14 +106,14 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 				);
 			animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
 
-			world.addTween(animation);
+			world::addTween(animation);
 		}
 	}
 
 	nlohmann::json& player = json["Player"];
 	if (player.is_object())
 	{
-		auto& playerActor = *world.createNamedActor<Player>("Player",
+		auto& playerActor = *world::createNamedActor<Player>("Player",
 			playerTexture, 
 			sf::IntRect(0, 0, 13, 14), sf::IntRect(0, 16, 6, 4), 
 			sf::Vector2f(8, 10), sf::Vector2f(1, 1)
@@ -128,7 +128,7 @@ void createActors(nlohmann::json& json, World& world, std::shared_ptr<Group>& gr
 	}
 }
 
-void levels::load(std::string_view levelPath, World& world)
+void levels::load(std::string_view levelPath)
 {
 
 	std::stringstream pathStream;
@@ -151,13 +151,13 @@ void levels::load(std::string_view levelPath, World& world)
 	std::stringstream groupName;
 	groupName << "Level " << level["Title"].get<std::string>();
 
-	auto group = std::make_shared<Group>(groupName.str());
+	auto group = Group::create(groupName.str());
 
 	try
 	{
-		createTilemap(level["Ground"], "Ground Tilemap", world, group);
-		createTilemap(level["Tiles"], "Free Tile Tilemap", world, group);
-		createActors(level["Actors"], world, group);
+		createTilemap(level["Ground"], "Ground Tilemap", group);
+		createTilemap(level["Tiles"], "Free Tile Tilemap", group);
+		createActors(level["Actors"], group);
 	}
 	catch (const std::exception& e)
 	{

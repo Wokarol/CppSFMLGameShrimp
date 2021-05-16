@@ -5,7 +5,14 @@
 #include <ios>
 #include <algorithm>
 
-void World::update(const GameClock& time)
+std::map<actor_id, std::unique_ptr<Actor>> world::actors = {};
+std::vector<std::shared_ptr<Tweener>> world::tweeners = {};
+std::vector<actor_id> world::actorsToRemove = {};
+actor_id world::nextID = 0;
+
+bool world::logging = false;
+
+void world::update(const GameClock& time)
 {
 	// Updating actors
 	for (auto& pairs : actors)
@@ -59,7 +66,7 @@ void World::update(const GameClock& time)
 	}
 }
 
-void World::draw(sf::RenderTarget& target)
+void world::draw(sf::RenderTarget& target)
 {
 	for (auto& pairs : actors)
 	{
@@ -72,7 +79,7 @@ void World::draw(sf::RenderTarget& target)
 	}
 }
 
-void World::dumpActors() const
+void world::dumpActors()
 {
 	std::map<std::shared_ptr<Group>, std::vector<Actor*>> actorsByGroups;
 
@@ -117,4 +124,12 @@ void World::dumpActors() const
 		}
 	}
 	cs::Print("--------------------------------------------");
+}
+
+void world::clear()
+{
+	actors.clear();
+	tweeners.clear();
+	actorsToRemove.clear();
+	nextID = 0;
 }

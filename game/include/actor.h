@@ -6,7 +6,7 @@
 #include <actorHandle.h>
 #include <console.h>
 
-class World;
+class world;
 
 class Group
 {
@@ -52,9 +52,8 @@ public:
 	virtual ~Actor() = default;
 
 	ActorHandle<Actor> getHandle() { return handle; }
-	World& getWorld() { return handle.getWorld(); }
 
-	friend World;
+	friend world;
 };
 
 class Drawable

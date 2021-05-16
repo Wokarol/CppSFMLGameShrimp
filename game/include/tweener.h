@@ -4,7 +4,7 @@
 #include <actorHandle.h>
 #include <functional>
 
-class World;
+class world;
 class Actor;
 
 class Tweener
@@ -29,5 +29,5 @@ public:
 
 	virtual ~Tweener() = default;
 
-	friend World;
+	friend world;
 };
