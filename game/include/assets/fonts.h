@@ -16,18 +16,14 @@ namespace fonts
 
 		if (font)
 		{
-			cs::Print("Reusing font asset!");
 			return font;
 		}
 		else
 		{
-			cs::Print("Loading [", name, ".ttf] from memory!");
-
 			std::string fontPath = (std::stringstream()
 				<< "assets/fonts/" << name << ".ttf"
 			).str();
 			font = std::make_shared<sf::Font>();
-			cs::Print("Loading font from ", fontPath);
 
 			font->loadFromFile(fontPath);
 

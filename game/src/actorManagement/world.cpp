@@ -40,6 +40,26 @@ void world::update(const GameClock& time)
 		}
 	}
 
+	// Removing dead tweens
+	if (tweeners.size() > 0)
+	{
+		auto& toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const auto& t)
+			{
+				bool noLongerRunning = !t->getIsRunning();
+				if (noLongerRunning && logging)
+				{
+					cs::Print("WORLD: ", "Tween for ", t->actor->name, " is no longer running");
+				}
+				if (noLongerRunning) 
+					t->afterKilled();
+				return noLongerRunning;
+			});
+		if (toErase != tweeners.end())
+		{
+			tweeners.erase(toErase);
+		}
+	}
+
 	// Removing dead actors
 	for (actor_id& id : actorsToRemove)
 	{
@@ -51,24 +71,6 @@ void world::update(const GameClock& time)
 		actors.erase(id);
 	}
 	actorsToRemove.clear();
-
-	// Removing dead tweens
-	if (tweeners.size() > 0)
-	{
-		auto& toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const auto& t)
-			{
-				bool noLongerRunning = !t->getIsRunning();
-				if (noLongerRunning && logging)
-				{
-					cs::Print("WORLD: ", "Tween for ", t->actor->name, " is no longer running");
-				}
-				return noLongerRunning;
-			});
-		if (toErase != tweeners.end())
-		{
-			tweeners.erase(toErase);
-		}
-	}
 }
 
 void world::draw(sf::RenderTarget& target)

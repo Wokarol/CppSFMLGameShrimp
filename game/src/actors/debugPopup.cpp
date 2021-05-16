@@ -21,8 +21,13 @@ void DebugPopup::start()
 {
 	auto fadeOut = std::make_shared<LerpTweener<sf::Color>>(handle,
 		[this]() { return text.getColor(); }, [this](auto v) { return text.setColor(v); },
-		sf::Color(0x00000000), 5.f
+		sf::Color(0x00000000), 1.f
 		);
+
+	auto myHandle = handle;
+	fadeOut->getAfterKilled([myHandle]() {
+		myHandle.destroy();
+	});
 
 	world::addTween(fadeOut);
 }

@@ -46,17 +46,19 @@ static void handleDebugKeys(const sf::Event& event)
 		if (cs::IsConsoleVisible())
 		{
 			cs::HideConsole();
+			DebugPopup::create("Console hidden");
 		}
 		else
 		{
 			cs::ShowConsole();
+			DebugPopup::create("Console shown");
 		}
 	}
 
-	if (event.key.code == sf::Keyboard::F5)
-	{
-		DebugPopup::create("Hello world!");
-	}
+	//if (event.key.code == sf::Keyboard::F5)
+	//{
+	//	DebugPopup::create("Hello world!");
+	//}
 }
 
 static void handleEventsAndInput(sf::RenderWindow& window)
