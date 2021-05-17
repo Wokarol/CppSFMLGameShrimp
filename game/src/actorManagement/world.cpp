@@ -110,16 +110,9 @@ void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	std::sort(drawables.begin(), drawables.end(), [](const auto& a, const auto& b)
 		{
-			int renderOrderA = a->getSortingOrder();
-			int renderOrderB = b->getSortingOrder();
-			if (renderOrderA != renderOrderB)
-			{
-				return renderOrderA < renderOrderB;
-			}
-			else
-			{
-				return a->getSortingYPos() < b->getSortingYPos();
-			}
+			auto sa = std::make_tuple(a->getSortingOrder(), a->getSortingYPos());
+			auto sb = std::make_tuple(b->getSortingOrder(), b->getSortingYPos());
+			return sa < sb;
 		});
 
 	for (auto& drawable : drawables)
