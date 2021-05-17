@@ -24,7 +24,7 @@ void Box::update(const GameClock& time)
 	);
 }
 
-void Box::draw(sf::RenderTarget& target)
+void Box::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	target.draw(body);
 }

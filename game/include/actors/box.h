@@ -3,7 +3,7 @@
 #include <actor.h>
 #include <cmath>
 
-class Box : public Actor, public Drawable
+class Box : public Actor, public Drawable, public Tickable
 {
 	sf::RectangleShape body;
 
@@ -14,5 +14,5 @@ public:
 
 	virtual void update(const GameClock& time) override;
 
-	virtual void draw(sf::RenderTarget& target) override;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
 };

@@ -92,7 +92,8 @@ int main()
 		world::update(time);
 
 		window.clear(colors.background);
-		world::draw(window);
+		auto& states = sf::RenderStates();
+		world::draw(window, states);
 		window.display();
 	}
 

@@ -18,10 +18,15 @@ void Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
 	tiles.push_back(tile);
 }
 
-void Tilemap::draw(sf::RenderTarget& target)
+void Tilemap::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	for (auto& tile : tiles)
 	{
 		target.draw(tile);
 	}
+}
+
+int Tilemap::getSortingOrder()
+{
+	return -100;
 }

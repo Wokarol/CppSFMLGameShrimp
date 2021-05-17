@@ -4,7 +4,7 @@
 #include <memory>
 #include <tweeners.h>
 
-class Player : public Actor, public Drawable
+class Player : public Actor, public Drawable, public Tickable
 {
 	std::shared_ptr<sf::Texture> texture;
 	sf::Sprite body;
@@ -34,5 +34,10 @@ public:
 	void setPosition(float x, float y);
 	void setPosition(sf::Vector2f v);
 	virtual void update(const GameClock& time) override;
-	virtual void draw(sf::RenderTarget& target) override;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
+
+	virtual float getSortingYPos() override
+	{
+		return body.getPosition().y;
+	}
 };

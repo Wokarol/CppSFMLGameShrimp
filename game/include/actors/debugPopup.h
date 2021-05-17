@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-class DebugPopup : public Actor, public Drawable
+class DebugPopup : public Actor, public Drawable, public Tickable
 {
 	std::shared_ptr<sf::Font> font;
 	sf::Text text;
@@ -17,7 +17,8 @@ public:
 	virtual void start() override;
 	virtual void update(const GameClock& time) override;
 
-	virtual void draw(sf::RenderTarget& target) override;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
+	virtual int getSortingOrder() override;
 
 	static void create(std::string message)
 	{

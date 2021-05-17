@@ -7,32 +7,36 @@
 #include <cassert>
 
 std::map<actor_id, std::unique_ptr<Actor>> world::actors = {};
+std::vector<Actor*> world::actorsToCallStartOn = {};
+std::vector<Drawable*> world::drawables = {};
+std::vector<Tickable*> world::tickables = {};
+
 std::vector<std::shared_ptr<Tweener>> world::tweeners = {};
 std::vector<actor_id> world::actorsToRemove = {};
 actor_id world::nextID = 0;
 
 bool world::logging = false;
 
-void world::update(const GameClock& time)
+void world::updateActors(const GameClock& time)
 {
-	// Updating actors
-	for (auto& pairs : actors)
+	for (auto& actor : actorsToCallStartOn)
 	{
-		auto& actor = pairs.second;
-
-		if (!actor->startCalled)
+		if (logging)
 		{
-			if (logging)
-			{
-				cs::Print("WORLD: ", "Starting ", actor->name, " [", pairs.first, "]");
-			}
-			actor->startCalled = true;
-			actor->start();
+			cs::Print("WORLD: ", "Starting ", actor->name, " [", actor->handle.id, "]");
 		}
+		actor->start();
+	}
+	actorsToCallStartOn.clear();
+
+	for (auto& actor : tickables)
+	{
 		actor->update(time);
 	}
+}
 
-	// Updating tweeners
+void world::updateTweeners(const GameClock& time)
+{
 	for (auto& tweener : tweeners)
 	{
 		assert(tweener);
@@ -41,8 +45,10 @@ void world::update(const GameClock& time)
 			tweener->tween(time);
 		}
 	}
+}
 
-	// Removing dead tweens
+void world::removeDeadTweens()
+{
 	if (tweeners.size() > 0)
 	{
 		auto toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const auto& t)
@@ -64,13 +70,27 @@ void world::update(const GameClock& time)
 			assert(tweener);
 		}
 	}
+}
 
-	// Removing dead actors
+void world::removeDeadActors()
+{
 	for (actor_id& id : actorsToRemove)
 	{
+		Actor* actor = getActorPointer<Actor>(id);
+		assert(actor);
 		if (logging)
 		{
-			cs::Print("WORLD: ", "Destroying actor: ", getActor<Actor>(id).name, " [", id, "]");
+			cs::Print("WORLD: ", "Destroying actor: ", actor->name, " [", id, "]");
+		}
+
+		if (auto tickable = dynamic_cast<Tickable*>(actor))
+		{
+			tickables.erase(std::find(tickables.begin(), tickables.end(), tickable));
+		}
+
+		if (auto drawable = dynamic_cast<Drawable*>(actor))
+		{
+			drawables.erase(std::find(drawables.begin(), drawables.end(), drawable));
 		}
 
 		actors.erase(id);
@@ -78,16 +98,27 @@ void world::update(const GameClock& time)
 	actorsToRemove.clear();
 }
 
-void world::draw(sf::RenderTarget& target)
+void world::update(const GameClock& time)
 {
-	for (auto& pairs : actors)
-	{
-		auto& actor = pairs.second;
+	updateActors(time);
+	updateTweeners(time);
+	removeDeadTweens();
+	removeDeadActors();
+}
 
-		if (auto drawable = dynamic_cast<Drawable*>(actor.get()))
+void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
+{
+	std::sort(drawables.begin(), drawables.end(), [](const auto& a, const auto& b)
 		{
-			drawable->draw(target);
-		}
+			auto sa = std::make_tuple(a->getSortingOrder(), a->getSortingYPos());
+			auto sb = std::make_tuple(b->getSortingOrder(), b->getSortingYPos());
+			return sa < sb;
+		});
+
+	for (auto& drawable : drawables)
+	{
+		assert(drawable);
+		drawable->draw(target, states);
 	}
 }
 
@@ -142,6 +173,9 @@ void world::clear()
 {
 	actors.clear();
 	tweeners.clear();
+	actorsToCallStartOn.clear();
+	drawables.clear();
+	tickables.clear();
 	actorsToRemove.clear();
 	nextID = 0;
 }

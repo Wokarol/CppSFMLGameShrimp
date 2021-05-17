@@ -18,8 +18,13 @@ public:
 		);
 	}
 
-	virtual void draw(sf::RenderTarget& target) override
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override
 	{
 		target.draw(*this);
 	};
+
+	virtual float getSortingYPos() override
+	{
+		return getPosition().y;
+	}
 };

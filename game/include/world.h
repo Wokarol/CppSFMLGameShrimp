@@ -14,6 +14,10 @@
 class world
 {
 	static std::map<actor_id, std::unique_ptr<Actor>> actors;
+	static std::vector<Actor*> actorsToCallStartOn;
+	static std::vector<Drawable*> drawables;
+	static std::vector<Tickable*> tickables;
+
 	static std::vector<std::shared_ptr<Tweener>> tweeners;
 	static std::vector<actor_id> actorsToRemove;
 	static actor_id nextID;
@@ -30,14 +34,33 @@ public:
 			id,
 			std::make_unique<T>(args...)
 		);
-		Actor& actor = *result.first->second;
-		actor.name = name;
-		actor.handle = { id };
+		Actor* actor = result.first->second.get();
+		actor->name = name;
+		actor->handle = { id };
+
+		actorsToCallStartOn.push_back(actor);
 
 		if (logging)
 		{
 			cs::Print("WORLD: ", "Creating actor: ", name, " [", id, "]");
 		}
+
+		if (auto tickable = dynamic_cast<Tickable*>(actor))
+		{
+			tickables.push_back(tickable);
+
+			if (logging)
+				cs::Print("    ", "Actor is tickable");
+		}
+
+		if (auto drawable = dynamic_cast<Drawable*>(actor))
+		{
+			drawables.push_back(drawable);
+
+			if (logging) 
+				cs::Print("    ", "Actor is drawable");
+		}
+
 
 		return { id };
 	}
@@ -62,7 +85,7 @@ public:
 	}
 
 	static void update(const GameClock& time);
-	static void draw(sf::RenderTarget& target);
+	static void draw(sf::RenderTarget& target, sf::RenderStates& states);
 
 
 	template< class T >
@@ -121,4 +144,11 @@ public:
 
 	static void dumpActors();
 	static void clear();
+
+
+private:
+	static void updateActors(const GameClock& time);
+	static void updateTweeners(const GameClock& time);
+	static void removeDeadTweens();
+	static void removeDeadActors();
 };

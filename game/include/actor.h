@@ -37,8 +37,6 @@ public:
 
 class Actor
 {
-	bool startCalled = false;
-
 protected:
 	ActorHandle<Actor> handle;
 
@@ -47,7 +45,6 @@ public:
 	std::string name;
 
 	virtual void start() {};
-	virtual void update(const GameClock& time) {};
 
 	virtual ~Actor() = default;
 
@@ -59,5 +56,13 @@ public:
 class Drawable
 {
 public:
-	virtual void draw(sf::RenderTarget& target) = 0;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) = 0;
+	virtual int getSortingOrder() { return 0; }
+	virtual float getSortingYPos() { return 0; }
+};
+
+class Tickable
+{
+public:
+	virtual void update(const GameClock& time) {};
 };
