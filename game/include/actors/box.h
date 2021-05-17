@@ -14,5 +14,5 @@ public:
 
 	virtual void update(const GameClock& time) override;
 
-	virtual void draw(sf::RenderTarget& target) override;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
 };

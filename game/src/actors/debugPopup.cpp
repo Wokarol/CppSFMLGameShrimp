@@ -63,7 +63,7 @@ void DebugPopup::update(const GameClock& time)
 	lastPos = pos;
 }
 
-void DebugPopup::draw(sf::RenderTarget& target)
+void DebugPopup::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	target.draw(text);
 }

@@ -85,7 +85,7 @@ public:
 	}
 
 	static void update(const GameClock& time);
-	static void draw(sf::RenderTarget& target);
+	static void draw(sf::RenderTarget& target, sf::RenderStates& states);
 
 
 	template< class T >

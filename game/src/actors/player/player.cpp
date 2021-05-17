@@ -46,7 +46,7 @@ void Player::update(const GameClock& time)
 	gun.setScale(body.getScale());
 }
 
-void Player::draw(sf::RenderTarget& target)
+void Player::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	target.draw(body);
 	target.draw(gun);

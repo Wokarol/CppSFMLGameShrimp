@@ -106,7 +106,7 @@ void world::update(const GameClock& time)
 	removeDeadActors();
 }
 
-void world::draw(sf::RenderTarget& target)
+void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	std::sort(drawables.begin(), drawables.end(), [](const auto& a, const auto& b)
 		{
@@ -125,7 +125,7 @@ void world::draw(sf::RenderTarget& target)
 	for (auto& drawable : drawables)
 	{
 		assert(drawable);
-		drawable->draw(target);
+		drawable->draw(target, states);
 	}
 }
 
