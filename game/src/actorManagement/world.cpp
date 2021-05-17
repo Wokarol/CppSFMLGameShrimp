@@ -128,6 +128,25 @@ void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
 	}
 }
 
+intersect::Intersection world::raycast(const m::Ray& ray)
+{
+
+	intersect::Intersection closestHit;
+
+	for (auto& hittable : hittables)
+	{
+		assert(hittable);
+		auto hit = hittable->getClosestHit(ray);
+
+		if (!closestHit.hit || (hit.hit && hit.distance < closestHit.distance))
+		{
+			closestHit = hit;
+		}
+	}
+
+	return closestHit;
+}
+
 void world::dumpActors(bool detailed)
 {
 	std::map<std::shared_ptr<Group>, std::vector<Actor*>> actorsByGroups;

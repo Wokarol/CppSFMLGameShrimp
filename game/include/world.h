@@ -11,6 +11,8 @@
 #include <tweener.h>
 #include <cassert>
 
+#include <physics/intersections.h>
+
 class world
 {
 	static std::map<actor_id, std::unique_ptr<Actor>> actors;
@@ -150,6 +152,8 @@ public:
 			}
 		}
 	}
+
+	static intersect::Intersection raycast(const m::Ray& ray);
 
 	static void dumpActors(bool details = false);
 	static void clear();

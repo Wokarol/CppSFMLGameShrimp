@@ -4,11 +4,16 @@
 #include <memory>
 #include <tweeners.h>
 
+#include <customShapes/line.h>
+
 class Player : public Actor, public Drawable, public Tickable
 {
 	std::shared_ptr<sf::Texture> texture;
+
 	sf::Sprite body;
 	sf::Sprite gun;
+	csf::LineShape gunLine;
+
 	sf::Vector2f gunOffset;
 	std::shared_ptr<LerpTweener<float>> flipTween;
 
@@ -17,19 +22,7 @@ class Player : public Actor, public Drawable, public Tickable
 public:
 	Player(std::shared_ptr<sf::Texture> texture, 
 		sf::IntRect playerSpriteRect, sf::IntRect gunSpriteRect, 
-		sf::Vector2f gunOffset, sf::Vector2f gunOrigin):
-		texture(texture),
-		body(*texture, playerSpriteRect),
-		gun(*texture, gunSpriteRect)
-	{
-		sf::Vector2f pivot(
-			(float)(playerSpriteRect.width / 2), 
-			(float)(playerSpriteRect.height)
-		);
-		this->gunOffset = gunOffset - pivot;
-		body.setOrigin(pivot);
-		gun.setOrigin(gunOrigin);
-	}
+		sf::Vector2f gunOffset, sf::Vector2f gunOrigin);
 
 	void setPosition(float x, float y);
 	void setPosition(sf::Vector2f v);

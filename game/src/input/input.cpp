@@ -4,6 +4,7 @@
 
 sf::Vector2f input::movement = { 0, 0 };
 sf::Vector2f input::mousePositionInWorld = { 0, 0 };
+input::key input::attack;
 
 struct DirectionKey
 {
@@ -45,5 +46,23 @@ void input::handleInputKeysReleased(const sf::Event& event)
 			movement -= key.direction;
 			key.pressed = false;
 		}
+	}
+}
+
+void input::handleMouseButtonsPressed(const sf::Event& event)
+{
+	if (event.mouseButton.button == sf::Mouse::Left)
+	{
+		input::attack.wasPressedThisFrame = true;
+		input::attack.isPressed = true;
+	}
+}
+
+void input::handleMouseButtonsReleased(const sf::Event& event)
+{
+	if (event.mouseButton.button == sf::Mouse::Left)
+	{
+		input::attack.wasReleasedThisFrame = true;
+		input::attack.isPressed = false;
 	}
 }

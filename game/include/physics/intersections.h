@@ -59,13 +59,15 @@ namespace intersect
 		return Intersection(distToHit, normal);
 	}
 
-	/// <param name="AABB"> Rectangle's rotation will be ignored </param>
-	inline Intersection rayWithAABB(m::Ray ray, const sf::RectangleShape& aabb)
+	/// <param name="AABB"> Rectangle's rotation and position will be ignored </param>
+	inline Intersection rayWithCenteredAABB(m::Ray ray, const sf::RectangleShape& aabb)
 	{
 		// We offset it so the aabb's top left corner is at [0, 0]
 		ray.move(aabb.getOrigin());
 		ray.direction = m::normalize(ray.direction);
 		auto size = aabb.getSize();
+
+		//cs::Print(ray.origin.x);
 
 		if (ray.direction.x > 0 && ray.origin.x < 0)
 		{
@@ -122,6 +124,13 @@ namespace intersect
 		return {};
 	}
 
+	/// <param name="AABB"> Rectangle's rotation will be ignored </param>
+	inline Intersection rayWithAABB(m::Ray ray, const sf::RectangleShape& aabb)
+	{
+		ray.move(-aabb.getPosition());
+		return rayWithCenteredAABB(ray, aabb);
+	}
+
 	inline Intersection rayWithOBB(m::Ray ray, const sf::RectangleShape& obb)
 	{
 		// We convert this scenario into Ray and AABB to simplify calculations
@@ -130,7 +139,7 @@ namespace intersect
 		auto angle = -obb.getRotation();
 		ray.rotateAround(sf::Vector2f(0, 0), angle);
 
-		auto res = rayWithAABB(ray, obb);
+		auto res = rayWithCenteredAABB(ray, obb);
 		res.normal = m::rotate(res.normal, -angle);
 
 		return res;

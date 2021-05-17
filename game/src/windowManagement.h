@@ -83,6 +83,9 @@ static void handleDebugKeys(const sf::Event& event)
 
 static void handleEventsAndInput(sf::RenderWindow& window)
 {
+	input::attack.wasPressedThisFrame = false;
+	input::attack.wasReleasedThisFrame = false;
+
 	sf::Event event;
 	while (window.pollEvent(event))
 	{
@@ -94,10 +97,18 @@ static void handleEventsAndInput(sf::RenderWindow& window)
 		{
 			handleDebugKeys(event);
 			input::handleInputKeysPressed(event);
-		}		
+		}	
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
+			input::handleMouseButtonsPressed(event);
+		}
 		if (event.type == sf::Event::KeyReleased)
 		{
 			input::handleInputKeysReleased(event);
+		}
+		if (event.type == sf::Event::MouseButtonReleased)
+		{
+			input::handleMouseButtonsReleased(event);
 		}
 		if (event.type == sf::Event::MouseMoved)
 		{
