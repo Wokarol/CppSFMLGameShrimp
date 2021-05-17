@@ -25,3 +25,8 @@ void Tilemap::draw(sf::RenderTarget& target)
 		target.draw(tile);
 	}
 }
+
+int Tilemap::getSortingOrder()
+{
+	return -100;
+}

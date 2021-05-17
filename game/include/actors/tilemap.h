@@ -19,4 +19,6 @@ public:
 	void add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord);
 
 	virtual void draw(sf::RenderTarget& target) override;
+
+	virtual int getSortingOrder() override;
 };

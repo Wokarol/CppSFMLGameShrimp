@@ -108,6 +108,20 @@ void world::update(const GameClock& time)
 
 void world::draw(sf::RenderTarget& target)
 {
+	std::sort(drawables.begin(), drawables.end(), [](const auto& a, const auto& b)
+		{
+			int renderOrderA = a->getSortingOrder();
+			int renderOrderB = b->getSortingOrder();
+			if (renderOrderA != renderOrderB)
+			{
+				return renderOrderA < renderOrderB;
+			}
+			else
+			{
+				return a->getSortingYPos() < b->getSortingYPos();
+			}
+		});
+
 	for (auto& drawable : drawables)
 	{
 		assert(drawable);

@@ -22,4 +22,9 @@ public:
 	{
 		target.draw(*this);
 	};
+
+	virtual float getSortingYPos() override
+	{
+		return getPosition().y;
+	}
 };

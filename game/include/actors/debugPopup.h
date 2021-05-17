@@ -18,6 +18,7 @@ public:
 	virtual void update(const GameClock& time) override;
 
 	virtual void draw(sf::RenderTarget& target) override;
+	virtual int getSortingOrder() override;
 
 	static void create(std::string message)
 	{

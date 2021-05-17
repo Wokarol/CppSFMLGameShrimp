@@ -57,6 +57,8 @@ class Drawable
 {
 public:
 	virtual void draw(sf::RenderTarget& target) = 0;
+	virtual int getSortingOrder() { return 0; }
+	virtual float getSortingYPos() { return 0; }
 };
 
 class Tickable

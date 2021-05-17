@@ -35,4 +35,9 @@ public:
 	void setPosition(sf::Vector2f v);
 	virtual void update(const GameClock& time) override;
 	virtual void draw(sf::RenderTarget& target) override;
+
+	virtual float getSortingYPos() override
+	{
+		return body.getPosition().y;
+	}
 };

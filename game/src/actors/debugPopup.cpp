@@ -3,6 +3,7 @@
 #include <world.h>
 #include <tweeners.h>
 #include <memory>
+#include <limits>
 
 auto color = 0xb03a2000;
 std::vector<DebugPopup*> popusActive;
@@ -65,6 +66,11 @@ void DebugPopup::update(const GameClock& time)
 void DebugPopup::draw(sf::RenderTarget& target)
 {
 	target.draw(text);
+}
+
+int DebugPopup::getSortingOrder()
+{
+	return std::numeric_limits<int>::max();
 }
 
 DebugPopup::~DebugPopup()
