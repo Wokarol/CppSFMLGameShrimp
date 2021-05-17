@@ -189,6 +189,7 @@ void world::clear()
 	actorsToCallStartOn.clear();
 	drawables.clear();
 	tickables.clear();
+	hittables.clear();
 	actorsToRemove.clear();
 	nextID = 0;
 }
