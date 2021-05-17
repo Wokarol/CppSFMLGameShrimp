@@ -5,6 +5,7 @@
 #include <string>
 #include <actorHandle.h>
 #include <console.h>
+#include <physics/intersections.h>
 
 class world;
 
@@ -65,4 +66,10 @@ class Tickable
 {
 public:
 	virtual void update(const GameClock& time) {};
+};
+
+class Hittable
+{
+public:
+	virtual intersect::Intersection getClosestHit(const m::Ray& ray) = 0;
 };

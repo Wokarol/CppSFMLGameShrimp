@@ -10,6 +10,7 @@ std::map<actor_id, std::unique_ptr<Actor>> world::actors = {};
 std::vector<Actor*> world::actorsToCallStartOn = {};
 std::vector<Drawable*> world::drawables = {};
 std::vector<Tickable*> world::tickables = {};
+std::vector<Hittable*> world::hittables = {};
 
 std::vector<std::shared_ptr<Tweener>> world::tweeners = {};
 std::vector<actor_id> world::actorsToRemove = {};
@@ -93,6 +94,11 @@ void world::removeDeadActors()
 			drawables.erase(std::find(drawables.begin(), drawables.end(), drawable));
 		}
 
+		if (auto hittable = dynamic_cast<Hittable*>(actor))
+		{
+			hittables.erase(std::find(hittables.begin(), hittables.end(), hittable));
+		}
+
 		actors.erase(id);
 	}
 	actorsToRemove.clear();
@@ -122,7 +128,7 @@ void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
 	}
 }
 
-void world::dumpActors()
+void world::dumpActors(bool detailed)
 {
 	std::map<std::shared_ptr<Group>, std::vector<Actor*>> actorsByGroups;
 
@@ -165,6 +171,13 @@ void world::dumpActors()
 		{
 			cs::Print("    ", std::left, std::setw(padding), namedActor.second, typeid(*namedActor.first).name());
 		}
+	}
+	if (detailed)
+	{
+		cs::Print("----------------- Details ------------------");
+		cs::Print("   Hittables: ", hittables.size());
+		cs::Print("   Tickables: ", tickables.size());
+		cs::Print("   Drawables: ", drawables.size());
 	}
 	cs::Print("--------------------------------------------");
 }

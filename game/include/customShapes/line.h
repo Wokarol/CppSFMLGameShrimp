@@ -2,13 +2,13 @@
 
 #include <SFML/Graphics.hpp>
 
-namespace sf
+namespace csf
 {
-	class LineShape : public Drawable
+	class LineShape : public sf::Drawable
 	{
-		mutable RectangleShape body;
-		Vector2f start;
-		Vector2f end;
+		mutable sf::RectangleShape body;
+		sf::Vector2f start;
+		sf::Vector2f end;
 		float thickness;
 
 		mutable bool isDirty;
@@ -16,10 +16,10 @@ namespace sf
 	public:
 		LineShape(float thickness = 10.f);
 
-		void setStart(Vector2f);
-		Vector2f getStart() const;
-		void setEnd(Vector2f);
-		Vector2f getEnd() const;
+		void setStart(sf::Vector2f);
+		sf::Vector2f getStart() const;
+		void setEnd(sf::Vector2f);
+		sf::Vector2f getEnd() const;
 
 		void setThickness(float);
 		float getThickness() const;
@@ -27,7 +27,7 @@ namespace sf
 		void setColor(sf::Color);
 		sf::Color getColor() const;
 
-		virtual void draw(RenderTarget&, RenderStates) const override;
+		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
 	private:
 		void updateShape() const;

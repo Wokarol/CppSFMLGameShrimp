@@ -1,9 +1,9 @@
 #include <customShapes/line.h>
 #include <utils/mathUtils.h>
 
-sf::LineShape::LineShape(float thickness)
+csf::LineShape::LineShape(float thickness)
 {
-	body.setFillColor(Color::White);
+	body.setFillColor(sf::Color::White);
 	start = sf::Vector2f(0, 0);
 	end = sf::Vector2f(100, 0);
 	this->thickness = thickness;
@@ -11,48 +11,48 @@ sf::LineShape::LineShape(float thickness)
 	isDirty = true;
 }
 
-void sf::LineShape::setStart(Vector2f v)
+void csf::LineShape::setStart(sf::Vector2f v)
 {
 	start = v;
 	isDirty = true;
 }
 
-sf::Vector2f sf::LineShape::getStart() const
+sf::Vector2f csf::LineShape::getStart() const
 {
 	return start;
 }
 
-void sf::LineShape::setEnd(Vector2f v)
+void csf::LineShape::setEnd(sf::Vector2f v)
 {
 	end = v;
 	isDirty = true;
 }
 
-sf::Vector2f sf::LineShape::getEnd() const
+sf::Vector2f csf::LineShape::getEnd() const
 {
 	return end;
 }
 
-void sf::LineShape::setThickness(float t)
+void csf::LineShape::setThickness(float t)
 {
 	thickness = t;
 	isDirty = true;
 }
-float sf::LineShape::getThickness() const
+float csf::LineShape::getThickness() const
 {
 	return thickness;
 }
 
-void sf::LineShape::setColor(sf::Color speedX)
+void csf::LineShape::setColor(sf::Color speedX)
 {
 	body.setFillColor(speedX);
 }
-sf::Color sf::LineShape::getColor() const
+sf::Color csf::LineShape::getColor() const
 {
 	return body.getFillColor();
 }
 
-void sf::LineShape::draw(RenderTarget& target, RenderStates states) const
+void csf::LineShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (isDirty)
 	{
@@ -61,7 +61,7 @@ void sf::LineShape::draw(RenderTarget& target, RenderStates states) const
 	target.draw(body, states);
 }
 
-void sf::LineShape::updateShape() const
+void csf::LineShape::updateShape() const
 {
 	isDirty = false;
 

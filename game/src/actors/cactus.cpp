@@ -28,3 +28,12 @@ void Cactus::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	target.draw(*this);
 }
+
+intersect::Intersection Cactus::getClosestHit(const m::Ray& ray)
+{
+	auto& bounds = getGlobalBounds();
+	sf::RectangleShape collider({ bounds.width, bounds.height });
+	collider.setPosition(bounds.left, bounds.top);
+
+	return intersect::rayWithAABB(ray, collider);
+}

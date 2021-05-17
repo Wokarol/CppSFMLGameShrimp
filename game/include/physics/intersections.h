@@ -1,6 +1,6 @@
 #pragma once
 
-#include <mathUtils.h>
+#include <utils/mathUtils.h>
 #include <SFML/Graphics.hpp>
 
 namespace intersect

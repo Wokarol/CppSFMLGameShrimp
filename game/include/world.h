@@ -17,6 +17,7 @@ class world
 	static std::vector<Actor*> actorsToCallStartOn;
 	static std::vector<Drawable*> drawables;
 	static std::vector<Tickable*> tickables;
+	static std::vector<Hittable*> hittables;
 
 	static std::vector<std::shared_ptr<Tweener>> tweeners;
 	static std::vector<actor_id> actorsToRemove;
@@ -59,6 +60,14 @@ public:
 
 			if (logging) 
 				cs::Print("    ", "Actor is drawable");
+		}
+
+		if (auto hittable = dynamic_cast<Hittable*>(actor))
+		{
+			hittables.push_back(hittable);
+
+			if (logging)
+				cs::Print("    ", "Actor is hittable");
 		}
 
 
@@ -142,7 +151,7 @@ public:
 		}
 	}
 
-	static void dumpActors();
+	static void dumpActors(bool details = false);
 	static void clear();
 
 
