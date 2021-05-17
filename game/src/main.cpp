@@ -75,7 +75,7 @@ int main()
 	Pallete colors;
 	GameClock time;
 
-	world::logging = false;
+	world::logging = true;
 
 	if (!startGame())
 	{

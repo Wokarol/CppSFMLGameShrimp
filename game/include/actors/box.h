@@ -3,7 +3,7 @@
 #include <actor.h>
 #include <cmath>
 
-class Box : public Actor, public Drawable
+class Box : public Actor, public Drawable, public Tickable
 {
 	sf::RectangleShape body;
 

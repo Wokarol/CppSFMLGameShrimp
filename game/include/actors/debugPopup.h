@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-class DebugPopup : public Actor, public Drawable
+class DebugPopup : public Actor, public Drawable, public Tickable
 {
 	std::shared_ptr<sf::Font> font;
 	sf::Text text;

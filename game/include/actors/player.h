@@ -4,7 +4,7 @@
 #include <memory>
 #include <tweeners.h>
 
-class Player : public Actor, public Drawable
+class Player : public Actor, public Drawable, public Tickable
 {
 	std::shared_ptr<sf::Texture> texture;
 	sf::Sprite body;
