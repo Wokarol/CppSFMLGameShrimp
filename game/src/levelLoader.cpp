@@ -63,24 +63,15 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 	{
 		for (auto& cactus : cacti)
 		{
-			auto& propHandle = world::createNamedActor<StaticProp>("Cactus", cactiTexture, sf::IntRect(0, 16, 16, 16));
+			auto& propHandle = world::createNamedActor<Cactus>("Cactus", 
+				cactiTexture, sf::IntRect(0, 16, 16, 16), 5.f);
 			auto& prop = *propHandle;
 			prop.group = group;
 
 			nlohmann::json posJ = cactus["pos"];
 
 			sf::Vector2f pos(posJ[0], posJ[1]);
-
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
-
-			auto animation = std::make_shared<SineTweener<float>>(
-				propHandle.as<Actor>(),
-				[&prop](float v) { prop.setRotation(v); },
-				-5.0f, 5.f, 5.f
-			);
-			animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
-
-			world::addTween(animation);
 		}
 	}
 
@@ -89,24 +80,15 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 	{
 		for (auto& tall_cactus : tall_cacti)
 		{
-			auto& propHandle = world::createNamedActor<StaticProp>("Tall Cactus", cactiTexture, sf::IntRect(16, 0, 16, 32));
+			auto& propHandle = world::createNamedActor<Cactus>("Tall Cactus", 
+				cactiTexture, sf::IntRect(16, 0, 16, 32), 4.f);
 			auto& prop = *propHandle;
 			prop.group = group;
 
 			nlohmann::json posJ = tall_cactus["pos"];
 
 			sf::Vector2f pos(posJ[0], posJ[1]);
-
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
-
-			auto animation = std::make_shared<SineTweener<float>>(
-				propHandle.as<Actor>(),
-				[&prop](float v) { prop.setRotation(v); },
-				-4.0f, 4.f, 4.f
-				);
-			animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
-
-			world::addTween(animation);
 		}
 	}
 
