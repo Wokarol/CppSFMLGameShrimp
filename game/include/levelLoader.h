@@ -5,7 +5,7 @@
 #include <sstream>
 #include <world.h>
 
-namespace levels
+namespace wok::levels
 {
 	namespace
 	{
@@ -13,5 +13,4 @@ namespace levels
 	}
 
 	void load(std::string_view name);
-
 }

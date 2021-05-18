@@ -6,10 +6,10 @@
 #include <limits>
 
 auto color = 0xb03a2000;
-std::vector<DebugPopup*> popusActive;
+std::vector<wok::DebugPopup*> popusActive;
 
 
-DebugPopup::DebugPopup(std::string message)
+wok::DebugPopup::DebugPopup(std::string message)
 {
 	text.setString(message);
 	font = res::get<sf::Font>("RobotoMono");
@@ -23,7 +23,7 @@ DebugPopup::DebugPopup(std::string message)
 	popusActive.push_back(this);
 }
 
-void DebugPopup::start()
+void wok::DebugPopup::start()
 {
 	auto fadeOut = std::make_shared<LerpTweener<sf::Color>>(handle,
 		[this]() { return text.getColor(); }, [this](auto v) { return text.setColor(v); },
@@ -38,7 +38,7 @@ void DebugPopup::start()
 	world::addTween(fadeOut);
 }
 
-void DebugPopup::update(const GameClock& time)
+void wok::DebugPopup::update(const GameClock& time)
 {
 	auto it = std::find(popusActive.begin(), popusActive.end(), this);
 	int pos = it - popusActive.begin();
@@ -63,17 +63,17 @@ void DebugPopup::update(const GameClock& time)
 	lastPos = pos;
 }
 
-void DebugPopup::draw(sf::RenderTarget& target, sf::RenderStates& states)
+void wok::DebugPopup::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	target.draw(text);
 }
 
-int DebugPopup::getSortingOrder()
+int wok::DebugPopup::getSortingOrder()
 {
 	return std::numeric_limits<int>::max();
 }
 
-DebugPopup::~DebugPopup()
+wok::DebugPopup::~DebugPopup()
 {
 	popusActive.erase(std::find(popusActive.begin(), popusActive.end(), this));
 }

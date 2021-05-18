@@ -4,7 +4,7 @@
 #include <world.h>
 #include <tweeners.h>
 
-Player::Player(std::shared_ptr<sf::Texture> texture, sf::IntRect playerSpriteRect, sf::IntRect gunSpriteRect, sf::Vector2f gunOffset, sf::Vector2f gunOrigin) :
+wok::Player::Player(std::shared_ptr<sf::Texture> texture, sf::IntRect playerSpriteRect, sf::IntRect gunSpriteRect, sf::Vector2f gunOffset, sf::Vector2f gunOrigin) :
 	texture(texture),
 	body(*texture, playerSpriteRect),
 	gun(*texture, gunSpriteRect),
@@ -20,17 +20,17 @@ Player::Player(std::shared_ptr<sf::Texture> texture, sf::IntRect playerSpriteRec
 	gunLine.setColor(sf::Color::Red);
 }
 
-void Player::setPosition(float x, float y)
+void wok::Player::setPosition(float x, float y)
 {
 	setPosition(sf::Vector2f(x, y));
 }
 
-void Player::setPosition(sf::Vector2f v)
+void wok::Player::setPosition(sf::Vector2f v)
 {
 	body.setPosition(v);
 }
 
-void Player::update(const GameClock& time)
+void wok::Player::update(const GameClock& time)
 {
 	auto mousePosition = input::mousePositionInWorld;
 
@@ -86,7 +86,7 @@ void Player::update(const GameClock& time)
 	gunLine.setEnd(gunRay.getPoint(1000));
 }
 
-void Player::draw(sf::RenderTarget& target, sf::RenderStates& states)
+void wok::Player::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	target.draw(body);
 	target.draw(gunLine);

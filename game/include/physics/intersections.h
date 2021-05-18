@@ -3,7 +3,7 @@
 #include <utils/mathUtils.h>
 #include <SFML/Graphics.hpp>
 
-namespace intersect
+namespace wok::intersect
 {
 	struct Intersection
 	{

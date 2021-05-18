@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <cassert>
 
+using namespace wok;
+
 std::map<actor_id, std::unique_ptr<Actor>> world::actors = {};
 std::vector<Actor*> world::actorsToCallStartOn = {};
 std::vector<Drawable*> world::drawables = {};

@@ -39,8 +39,8 @@ static void handleDebugKeys(const sf::Event& event)
 {
 	if (event.key.code == sf::Keyboard::F10)
 	{
-		world::dumpActors(event.key.shift);
-		DebugPopup::create("Actors dumped");
+		wok::world::dumpActors(event.key.shift);
+		wok::DebugPopup::create("Actors dumped");
 	}
 	if (event.key.code == sf::Keyboard::F2)
 	{
@@ -48,12 +48,12 @@ static void handleDebugKeys(const sf::Event& event)
 		{
 			cs::HideConsole();
 			cs::enableLock = true;
-			DebugPopup::create("Console locked");
+			wok::DebugPopup::create("Console locked");
 		}
 		else
 		{
 			cs::enableLock = false;
-			DebugPopup::create("Console unlocked");
+			wok::DebugPopup::create("Console unlocked");
 		}
 	}
 	if (event.key.code == sf::Keyboard::F3)
@@ -61,17 +61,17 @@ static void handleDebugKeys(const sf::Event& event)
 		if (cs::IsConsoleVisible())
 		{
 			cs::HideConsole();
-			DebugPopup::create("Console hidden");
+			wok::DebugPopup::create("Console hidden");
 		}
 		else
 		{
 			if (cs::enableLock)
 			{
 				cs::enableLock = false;
-				DebugPopup::create("Console unlocked");
+				wok::DebugPopup::create("Console unlocked");
 			}
 			cs::ShowConsole();
-			DebugPopup::create("Console shown");
+			wok::DebugPopup::create("Console shown");
 		}
 	}
 
@@ -83,8 +83,8 @@ static void handleDebugKeys(const sf::Event& event)
 
 static void handleEventsAndInput(sf::RenderWindow& window)
 {
-	input::attack.wasPressedThisFrame = false;
-	input::attack.wasReleasedThisFrame = false;
+	wok::input::attack.wasPressedThisFrame = false;
+	wok::input::attack.wasReleasedThisFrame = false;
 
 	sf::Event event;
 	while (window.pollEvent(event))
@@ -96,26 +96,26 @@ static void handleEventsAndInput(sf::RenderWindow& window)
 		if (event.type == sf::Event::KeyPressed)
 		{
 			handleDebugKeys(event);
-			input::handleInputKeysPressed(event);
+			wok::input::handleInputKeysPressed(event);
 		}	
 		if (event.type == sf::Event::MouseButtonPressed)
 		{
-			input::handleMouseButtonsPressed(event);
+			wok::input::handleMouseButtonsPressed(event);
 		}
 		if (event.type == sf::Event::KeyReleased)
 		{
-			input::handleInputKeysReleased(event);
+			wok::input::handleInputKeysReleased(event);
 		}
 		if (event.type == sf::Event::MouseButtonReleased)
 		{
-			input::handleMouseButtonsReleased(event);
+			wok::input::handleMouseButtonsReleased(event);
 		}
 		if (event.type == sf::Event::MouseMoved)
 		{
 			sf::Vector2i mousePos;
 			mousePos.x = event.mouseMove.x;
 			mousePos.y = event.mouseMove.y;
-			input::mousePositionInWorld = window.mapPixelToCoords(mousePos);
+			wok::input::mousePositionInWorld = window.mapPixelToCoords(mousePos);
 		}
 	}
 }

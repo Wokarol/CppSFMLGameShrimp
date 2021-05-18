@@ -1,9 +1,12 @@
 #pragma once
 #include <string>
 
-struct TilesetData
+namespace wok
 {
-	std::string path;
-	int tileSize;
-};
+	struct TilesetData
+	{
+		std::string path;
+		int tileSize;
+	};
+}
 

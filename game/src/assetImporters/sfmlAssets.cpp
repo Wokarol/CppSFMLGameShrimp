@@ -1,7 +1,7 @@
 #include <resources.h>
 
 template <>
-static void res::create(const std::string& name, std::shared_ptr<sf::Font>& asset)
+static void wok::res::create(const std::string& name, std::shared_ptr<sf::Font>& asset)
 {
 	std::string fontPath = (std::stringstream()
 		<< "assets/fonts/" << name << ".ttf"
@@ -14,7 +14,7 @@ static void res::create(const std::string& name, std::shared_ptr<sf::Font>& asse
 }
 
 template<>
-static void res::create(const std::string& name, std::shared_ptr<sf::Texture>& asset)
+static void wok::res::create(const std::string& name, std::shared_ptr<sf::Texture>& asset)
 {
 	std::string texturePath = (std::stringstream()
 		<< "assets/" << name << ".png"

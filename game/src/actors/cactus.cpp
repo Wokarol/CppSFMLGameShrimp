@@ -1,7 +1,7 @@
 #include <actors/cactus.h>
 #include <world.h>
 
-Cactus::Cactus(std::shared_ptr<sf::Texture> texture, sf::IntRect rect, float sizeScale) :
+wok::Cactus::Cactus(std::shared_ptr<sf::Texture> texture, sf::IntRect rect, float sizeScale) :
 	texture(texture),
 	Sprite(*texture, rect),
 	sizeScale(sizeScale)
@@ -12,7 +12,7 @@ Cactus::Cactus(std::shared_ptr<sf::Texture> texture, sf::IntRect rect, float siz
 	);
 }
 
-void Cactus::start()
+void wok::Cactus::start()
 {
 	auto animation = std::make_shared<SineTweener<float>>(
 		handle,
@@ -24,12 +24,12 @@ void Cactus::start()
 	world::addTween(animation);
 }
 
-void Cactus::draw(sf::RenderTarget& target, sf::RenderStates& states)
+void wok::Cactus::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	target.draw(*this);
 }
 
-intersect::Intersection Cactus::getClosestHit(const m::Ray& ray)
+wok::intersect::Intersection wok::Cactus::getClosestHit(const m::Ray& ray)
 {
 	auto& bounds = getGlobalBounds();
 	sf::RectangleShape collider({ bounds.width, bounds.height });

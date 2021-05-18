@@ -7,69 +7,72 @@
 #include <console.h>
 #include <physics/intersections.h>
 
-class world;
-
-class Group
+namespace wok
 {
-	std::string name;
+	class world;
 
-public:
-	Group(std::string name_) :
-		name(name_)
+	class Group
 	{
-		cs::Print("Created group ", name);
-	}
+		std::string name;
 
-	~Group()
+	public:
+		Group(std::string name_) :
+			name(name_)
+		{
+			cs::Print("Created group ", name);
+		}
+
+		~Group()
+		{
+			cs::Print("Removed group ", name);
+		}
+
+		std::string getName() const
+		{
+			return name;
+		}
+
+		static std::shared_ptr<Group> create(std::string name_)
+		{
+			return std::make_shared<Group>(name_);
+		}
+	};
+
+	class Actor
 	{
-		cs::Print("Removed group ", name);
-	}
+	protected:
+		ActorHandle<Actor> handle;
 
-	std::string getName() const
+	public:
+		std::shared_ptr<Group> group;
+		std::string name;
+
+		virtual void start() {};
+
+		virtual ~Actor() = default;
+
+		ActorHandle<Actor> getHandle() { return handle; }
+
+		friend world;
+	};
+
+	class Drawable
 	{
-		return name;
-	}
+	public:
+		virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) = 0;
+		virtual int getSortingOrder() { return 0; }
+		virtual float getSortingYPos() { return 0; }
+	};
 
-	static std::shared_ptr<Group> create(std::string name_)
+	class Tickable
 	{
-		return std::make_shared<Group>(name_);
-	}
-};
+	public:
+		virtual void update(const GameClock& time) {};
+	};
 
-class Actor
-{
-protected:
-	ActorHandle<Actor> handle;
-
-public:
-	std::shared_ptr<Group> group;
-	std::string name;
-
-	virtual void start() {};
-
-	virtual ~Actor() = default;
-
-	ActorHandle<Actor> getHandle() { return handle; }
-
-	friend world;
-};
-
-class Drawable
-{
-public:
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) = 0;
-	virtual int getSortingOrder() { return 0; }
-	virtual float getSortingYPos() { return 0; }
-};
-
-class Tickable
-{
-public:
-	virtual void update(const GameClock& time) {};
-};
-
-class Hittable
-{
-public:
-	virtual intersect::Intersection getClosestHit(const m::Ray& ray) = 0;
-};
+	class Hittable
+	{
+	public:
+		virtual intersect::Intersection getClosestHit(const m::Ray& ray) = 0;
+	};
+}

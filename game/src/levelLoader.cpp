@@ -14,6 +14,8 @@
 
 constexpr auto ppu = 16;
 
+using namespace wok;
+
 void createTilemap(nlohmann::json& json, std::string_view name, 
 	TilesetData tileset, std::shared_ptr<Group>& group)
 {
@@ -97,7 +99,7 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 	}
 }
 
-void levels::load(std::string_view levelPath)
+void wok::levels::load(std::string_view levelPath)
 {
 
 	std::stringstream pathStream;

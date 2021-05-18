@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-namespace csf
+namespace wok::csf
 {
 	class LineShape : public sf::Drawable
 	{

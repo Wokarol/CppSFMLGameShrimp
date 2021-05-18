@@ -5,7 +5,7 @@
 #include <fstream>
 
 template<>
-static void res::create(const std::string& name, std::shared_ptr<TilesetData>& asset)
+static void wok::res::create(const std::string& name, std::shared_ptr<TilesetData>& asset)
 {
 	std::string tilesetPath = (std::stringstream()
 		<< "assets/" << name << ".tileset"
