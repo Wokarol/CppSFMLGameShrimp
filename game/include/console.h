@@ -6,7 +6,7 @@
 
 namespace cs
 {
-    inline bool enableAutoShow = true;
+    inline bool enableLock = false;
 
     static void HideConsole()
     {
@@ -17,6 +17,9 @@ namespace cs
 
     static void ShowConsole()
     {
+        if (enableLock)
+            return;
+
 #if GAME_PLATFORM_WINDOWS
         auto window = ::GetActiveWindow();
         ::ShowWindow(::GetConsoleWindow(), SW_SHOW);
@@ -28,10 +31,7 @@ namespace cs
     static void Print(Params&&... params)
     {
 #ifdef DEBUG
-        if (enableAutoShow)
-        {
-            ShowConsole();
-        }
+        ShowConsole();
         ((std::cout << std::forward<Params>(params)), ...);
         std::cout << std::endl;
 #endif // DEBUG

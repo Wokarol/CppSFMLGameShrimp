@@ -5,39 +5,45 @@
 #include <functional>
 #include <console.h>
 
-class world;
-class Actor;
-
-class Tweener
+namespace wok
 {
-protected:
-	bool isRunning = true;
-	ActorHandle<Actor> actor;
-	std::function<void()> afterKilled = []() {};
-	std::string name;
+	class world;
+	class Actor;
 
-public:
-	Tweener(ActorHandle<Actor> actor) :
-		actor(actor)
+	class Tweener
 	{
-		name = actor->name;
-	}
+	protected:
+		bool isRunning = true;
+		ActorHandle<Actor> actor;
+		std::function<void()> afterKilled = []() {};
+		std::string name;
 
-	virtual void tween(const GameClock& time) = 0;
-	bool isTweensActorAlive() { return actor.isValid(); }
-	bool getIsRunning() { return isRunning && isTweensActorAlive(); }
+	public:
+		bool paused = false;
 
-	void getAfterKilled(std::function<void()> callback)
-	{
-		this->afterKilled = callback;
-	}
+		Tweener(ActorHandle<Actor> actor) :
+			actor(actor)
+		{
+			name = actor->name;
+		}
 
-	void kill()
-	{
-		isRunning = false;
-	}
+		virtual void tween(const GameClock& time) = 0;
+		bool isTweensActorAlive() { return actor.isValid(); }
+		bool getIsRunning() { return isRunning && isTweensActorAlive(); }
 
-	virtual ~Tweener() = default;
+		void setAfterKilled(std::function<void()> callback)
+		{
+			this->afterKilled = callback;
+		}
 
-	friend world;
-};
+		void kill()
+		{
+			isRunning = false;
+		}
+
+		virtual ~Tweener() = default;
+
+		friend world;
+	};
+
+}

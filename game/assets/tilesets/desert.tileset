@@ -1,4 +1,4 @@
 {
-    "path": "desert_tiles.png",
+    "path": "tilesets/desert_tiles",
     "tile_size": 16
 }

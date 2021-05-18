@@ -4,40 +4,37 @@
 #include <memory>
 #include <tweeners.h>
 
-class Player : public Actor, public Drawable, public Tickable
+#include <customShapes/line.h>
+
+namespace wok
 {
-	std::shared_ptr<sf::Texture> texture;
-	sf::Sprite body;
-	sf::Sprite gun;
-	sf::Vector2f gunOffset;
-	std::shared_ptr<LerpTweener<float>> flipTween;
-
-	bool facingRight = true;
-
-public:
-	Player(std::shared_ptr<sf::Texture> texture, 
-		sf::IntRect playerSpriteRect, sf::IntRect gunSpriteRect, 
-		sf::Vector2f gunOffset, sf::Vector2f gunOrigin):
-		texture(texture),
-		body(*texture, playerSpriteRect),
-		gun(*texture, gunSpriteRect)
+	class Player : public Actor, public wok::Drawable, public Tickable
 	{
-		sf::Vector2f pivot(
-			(float)(playerSpriteRect.width / 2), 
-			(float)(playerSpriteRect.height)
-		);
-		this->gunOffset = gunOffset - pivot;
-		body.setOrigin(pivot);
-		gun.setOrigin(gunOrigin);
-	}
+		std::shared_ptr<sf::Texture> texture;
 
-	void setPosition(float x, float y);
-	void setPosition(sf::Vector2f v);
-	virtual void update(const GameClock& time) override;
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
+		sf::Sprite body;
+		sf::Sprite gun;
+		sf::Sprite muzzleFlash;
+		csf::LineShape gunLine;
 
-	virtual float getSortingYPos() override
-	{
-		return body.getPosition().y;
-	}
-};
+		sf::Vector2f gunOffset;
+		sf::Vector2f muzzleFlashOffset;
+		std::shared_ptr<LerpTweener<float>> flipTween;
+
+		bool facingRight = true;
+		bool renderMuzzleFlash = false;
+
+	public:
+		Player();
+
+		void setPosition(float x, float y);
+		void setPosition(sf::Vector2f v);
+		virtual void update(const GameClock& time) override;
+		virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
+
+		virtual float getSortingYPos() override
+		{
+			return body.getPosition().y;
+		}
+	};
+}

@@ -1,15 +1,20 @@
-#include "world.h"
+#include <world.h>
 #include <console.h>
 #include <iomanip>
 #include <sstream>
 #include <ios>
 #include <algorithm>
 #include <cassert>
+#include <physics/interactions.h>
+
+using namespace wok;
 
 std::map<actor_id, std::unique_ptr<Actor>> world::actors = {};
 std::vector<Actor*> world::actorsToCallStartOn = {};
 std::vector<Drawable*> world::drawables = {};
 std::vector<Tickable*> world::tickables = {};
+std::vector<Hittable*> world::hittables = {};
+std::vector<Actor*> world::actorsToAddToCache = {};
 
 std::vector<std::shared_ptr<Tweener>> world::tweeners = {};
 std::vector<actor_id> world::actorsToRemove = {};
@@ -40,7 +45,7 @@ void world::updateTweeners(const GameClock& time)
 	for (auto& tweener : tweeners)
 	{
 		assert(tweener);
-		if (tweener->getIsRunning())
+		if (tweener->getIsRunning() && !tweener->paused)
 		{
 			tweener->tween(time);
 		}
@@ -74,33 +79,92 @@ void world::removeDeadTweens()
 
 void world::removeDeadActors()
 {
-	for (actor_id& id : actorsToRemove)
+	auto end = std::unique(actorsToRemove.begin(), actorsToRemove.end());
+	for (auto it = actorsToRemove.begin(); it != end; it++)
 	{
+		auto id = *it;
 		Actor* actor = getActorPointer<Actor>(id);
-		assert(actor);
+		if (!actor)
+		{
+			continue;
+		}
+
 		if (logging)
 		{
 			cs::Print("WORLD: ", "Destroying actor: ", actor->name, " [", id, "]");
 		}
-
-		if (auto tickable = dynamic_cast<Tickable*>(actor))
-		{
-			tickables.erase(std::find(tickables.begin(), tickables.end(), tickable));
-		}
-
-		if (auto drawable = dynamic_cast<Drawable*>(actor))
-		{
-			drawables.erase(std::find(drawables.begin(), drawables.end(), drawable));
-		}
+		clearActorFromCache(actor);
 
 		actors.erase(id);
 	}
 	actorsToRemove.clear();
 }
 
+
+void wok::world::fillCacheIfNeeded()
+{
+	for (auto& actor : actorsToAddToCache)
+	{
+		addActorToCache(actor);
+	}
+	actorsToAddToCache.clear();
+}
+
+void wok::world::addActorToCache(Actor* actor)
+{
+	if (logging) 
+		cs::Print("WORLD: ", "Adding: ", actor->name, " [", actor->handle.id, "] to cache");
+	
+	if (auto tickable = dynamic_cast<Tickable*>(actor))
+	{
+		tickables.push_back(tickable);
+
+		if (logging)
+			cs::Print("    ", "Actor is tickable");
+	}
+
+	if (auto drawable = dynamic_cast<Drawable*>(actor))
+	{
+		drawables.push_back(drawable);
+
+		if (logging)
+			cs::Print("    ", "Actor is drawable");
+	}
+
+	if (auto hittable = dynamic_cast<Hittable*>(actor))
+	{
+		hittables.push_back(hittable);
+
+		if (logging)
+			cs::Print("    ", "Actor is hittable");
+	}
+}
+
+void wok::world::clearActorFromCache(Actor* actor)
+{
+	if (auto tickable = dynamic_cast<Tickable*>(actor))
+	{
+		tickables.erase(std::find(tickables.begin(), tickables.end(), tickable));
+	}
+
+	if (auto drawable = dynamic_cast<Drawable*>(actor))
+	{
+		drawables.erase(std::find(drawables.begin(), drawables.end(), drawable));
+	}
+
+	if (auto hittable = dynamic_cast<Hittable*>(actor))
+	{
+		hittables.erase(std::find(hittables.begin(), hittables.end(), hittable));
+	}
+}
+
 void world::update(const GameClock& time)
 {
+	fillCacheIfNeeded();
+
 	updateActors(time);
+	fillCacheIfNeeded();
+
 	updateTweeners(time);
 	removeDeadTweens();
 	removeDeadActors();
@@ -122,7 +186,41 @@ void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
 	}
 }
 
-void world::dumpActors()
+physics::RaycastResult world::raycast(const m::Ray& ray, float maxDist)
+{
+
+	intersect::Intersection closestHit;
+	ActorHandle<Actor> hitActorHandle{};
+
+	for (auto& hittable : hittables)
+	{
+		assert(hittable);
+		auto castResult = hittable->getClosestHit(ray);
+
+		if (!castResult.hit)
+			continue;
+
+		if (!closestHit.hit || (castResult.distance < closestHit.distance))
+		{
+			closestHit = castResult;
+			auto hitActor = dynamic_cast<Actor*>(hittable);
+			assert(hitActor);
+			hitActorHandle = hitActor->getHandle();
+		}
+	}
+
+	if (maxDist < 0 || closestHit.distance <= maxDist)
+	{
+		return { closestHit, hitActorHandle.as<Hittable>() };
+	}
+	else
+	{
+		return { };
+	}
+
+}
+
+void world::dumpActors(bool detailed)
 {
 	std::map<std::shared_ptr<Group>, std::vector<Actor*>> actorsByGroups;
 
@@ -166,6 +264,14 @@ void world::dumpActors()
 			cs::Print("    ", std::left, std::setw(padding), namedActor.second, typeid(*namedActor.first).name());
 		}
 	}
+	if (detailed)
+	{
+		cs::Print("----------------- Details ------------------");
+		cs::Print("   Hittables: ", hittables.size());
+		cs::Print("   Tickables: ", tickables.size());
+		cs::Print("   Drawables: ", drawables.size());
+		cs::Print("   Tweeners:  ", tweeners.size());
+	}
 	cs::Print("--------------------------------------------");
 }
 
@@ -176,6 +282,8 @@ void world::clear()
 	actorsToCallStartOn.clear();
 	drawables.clear();
 	tickables.clear();
+	hittables.clear();
 	actorsToRemove.clear();
+	actorsToAddToCache.clear();
 	nextID = 0;
 }

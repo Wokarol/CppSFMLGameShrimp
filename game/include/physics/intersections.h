@@ -1,18 +1,26 @@
 #pragma once
 
-#include <mathUtils.h>
+#include <utils/mathUtils.h>
 #include <SFML/Graphics.hpp>
 
-namespace intersect
+namespace wok::intersect
 {
 	struct Intersection
 	{
 		bool hit;
 		float distance;
 		sf::Vector2f normal;
+		m::Ray ray;
 
-		Intersection() : hit(false), distance(0), normal(sf::Vector2f(0.f, 0.f)) {}
-		Intersection(float d, sf::Vector2f n) : hit(true), distance(d), normal(n) {}
+		Intersection() : 
+			hit(false), 
+			distance(0), normal(sf::Vector2f(0.f, 0.f)), ray()
+		{}
+
+		Intersection(float d, sf::Vector2f n, m::Ray ray) : 
+			hit(true), 
+			distance(d), normal(n), ray(ray)
+		{}
 	};
 
 	inline Intersection rayWithCircle(m::Ray ray, const sf::CircleShape& circle)
@@ -56,16 +64,18 @@ namespace intersect
 		sf::Vector2f hitPoint = ray.getPoint(distToHit);
 		sf::Vector2f normal = m::normalize(hitPoint);
 
-		return Intersection(distToHit, normal);
+		return Intersection(distToHit, normal, ray);
 	}
 
-	/// <param name="AABB"> Rectangle's rotation will be ignored </param>
-	inline Intersection rayWithAABB(m::Ray ray, const sf::RectangleShape& aabb)
+	/// <param name="AABB"> Rectangle's rotation and position will be ignored </param>
+	inline Intersection rayWithCenteredAABB(m::Ray ray, const sf::RectangleShape& aabb)
 	{
 		// We offset it so the aabb's top left corner is at [0, 0]
 		ray.move(aabb.getOrigin());
 		ray.direction = m::normalize(ray.direction);
 		auto size = aabb.getSize();
+
+		//cs::Print(ray.origin.x);
 
 		if (ray.direction.x > 0 && ray.origin.x < 0)
 		{
@@ -76,7 +86,7 @@ namespace intersect
 
 			if (yOnWall >= 0 && yOnWall <= size.y)
 			{
-				return Intersection(distanceToWall, sf::Vector2f(-1.f, 0.f));
+				return Intersection(distanceToWall, sf::Vector2f(-1.f, 0.f), ray);
 			}
 		}
 
@@ -89,7 +99,7 @@ namespace intersect
 
 			if (yOnWall >= 0 && yOnWall <= size.y)
 			{
-				return Intersection(distanceToWall, sf::Vector2f(1.f, 0.f));
+				return Intersection(distanceToWall, sf::Vector2f(1.f, 0.f), ray);
 			}
 		}
 
@@ -102,7 +112,7 @@ namespace intersect
 
 			if (xOnWall >= 0 && xOnWall <= size.x)
 			{
-				return Intersection(distanceToWall, sf::Vector2f(0.f, -1.f));
+				return Intersection(distanceToWall, sf::Vector2f(0.f, -1.f), ray);
 			}
 		}
 
@@ -115,11 +125,18 @@ namespace intersect
 
 			if (xOnWall >= 0 && xOnWall <= size.x)
 			{
-				return Intersection(distanceToWall, sf::Vector2f(0.f, 1.f));
+				return Intersection(distanceToWall, sf::Vector2f(0.f, 1.f), ray);
 			}
 		}
 
 		return {};
+	}
+
+	/// <param name="AABB"> Rectangle's rotation will be ignored </param>
+	inline Intersection rayWithAABB(m::Ray ray, const sf::RectangleShape& aabb)
+	{
+		ray.move(-aabb.getPosition());
+		return rayWithCenteredAABB(ray, aabb);
 	}
 
 	inline Intersection rayWithOBB(m::Ray ray, const sf::RectangleShape& obb)
@@ -130,7 +147,7 @@ namespace intersect
 		auto angle = -obb.getRotation();
 		ray.rotateAround(sf::Vector2f(0, 0), angle);
 
-		auto res = rayWithAABB(ray, obb);
+		auto res = rayWithCenteredAABB(ray, obb);
 		res.normal = m::rotate(res.normal, -angle);
 
 		return res;

@@ -8,20 +8,18 @@
 #include <console.h>
 
 #include <tweeners.h>
+#include <resources.h>
+
+#include <assets/tilesetData.h>
 
 constexpr auto ppu = 16;
 
-void createTilemap(nlohmann::json& json, std::string_view name, std::shared_ptr<Group>& group)
+using namespace wok;
+
+void createTilemap(nlohmann::json& json, std::string_view name, 
+	TilesetData tileset, std::shared_ptr<Group>& group)
 {
-	// TODO: FIX HARDCODING
-
-	sf::Texture ground;
-	if (!ground.loadFromFile("assets/tilesets/desert_tiles.png"))
-	{
-		cs::ShowConsole();
-	}
-
-	auto& tilemap = *world::createNamedActor<Tilemap>(name, ground, ppu);
+	auto& tilemap = *world::createNamedActor<Tilemap>(name, tileset);
 	tilemap.group = group;
 
 	if (!json.is_array())
@@ -46,41 +44,23 @@ void createTilemap(nlohmann::json& json, std::string_view name, std::shared_ptr<
 
 void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 {
-	auto cactiTexture = std::make_shared<sf::Texture>();
-	if (!cactiTexture->loadFromFile("assets/actors/cacti.png"))
-	{
-		cs::ShowConsole();
-	}
-
-	auto playerTexture = std::make_shared<sf::Texture>();
-	if (!playerTexture->loadFromFile("assets/actors/shrimp.png"))
-	{
-		cs::ShowConsole();
-	}
+	auto& cactiTexture = res::get<sf::Texture>("actors/cacti");
+	auto& playerTexture = res::get<sf::Texture>("actors/shrimp");
 
 	nlohmann::json& cacti = json["Cacti"];
 	if (cacti.is_array())
 	{
 		for (auto& cactus : cacti)
 		{
-			auto& propHandle = world::createNamedActor<StaticProp>("Cactus", cactiTexture, sf::IntRect(0, 16, 16, 16));
+			auto& propHandle = world::createNamedActor<Cactus>("Cactus", 
+				cactiTexture, sf::IntRect(0, 16, 16, 16), 5.f);
 			auto& prop = *propHandle;
 			prop.group = group;
 
 			nlohmann::json posJ = cactus["pos"];
 
 			sf::Vector2f pos(posJ[0], posJ[1]);
-
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
-
-			auto animation = std::make_shared<SineTweener<float>>(
-				propHandle.as<Actor>(),
-				[&prop](float v) { prop.setRotation(v); },
-				-5.0f, 5.f, 5.f
-			);
-			animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
-
-			world::addTween(animation);
 		}
 	}
 
@@ -89,35 +69,22 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 	{
 		for (auto& tall_cactus : tall_cacti)
 		{
-			auto& propHandle = world::createNamedActor<StaticProp>("Tall Cactus", cactiTexture, sf::IntRect(16, 0, 16, 32));
+			auto& propHandle = world::createNamedActor<Cactus>("Tall Cactus", 
+				cactiTexture, sf::IntRect(16, 0, 16, 32), 4.f);
 			auto& prop = *propHandle;
 			prop.group = group;
 
 			nlohmann::json posJ = tall_cactus["pos"];
 
 			sf::Vector2f pos(posJ[0], posJ[1]);
-
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
-
-			auto animation = std::make_shared<SineTweener<float>>(
-				propHandle.as<Actor>(),
-				[&prop](float v) { prop.setRotation(v); },
-				-4.0f, 4.f, 4.f
-				);
-			animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
-
-			world::addTween(animation);
 		}
 	}
 
 	nlohmann::json& player = json["Player"];
 	if (player.is_object())
 	{
-		auto& playerActor = *world::createNamedActor<Player>("Player",
-			playerTexture, 
-			sf::IntRect(0, 0, 13, 14), sf::IntRect(0, 16, 6, 4), 
-			sf::Vector2f(8, 10), sf::Vector2f(1, 1)
-		);
+		auto& playerActor = *world::createNamedActor<Player>("Player");
 		playerActor.group = group;
 
 		nlohmann::json posJ = player["pos"];
@@ -128,7 +95,7 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 	}
 }
 
-void levels::load(std::string_view levelPath)
+void wok::levels::load(std::string_view levelPath)
 {
 
 	std::stringstream pathStream;
@@ -155,8 +122,9 @@ void levels::load(std::string_view levelPath)
 
 	try
 	{
-		createTilemap(level["Ground"], "Ground Tilemap", group);
-		createTilemap(level["Tiles"], "Free Tile Tilemap", group);
+		auto& groundTileset = res::get<TilesetData>("tilesets/desert");
+		createTilemap(level["Ground"], "Ground Tilemap", *groundTileset, group);
+		createTilemap(level["Tiles"], "Free Tile Tilemap", *groundTileset, group);
 		createActors(level["Actors"], group);
 	}
 	catch (const std::exception& e)

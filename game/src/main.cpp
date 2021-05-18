@@ -15,7 +15,7 @@
 #include <world.h>
 
 #include <levelLoader.h>
-#include <assets/fonts.h>
+#include <resources.h>
 
 struct Pallete
 {
@@ -45,13 +45,13 @@ bool startGame()
 	{
 		std::string levelToLoad;
 
-		if(!tryGetString(config, "start_level", levelToLoad))
+		if(!wok::tryGetString(config, "start_level", levelToLoad))
 		{
 			cs::Print("Key 'start_level' was not found");
 			return false;
 		}
 
-		levels::load(levelToLoad);
+		wok::levels::load(levelToLoad);
 	}
 	catch (const std::exception& e)
 	{
@@ -73,9 +73,9 @@ int main()
 	setCornerCam(window);
 
 	Pallete colors;
-	GameClock time;
+	wok::GameClock time;
 
-	world::logging = false;
+	wok::world::logging = false;
 
 	if (!startGame())
 	{
@@ -89,14 +89,14 @@ int main()
 		handleEventsAndInput(window);
 		time.Tick();
 
-		world::update(time);
+		wok::world::update(time);
 
 		window.clear(colors.background);
 		auto& states = sf::RenderStates();
-		world::draw(window, states);
+		wok::world::draw(window, states);
 		window.display();
 	}
 
-	world::clear();
-	fonts::clear();
+	wok::world::clear();
+	wok::res::clear();
 }

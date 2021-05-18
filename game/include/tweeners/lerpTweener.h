@@ -4,37 +4,47 @@
 #include <console.h>
 #include <utils/mathUtils.h>
 
-template <class T>
-class LerpTweener : public Tweener
+namespace wok
 {
-	std::function<void(T)> setter;
-	std::function<T()> getter;
-	float t = 0;
-	float speed;
-	T start, end;
-
-public:
-	LerpTweener(ActorHandle<Actor> actor,
-		std::function<T()> getter, std::function<void(T)> setter,
-		T target, float duration
-	) :
-		Tweener(actor),
-		getter(getter), setter(setter),
-		speed(1.f / duration),
-		start(getter()), end(target)
-	{ }
-
-	virtual void tween(const GameClock& time) override
+	template <class T>
+	class LerpTweener : public Tweener
 	{
-		t += time.delta * speed;
-		if (t < 1)
+		std::function<void(T)> setter;
+		std::function<T()> getter;
+		float t = 0;
+		float speed;
+		T start, end;
+
+		std::function<float(float)> easingFormula = [](float t) { return t; };
+
+	public:
+		LerpTweener(ActorHandle<Actor> actor,
+			std::function<T()> getter, std::function<void(T)> setter,
+			T target, float duration
+		) :
+			Tweener(actor),
+			getter(getter), setter(setter),
+			speed(1.f / duration),
+			start(getter()), end(target)
+		{ }
+
+		virtual void tween(const GameClock& time) override
 		{
-			setter(m::lerp(start, end, t));
+			t += time.delta * speed;
+			if (t < 1)
+			{
+				setter(m::lerp(start, end, easingFormula(t)));
+			}
+			else
+			{
+				setter(end);
+				kill();
+			}
 		}
-		else
+
+		void setEasing(std::function<float(float)> easing)
 		{
-			setter(end);
-			kill();
+			this->easingFormula = easing;
 		}
-	}
-};
+	};
+}

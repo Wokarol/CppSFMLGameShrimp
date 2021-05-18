@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <console.h>
 
-void Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
+void wok::Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
 {
 	sf::IntRect tileRect(
 		(int)(tilesetCoord.x * ppu),
@@ -12,13 +12,13 @@ void Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
 		ppu
 	);
 
-	sf::Sprite& tile = sf::Sprite(tileset, sf::IntRect(tileRect));
+	sf::Sprite& tile = sf::Sprite(*tileset, sf::IntRect(tileRect));
 	tile.setPosition(tilePos * (float)ppu);
 
 	tiles.push_back(tile);
 }
 
-void Tilemap::draw(sf::RenderTarget& target, sf::RenderStates& states)
+void wok::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	for (auto& tile : tiles)
 	{
@@ -26,7 +26,7 @@ void Tilemap::draw(sf::RenderTarget& target, sf::RenderStates& states)
 	}
 }
 
-int Tilemap::getSortingOrder()
+int wok::Tilemap::getSortingOrder()
 {
 	return -100;
 }

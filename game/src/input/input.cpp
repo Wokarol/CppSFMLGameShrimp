@@ -2,8 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <console.h>
 
-sf::Vector2f input::movement = { 0, 0 };
-sf::Vector2f input::mousePositionInWorld = { 0, 0 };
+sf::Vector2f wok::input::movement = { 0, 0 };
+sf::Vector2f wok::input::mousePositionInWorld = { 0, 0 };
+wok::input::key wok::input::attack;
 
 struct DirectionKey
 {
@@ -24,7 +25,7 @@ std::vector<DirectionKey> directionKeys{
 	{ sf::Keyboard::S, sf::Vector2f(0,  1) },
 };
 
-void input::handleInputKeysPressed(const sf::Event& event)
+void wok::input::handleInputKeysPressed(const sf::Event& event)
 {
 	for (auto& key : directionKeys)
 	{
@@ -36,7 +37,7 @@ void input::handleInputKeysPressed(const sf::Event& event)
 	}
 }
 
-void input::handleInputKeysReleased(const sf::Event& event)
+void wok::input::handleInputKeysReleased(const sf::Event& event)
 {
 	for (auto& key : directionKeys)
 	{
@@ -45,5 +46,23 @@ void input::handleInputKeysReleased(const sf::Event& event)
 			movement -= key.direction;
 			key.pressed = false;
 		}
+	}
+}
+
+void wok::input::handleMouseButtonsPressed(const sf::Event& event)
+{
+	if (event.mouseButton.button == sf::Mouse::Left)
+	{
+		input::attack.wasPressedThisFrame = true;
+		input::attack.isPressed = true;
+	}
+}
+
+void wok::input::handleMouseButtonsReleased(const sf::Event& event)
+{
+	if (event.mouseButton.button == sf::Mouse::Left)
+	{
+		input::attack.wasReleasedThisFrame = true;
+		input::attack.isPressed = false;
 	}
 }
