@@ -1,5 +1,6 @@
 #include <actors/cactus.h>
 #include <world.h>
+#include "..\..\include\actors\cactus.h"
 
 wok::Cactus::Cactus(std::shared_ptr<sf::Texture> texture, sf::IntRect rect, float sizeScale) :
 	texture(texture),
@@ -14,7 +15,7 @@ wok::Cactus::Cactus(std::shared_ptr<sf::Texture> texture, sf::IntRect rect, floa
 
 void wok::Cactus::start()
 {
-	auto animation = std::make_shared<SineTweener<float>>(
+	animation = std::make_shared<SineTweener<float>>(
 		handle,
 		[this](float v) { setRotation(v); },
 		-sizeScale, sizeScale, sizeScale
@@ -36,4 +37,24 @@ wok::intersect::Intersection wok::Cactus::getClosestHit(const m::Ray& ray)
 	collider.setPosition(bounds.left, bounds.top);
 
 	return intersect::rayWithAABB(ray, collider);
+}
+
+void wok::Cactus::reactToHit(const intersect::Intersection& intersection)
+{
+	float dir = 1;
+	if (intersection.ray.direction.x < 0)
+	{
+		dir = -1;
+	}
+
+	animation->paused = true;
+	auto hit = std::make_shared<LerpTweener<float>>(handle,
+		[this]() { return getRotation(); }, [this](float v) { setRotation(v); },
+		getRotation() + 5.f * dir * sizeScale, 2.f
+		);
+
+	hit->setAfterKilled([=]() { animation->paused = false; });
+	hit->setEasing([](float t) { return std::sin(t * 7 * 3.1415f) * pow(2.7182f, -5 * t); });
+
+	world::addTween(hit);
 }

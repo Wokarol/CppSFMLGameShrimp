@@ -15,6 +15,8 @@ namespace wok
 		float speed;
 		T start, end;
 
+		std::function<float(float)> easingFormula = [](float t) { return t; };
+
 	public:
 		LerpTweener(ActorHandle<Actor> actor,
 			std::function<T()> getter, std::function<void(T)> setter,
@@ -31,13 +33,18 @@ namespace wok
 			t += time.delta * speed;
 			if (t < 1)
 			{
-				setter(m::lerp(start, end, t));
+				setter(m::lerp(start, end, easingFormula(t)));
 			}
 			else
 			{
 				setter(end);
 				kill();
 			}
+		}
+
+		void setEasing(std::function<float(float)> easing)
+		{
+			this->easingFormula = easing;
 		}
 	};
 }

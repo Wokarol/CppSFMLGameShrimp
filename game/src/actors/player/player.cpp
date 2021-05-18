@@ -77,8 +77,8 @@ void wok::Player::update(const GameClock& time)
 
 		if (raycastResult.hitActor.isValid())
 		{
-			cs::Print(raycastResult.hitActor->name);
-			raycastResult.hitActor.destroy();
+			cs::Print(raycastResult.hitActor.as<Actor>()->name);
+			raycastResult.hitActor->reactToHit(raycastResult.intersection);
 		}
 	}
 

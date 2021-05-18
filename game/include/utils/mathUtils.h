@@ -128,6 +128,7 @@ namespace wok::m
         sf::Vector2f origin;
         sf::Vector2f direction;
 
+        Ray() : origin(), direction() {}
         Ray(sf::Vector2f _origin, sf::Vector2f _direction) : origin(_origin), direction(m::normalize(_direction)) {}
 
         void rotateAround(sf::Vector2f pivot, float degrees)

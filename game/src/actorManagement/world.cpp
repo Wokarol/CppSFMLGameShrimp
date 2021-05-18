@@ -44,7 +44,7 @@ void world::updateTweeners(const GameClock& time)
 	for (auto& tweener : tweeners)
 	{
 		assert(tweener);
-		if (tweener->getIsRunning())
+		if (tweener->getIsRunning() && !tweener->paused)
 		{
 			tweener->tween(time);
 		}
@@ -154,7 +154,7 @@ physics::RaycastResult world::raycast(const m::Ray& ray)
 		}
 	}
 
-	return { closestHit, hitActorHandle };
+	return { closestHit, hitActorHandle.as<Hittable>() };
 }
 
 void world::dumpActors(bool detailed)

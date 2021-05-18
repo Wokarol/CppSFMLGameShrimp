@@ -10,9 +10,17 @@ namespace wok::intersect
 		bool hit;
 		float distance;
 		sf::Vector2f normal;
+		m::Ray ray;
 
-		Intersection() : hit(false), distance(0), normal(sf::Vector2f(0.f, 0.f)) {}
-		Intersection(float d, sf::Vector2f n) : hit(true), distance(d), normal(n) {}
+		Intersection() : 
+			hit(false), 
+			distance(0), normal(sf::Vector2f(0.f, 0.f)), ray()
+		{}
+
+		Intersection(float d, sf::Vector2f n, m::Ray ray) : 
+			hit(true), 
+			distance(d), normal(n), ray(ray)
+		{}
 	};
 
 	inline Intersection rayWithCircle(m::Ray ray, const sf::CircleShape& circle)
@@ -56,7 +64,7 @@ namespace wok::intersect
 		sf::Vector2f hitPoint = ray.getPoint(distToHit);
 		sf::Vector2f normal = m::normalize(hitPoint);
 
-		return Intersection(distToHit, normal);
+		return Intersection(distToHit, normal, ray);
 	}
 
 	/// <param name="AABB"> Rectangle's rotation and position will be ignored </param>
@@ -78,7 +86,7 @@ namespace wok::intersect
 
 			if (yOnWall >= 0 && yOnWall <= size.y)
 			{
-				return Intersection(distanceToWall, sf::Vector2f(-1.f, 0.f));
+				return Intersection(distanceToWall, sf::Vector2f(-1.f, 0.f), ray);
 			}
 		}
 
@@ -91,7 +99,7 @@ namespace wok::intersect
 
 			if (yOnWall >= 0 && yOnWall <= size.y)
 			{
-				return Intersection(distanceToWall, sf::Vector2f(1.f, 0.f));
+				return Intersection(distanceToWall, sf::Vector2f(1.f, 0.f), ray);
 			}
 		}
 
@@ -104,7 +112,7 @@ namespace wok::intersect
 
 			if (xOnWall >= 0 && xOnWall <= size.x)
 			{
-				return Intersection(distanceToWall, sf::Vector2f(0.f, -1.f));
+				return Intersection(distanceToWall, sf::Vector2f(0.f, -1.f), ray);
 			}
 		}
 
@@ -117,7 +125,7 @@ namespace wok::intersect
 
 			if (xOnWall >= 0 && xOnWall <= size.x)
 			{
-				return Intersection(distanceToWall, sf::Vector2f(0.f, 1.f));
+				return Intersection(distanceToWall, sf::Vector2f(0.f, 1.f), ray);
 			}
 		}
 

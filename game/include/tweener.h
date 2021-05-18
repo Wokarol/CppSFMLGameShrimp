@@ -19,6 +19,8 @@ namespace wok
 		std::string name;
 
 	public:
+		bool paused = false;
+
 		Tweener(ActorHandle<Actor> actor) :
 			actor(actor)
 		{
@@ -29,7 +31,7 @@ namespace wok
 		bool isTweensActorAlive() { return actor.isValid(); }
 		bool getIsRunning() { return isRunning && isTweensActorAlive(); }
 
-		void getAfterKilled(std::function<void()> callback)
+		void setAfterKilled(std::function<void()> callback)
 		{
 			this->afterKilled = callback;
 		}

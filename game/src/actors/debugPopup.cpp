@@ -31,7 +31,7 @@ void wok::DebugPopup::start()
 		);
 
 	auto myHandle = handle;
-	fadeOut->getAfterKilled([myHandle]() {
+	fadeOut->setAfterKilled([myHandle]() {
 		myHandle.destroy();
 	});
 

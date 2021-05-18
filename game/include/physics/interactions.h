@@ -1,13 +1,13 @@
 #pragma once
 
 #include <physics/intersections.h>
-#include <actorHandle.h>
+#include <actor.h>
 
 namespace wok::physics
 {
 	struct RaycastResult
 	{
 		intersect::Intersection intersection;
-		ActorHandle<Actor> hitActor;
+		ActorHandle<Hittable> hitActor;
 	};
 }

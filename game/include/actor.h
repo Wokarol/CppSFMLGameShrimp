@@ -74,5 +74,6 @@ namespace wok
 	{
 	public:
 		virtual intersect::Intersection getClosestHit(const m::Ray& ray) = 0;
+		virtual void reactToHit(const intersect::Intersection& intersection) {};
 	};
 }
