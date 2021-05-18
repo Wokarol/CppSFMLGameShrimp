@@ -121,7 +121,7 @@ namespace wok
 			auto& pair = actors.find(id);
 			if (pair == actors.end())
 			{
-				throw std::out_of_range("There is no actor with given id");
+				return nullptr;
 			}
 
 			return dynamic_cast<T*>(pair->second.get());

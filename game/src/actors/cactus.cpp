@@ -39,7 +39,7 @@ wok::intersect::Intersection wok::Cactus::getClosestHit(const m::Ray& ray)
 	return intersect::rayWithAABB(ray, collider);
 }
 
-void wok::Cactus::reactToHit(const intersect::Intersection& intersection)
+void wok::Cactus::reactToHit(const intersect::Intersection& intersection, int damage)
 {
 	float dir = 1;
 	if (intersection.ray.direction.x < 0)
@@ -47,14 +47,27 @@ void wok::Cactus::reactToHit(const intersect::Intersection& intersection)
 		dir = -1;
 	}
 
+	health -= damage;
+	bool shouldDie = health <= 0;
+
 	animation->paused = true;
 	auto hit = std::make_shared<LerpTweener<float>>(handle,
 		[this]() { return getRotation(); }, [this](float v) { setRotation(v); },
 		getRotation() + 5.f * dir * sizeScale, 2.f
 		);
 
-	hit->setAfterKilled([=]() { animation->paused = false; });
 	hit->setEasing([](float t) { return std::sin(t * 7 * 3.1415f) * pow(2.7182f, -5 * t); });
+
+	auto h = handle;
+	auto anim = animation;
+	hit->setAfterKilled([anim, shouldDie, h]() 
+		{ 
+			if(anim) anim->paused = false;
+			if (shouldDie)
+			{
+				h.destroy();
+			}
+		});
 
 	world::addTween(hit);
 }

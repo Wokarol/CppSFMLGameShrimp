@@ -78,10 +78,16 @@ void world::removeDeadTweens()
 
 void world::removeDeadActors()
 {
-	for (actor_id& id : actorsToRemove)
+	auto end = std::unique(actorsToRemove.begin(), actorsToRemove.end());
+	for (auto it = actorsToRemove.begin(); it != end; it++)
 	{
+		auto id = *it;
 		Actor* actor = getActorPointer<Actor>(id);
-		assert(actor);
+		if (!actor)
+		{
+			continue;
+		}
+
 		if (logging)
 		{
 			cs::Print("WORLD: ", "Destroying actor: ", actor->name, " [", id, "]");

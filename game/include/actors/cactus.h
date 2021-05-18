@@ -13,6 +13,7 @@ namespace wok
 		std::shared_ptr<sf::Texture> texture;
 		std::shared_ptr<SineTweener<float>> animation;
 		float sizeScale;
+		int health = 3;
 
 	public:
 		Cactus(std::shared_ptr<sf::Texture> texture, sf::IntRect rect, float sizeScale);
@@ -21,6 +22,6 @@ namespace wok
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;;
 		virtual float getSortingYPos() override { return getPosition().y; }
 		virtual intersect::Intersection getClosestHit(const m::Ray& ray) override;
-		virtual void reactToHit(const intersect::Intersection& intersection) override;
+		virtual void reactToHit(const intersect::Intersection& intersection, int damage) override;
 	};
 }
