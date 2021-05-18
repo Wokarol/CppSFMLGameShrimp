@@ -7,15 +7,16 @@
 #include <console.h>
 #include <typeindex>
 
-namespace res
+class res
 {
-	inline std::map<
-		std::type_index, 
+	static inline std::map<
+		std::type_index,
 		std::map<std::string, std::shared_ptr<void>>
-	> loadedAssets;
+	> loadedAssets{};
 
+public:
 	template <typename T>
-	inline std::shared_ptr<T> get(std::string name)
+	static inline std::shared_ptr<T> get(std::string name)
 	{
 		auto id = std::type_index(typeid(T));
 		auto& asset = loadedAssets[id][name];
@@ -28,23 +29,16 @@ namespace res
 			create<T>(name, castedAsset);
 			asset = std::static_pointer_cast<void>(castedAsset);
 		}
-		
+
 		return castedAsset;
 	}
 
 
 	template <typename T>
-	inline void create(const std::string& name, std::shared_ptr<T>& asset)
-	{
-		std::string fontPath = (std::stringstream()
-			<< "assets/fonts/" << name << ".ttf"
-			).str();
+	static void create(const std::string& name, std::shared_ptr<T>& asset);
 
-		asset->loadFromFile(fontPath);
-	}
-
-	inline void clear()
+	static inline void clear()
 	{
 		loadedAssets.clear();
 	}
-}
+};

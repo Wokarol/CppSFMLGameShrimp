@@ -5,13 +5,13 @@
 
 class Tilemap : public Actor, public Drawable
 {
-	sf::Texture tileset;
+	std::shared_ptr<sf::Texture> tileset;
 	int ppu;
 
 	std::vector<sf::Sprite> tiles;
 
 public:
-	Tilemap(sf::Texture tileset_, int ppu_) :
+	Tilemap(std::shared_ptr<sf::Texture> tileset_, int ppu_) :
 		tileset(tileset_),
 		ppu(ppu_)
 	{}

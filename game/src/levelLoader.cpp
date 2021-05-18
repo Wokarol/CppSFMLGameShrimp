@@ -8,6 +8,7 @@
 #include <console.h>
 
 #include <tweeners.h>
+#include <resources.h>
 
 constexpr auto ppu = 16;
 
@@ -15,11 +16,7 @@ void createTilemap(nlohmann::json& json, std::string_view name, std::shared_ptr<
 {
 	// TODO: FIX HARDCODING
 
-	sf::Texture ground;
-	if (!ground.loadFromFile("assets/tilesets/desert_tiles.png"))
-	{
-		cs::ShowConsole();
-	}
+	auto& ground = res::get<sf::Texture>("tilesets/desert_tiles");
 
 	auto& tilemap = *world::createNamedActor<Tilemap>(name, ground, ppu);
 	tilemap.group = group;
@@ -46,17 +43,8 @@ void createTilemap(nlohmann::json& json, std::string_view name, std::shared_ptr<
 
 void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 {
-	auto cactiTexture = std::make_shared<sf::Texture>();
-	if (!cactiTexture->loadFromFile("assets/actors/cacti.png"))
-	{
-		cs::ShowConsole();
-	}
-
-	auto playerTexture = std::make_shared<sf::Texture>();
-	if (!playerTexture->loadFromFile("assets/actors/shrimp.png"))
-	{
-		cs::ShowConsole();
-	}
+	auto& cactiTexture = res::get<sf::Texture>("actors/cacti");
+	auto& playerTexture = res::get<sf::Texture>("actors/shrimp");
 
 	nlohmann::json& cacti = json["Cacti"];
 	if (cacti.is_array())

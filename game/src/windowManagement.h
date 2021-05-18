@@ -47,12 +47,12 @@ static void handleDebugKeys(const sf::Event& event)
 		if (cs::IsConsoleVisible())
 		{
 			cs::HideConsole();
-			cs::enableAutoShow = false;
+			cs::enableLock = true;
 			DebugPopup::create("Console locked");
 		}
 		else
 		{
-			cs::enableAutoShow = true;
+			cs::enableLock = false;
 			DebugPopup::create("Console unlocked");
 		}
 	}
@@ -65,13 +65,13 @@ static void handleDebugKeys(const sf::Event& event)
 		}
 		else
 		{
-			cs::ShowConsole();
-			DebugPopup::create("Console shown");
-			if (!cs::enableAutoShow)
+			if (cs::enableLock)
 			{
-				cs::enableAutoShow = true;
+				cs::enableLock = false;
 				DebugPopup::create("Console unlocked");
 			}
+			cs::ShowConsole();
+			DebugPopup::create("Console shown");
 		}
 	}
 

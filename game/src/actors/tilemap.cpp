@@ -12,7 +12,7 @@ void Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
 		ppu
 	);
 
-	sf::Sprite& tile = sf::Sprite(tileset, sf::IntRect(tileRect));
+	sf::Sprite& tile = sf::Sprite(*tileset, sf::IntRect(tileRect));
 	tile.setPosition(tilePos * (float)ppu);
 
 	tiles.push_back(tile);
