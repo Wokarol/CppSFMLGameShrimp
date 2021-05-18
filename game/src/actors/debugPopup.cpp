@@ -38,7 +38,7 @@ void wok::DebugPopup::start()
 	world::addTween(fadeOut);
 }
 
-void wok::DebugPopup::update(const GameClock& time)
+void wok::DebugPopup::update([[maybe_unused]] const GameClock& time)
 {
 	auto it = std::find(popusActive.begin(), popusActive.end(), this);
 	int pos = (int)(it - popusActive.begin());
@@ -65,7 +65,7 @@ void wok::DebugPopup::update(const GameClock& time)
 
 void wok::DebugPopup::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
-	target.draw(text);
+	target.draw(text, states);
 }
 
 int wok::DebugPopup::getSortingOrder()

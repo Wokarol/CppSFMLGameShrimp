@@ -22,7 +22,7 @@ namespace wok
 
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override
 		{
-			target.draw(*this);
+			target.draw(*this, states);
 		};
 
 		virtual float getSortingYPos() override

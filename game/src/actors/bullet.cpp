@@ -26,7 +26,7 @@ void wok::Bullet::update(const GameClock& time)
 
 	float distanceDelta = velocity * time.delta;
 
-	auto& raycastResult = world::raycast(m::Ray(getPosition(), direction), distanceDelta);
+	auto raycastResult = world::raycast(m::Ray(getPosition(), direction), distanceDelta);
 	if (raycastResult.hitActor.isValid())
 	{
 		raycastResult.hitActor->reactToHit(raycastResult.intersection, damage);

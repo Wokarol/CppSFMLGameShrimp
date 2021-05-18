@@ -16,7 +16,7 @@ namespace wok
 
 	public:
 		ActorHandle() :
-			id(-1)
+			id((actor_id)(-1))
 		{}
 
 		ActorHandle(actor_id id_) :

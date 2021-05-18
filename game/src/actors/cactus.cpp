@@ -31,12 +31,12 @@ void wok::Cactus::start()
 
 void wok::Cactus::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
-	target.draw(*this);
+	target.draw(*this, states);
 }
 
 wok::intersect::Intersection wok::Cactus::getClosestHit(const m::Ray& ray)
 {
-	auto& bounds = getGlobalBounds();
+	auto bounds = getGlobalBounds();
 	sf::RectangleShape collider({ bounds.width, bounds.height });
 	collider.setPosition(bounds.left, bounds.top);
 

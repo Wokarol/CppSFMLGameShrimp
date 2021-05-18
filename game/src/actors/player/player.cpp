@@ -104,8 +104,8 @@ void wok::Player::update(const GameClock& time)
 
 void wok::Player::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
-	target.draw(body);
-	target.draw(gun);
+	target.draw(body, states);
+	target.draw(gun, states);
 
 	if (shouldRenderMuzzleFlash)
 	{

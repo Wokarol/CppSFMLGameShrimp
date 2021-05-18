@@ -115,7 +115,7 @@ void wok::levels::load(std::string_view levelPath)
 
 	try
 	{
-		auto& groundTileset = res::get<TilesetData>("tilesets/desert");
+		auto groundTileset = res::get<TilesetData>("tilesets/desert");
 		createTilemap(level["Ground"], "Ground Tilemap", *groundTileset, group);
 		createTilemap(level["Tiles"], "Free Tile Tilemap", *groundTileset, group);
 		createActors(level["Actors"], group);
