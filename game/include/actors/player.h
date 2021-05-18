@@ -14,17 +14,18 @@ namespace wok
 
 		sf::Sprite body;
 		sf::Sprite gun;
+		sf::Sprite muzzleFlash;
 		csf::LineShape gunLine;
 
 		sf::Vector2f gunOffset;
+		sf::Vector2f muzzleFlashOffset;
 		std::shared_ptr<LerpTweener<float>> flipTween;
 
 		bool facingRight = true;
+		bool renderMuzzleFlash = false;
 
 	public:
-		Player(std::shared_ptr<sf::Texture> texture,
-			sf::IntRect playerSpriteRect, sf::IntRect gunSpriteRect,
-			sf::Vector2f gunOffset, sf::Vector2f gunOrigin);
+		Player();
 
 		void setPosition(float x, float y);
 		void setPosition(sf::Vector2f v);
