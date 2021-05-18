@@ -1,4 +1,5 @@
 #include <actors/player.h>
+#include <actors/bullet.h>
 #include <input.h>
 #include <utils/mathUtils.h>
 #include <world.h>
@@ -86,7 +87,6 @@ void wok::Player::update(const GameClock& time)
 			);
 		world::addTween(flash);
 
-		auto& raycastResult = world::raycast(gunRay);
 
 		muzzleFlash.setPosition(globalGunPos + m::rotate(muzzleFlashOffset, m::angle(gunRay.direction)));
 		muzzleFlash.setRotation(gun.getRotation());
@@ -103,11 +103,15 @@ void wok::Player::update(const GameClock& time)
 
 		world::addTween(muzzleFlashAnimation);
 
-		if (raycastResult.hitActor.isValid())
-		{
-			cs::Print(raycastResult.hitActor.as<Actor>()->name);
-			raycastResult.hitActor->reactToHit(raycastResult.intersection, 1);
-		}
+		world::createNamedActor<Bullet>("Bullet",
+			gunRay.origin, gunRay.direction);
+
+		//auto& raycastResult = world::raycast(gunRay);
+		//if (raycastResult.hitActor.isValid())
+		//{
+		//	cs::Print(raycastResult.hitActor.as<Actor>()->name);
+		//	raycastResult.hitActor->reactToHit(raycastResult.intersection, 1);
+		//}
 	}
 
 	gunLine.setStart(gunRay.origin);

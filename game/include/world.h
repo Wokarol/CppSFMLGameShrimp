@@ -24,6 +24,8 @@ namespace wok
 		static std::vector<Tickable*> tickables;
 		static std::vector<Hittable*> hittables;
 
+		static std::vector<Actor*> actorsToAddToCache;
+
 		static std::vector<std::shared_ptr<Tweener>> tweeners;
 		static std::vector<actor_id> actorsToRemove;
 		static actor_id nextID;
@@ -50,31 +52,7 @@ namespace wok
 			{
 				cs::Print("WORLD: ", "Creating actor: ", name, " [", id, "]");
 			}
-
-			if (auto tickable = dynamic_cast<Tickable*>(actor))
-			{
-				tickables.push_back(tickable);
-
-				if (logging)
-					cs::Print("    ", "Actor is tickable");
-			}
-
-			if (auto drawable = dynamic_cast<Drawable*>(actor))
-			{
-				drawables.push_back(drawable);
-
-				if (logging)
-					cs::Print("    ", "Actor is drawable");
-			}
-
-			if (auto hittable = dynamic_cast<Hittable*>(actor))
-			{
-				hittables.push_back(hittable);
-
-				if (logging)
-					cs::Print("    ", "Actor is hittable");
-			}
-
+			actorsToAddToCache.push_back(actor);
 
 			return { id };
 		}
@@ -167,5 +145,8 @@ namespace wok
 		static void updateTweeners(const GameClock& time);
 		static void removeDeadTweens();
 		static void removeDeadActors();
+		static void fillCacheIfNeeded();
+		static void addActorToCache(Actor*);
+		static void clearActorFromCache(Actor*);
 	};
 }

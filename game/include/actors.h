@@ -5,3 +5,4 @@
 #include "actors/player.h"
 #include "actors/debugPopup.h"
 #include "actors/cactus.h"
+#include "actors/bullet.h"

@@ -14,6 +14,7 @@ std::vector<Actor*> world::actorsToCallStartOn = {};
 std::vector<Drawable*> world::drawables = {};
 std::vector<Tickable*> world::tickables = {};
 std::vector<Hittable*> world::hittables = {};
+std::vector<Actor*> world::actorsToAddToCache = {};
 
 std::vector<std::shared_ptr<Tweener>> world::tweeners = {};
 std::vector<actor_id> world::actorsToRemove = {};
@@ -92,30 +93,78 @@ void world::removeDeadActors()
 		{
 			cs::Print("WORLD: ", "Destroying actor: ", actor->name, " [", id, "]");
 		}
-
-		if (auto tickable = dynamic_cast<Tickable*>(actor))
-		{
-			tickables.erase(std::find(tickables.begin(), tickables.end(), tickable));
-		}
-
-		if (auto drawable = dynamic_cast<Drawable*>(actor))
-		{
-			drawables.erase(std::find(drawables.begin(), drawables.end(), drawable));
-		}
-
-		if (auto hittable = dynamic_cast<Hittable*>(actor))
-		{
-			hittables.erase(std::find(hittables.begin(), hittables.end(), hittable));
-		}
+		clearActorFromCache(actor);
 
 		actors.erase(id);
 	}
 	actorsToRemove.clear();
 }
 
+
+void wok::world::fillCacheIfNeeded()
+{
+	for (auto& actor : actorsToAddToCache)
+	{
+		addActorToCache(actor);
+	}
+	actorsToAddToCache.clear();
+}
+
+void wok::world::addActorToCache(Actor* actor)
+{
+	if (logging) 
+		cs::Print("WORLD: ", "Adding: ", actor->name, " [", actor->handle.id, "] to cache");
+	
+	if (auto tickable = dynamic_cast<Tickable*>(actor))
+	{
+		tickables.push_back(tickable);
+
+		if (logging)
+			cs::Print("    ", "Actor is tickable");
+	}
+
+	if (auto drawable = dynamic_cast<Drawable*>(actor))
+	{
+		drawables.push_back(drawable);
+
+		if (logging)
+			cs::Print("    ", "Actor is drawable");
+	}
+
+	if (auto hittable = dynamic_cast<Hittable*>(actor))
+	{
+		hittables.push_back(hittable);
+
+		if (logging)
+			cs::Print("    ", "Actor is hittable");
+	}
+}
+
+void wok::world::clearActorFromCache(Actor* actor)
+{
+	if (auto tickable = dynamic_cast<Tickable*>(actor))
+	{
+		tickables.erase(std::find(tickables.begin(), tickables.end(), tickable));
+	}
+
+	if (auto drawable = dynamic_cast<Drawable*>(actor))
+	{
+		drawables.erase(std::find(drawables.begin(), drawables.end(), drawable));
+	}
+
+	if (auto hittable = dynamic_cast<Hittable*>(actor))
+	{
+		hittables.erase(std::find(hittables.begin(), hittables.end(), hittable));
+	}
+}
+
 void world::update(const GameClock& time)
 {
+	fillCacheIfNeeded();
+
 	updateActors(time);
+	fillCacheIfNeeded();
+
 	updateTweeners(time);
 	removeDeadTweens();
 	removeDeadActors();
@@ -227,5 +276,6 @@ void world::clear()
 	tickables.clear();
 	hittables.clear();
 	actorsToRemove.clear();
+	actorsToAddToCache.clear();
 	nextID = 0;
 }
