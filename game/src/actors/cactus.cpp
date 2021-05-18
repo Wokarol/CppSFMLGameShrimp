@@ -53,10 +53,10 @@ void wok::Cactus::reactToHit(const intersect::Intersection& intersection, int da
 	animation->paused = true;
 	auto hit = std::make_shared<LerpTweener<float>>(handle,
 		[this]() { return getRotation(); }, [this](float v) { setRotation(v); },
-		getRotation() + 5.f * dir * sizeScale, 2.f
+		getRotation() + 2.f * dir * sizeScale, 1.f
 		);
 
-	hit->setEasing([](float t) { return std::sin(t * 7 * 3.1415f) * pow(2.7182f, -5 * t); });
+	hit->setEasing([](float t) { return std::sin(t * 4 * 3.1415f) * pow(2.7182f, 0.4f * -t); });
 
 	auto h = handle;
 	auto anim = animation;
@@ -69,5 +69,14 @@ void wok::Cactus::reactToHit(const intersect::Intersection& intersection, int da
 			}
 		});
 
+	if (shouldDie)
+	{
+		auto deathAnim = std::make_shared<LerpTweener<float>>(handle,
+			[this]() { return getScale().x; }, [this](float v) { setScale(v, v); },
+			0.f, 1.f
+			);
+
+		world::addTween(deathAnim);
+	}
 	world::addTween(hit);
 }
