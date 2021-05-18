@@ -15,7 +15,7 @@ wok::DebugPopup::DebugPopup(std::string message)
 	font = res::get<sf::Font>("RobotoMono");
 
 	text.setFont(*font);
-	text.setColor(sf::Color(color + 0xff));
+	text.setFillColor(sf::Color(color + 0xff));
 	text.setCharacterSize(8 * 2);
 	text.setScale(0.5f, 0.5f);
 
@@ -26,7 +26,7 @@ wok::DebugPopup::DebugPopup(std::string message)
 void wok::DebugPopup::start()
 {
 	auto fadeOut = std::make_shared<LerpTweener<sf::Color>>(handle,
-		[this]() { return text.getColor(); }, [this](auto v) { return text.setColor(v); },
+		[this]() { return text.getFillColor(); }, [this](auto v) { return text.setFillColor(v); },
 		sf::Color(color), 2.f
 		);
 
@@ -41,7 +41,7 @@ void wok::DebugPopup::start()
 void wok::DebugPopup::update(const GameClock& time)
 {
 	auto it = std::find(popusActive.begin(), popusActive.end(), this);
-	int pos = it - popusActive.begin();
+	int pos = (int)(it - popusActive.begin());
 
 	if (lastPos == -1)
 	{
