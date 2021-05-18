@@ -134,7 +134,7 @@ namespace wok
 			}
 		}
 
-		static physics::RaycastResult raycast(const m::Ray& ray);
+		static physics::RaycastResult raycast(const m::Ray& ray, float maxDist = -1);
 
 		static void dumpActors(bool details = false);
 		static void clear();

@@ -186,7 +186,7 @@ void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
 	}
 }
 
-physics::RaycastResult world::raycast(const m::Ray& ray)
+physics::RaycastResult world::raycast(const m::Ray& ray, float maxDist)
 {
 
 	intersect::Intersection closestHit;
@@ -209,7 +209,15 @@ physics::RaycastResult world::raycast(const m::Ray& ray)
 		}
 	}
 
-	return { closestHit, hitActorHandle.as<Hittable>() };
+	if (maxDist < 0 || closestHit.distance <= maxDist)
+	{
+		return { closestHit, hitActorHandle.as<Hittable>() };
+	}
+	else
+	{
+		return { };
+	}
+
 }
 
 void world::dumpActors(bool detailed)
