@@ -6,7 +6,7 @@ namespace wok
 	struct TilesetData
 	{
 		std::string path;
-		int tileSize;
+		int tileSize = 0;
 	};
 }
 

@@ -45,7 +45,7 @@ void wok::Player::update(const GameClock& time)
 {
 	auto mousePosition = input::mousePositionInWorld;
 
-	body.move(m::normalize(input::movement) * time.delta * 50.f);
+	body.move(m::normalize(input::movement) * time.delta * movementSpeed);
 	if (mousePosition.x < body.getPosition().x == facingRight)
 	{
 		facingRight = !facingRight;
@@ -57,8 +57,8 @@ void wok::Player::update(const GameClock& time)
 
 		flipTween = std::make_shared<LerpTweener<float>>(handle,
 			[this]() { return body.getScale().x; }, [this](float v) { body.setScale(v, 1); },
-			nextScale, 0.1f
-		);
+			nextScale, flipTime
+			);
 
 		world::addTween(flipTween);
 	}
@@ -76,25 +76,33 @@ void wok::Player::update(const GameClock& time)
 	sf::Vector2f gunDirection = m::rotate(sf::Vector2f(body.getScale().x, 0), gun.getRotation());
 	m::Ray gunRay(gun.getPosition(), gunDirection);
 
-	if (input::attack.wasPressedThisFrame)
+	if (shootCooldown <= 0)
 	{
-		muzzleFlash.setPosition(globalGunPos + m::rotate(muzzleFlashOffset, m::angle(gunRay.direction)));
-		muzzleFlash.setRotation(gun.getRotation());
-		muzzleFlash.setScale(body.getScale());
+		if (input::attack.isPressed)
+		{
+			shootCooldown += shootInterval;
+			muzzleFlash.setPosition(globalGunPos + m::rotate(muzzleFlashOffset, m::angle(gunRay.direction)));
+			muzzleFlash.setRotation(gun.getRotation());
+			muzzleFlash.setScale(body.getScale());
 
-		renderMuzzleFlash = true;
-		muzzleFlash.setColor(sf::Color(0xFFFFFFFF));
+			renderMuzzleFlash = true;
+			muzzleFlash.setColor(sf::Color(0xFFFFFFFF));
 
-		auto muzzleFlashAnimation = std::make_shared<LerpTweener<sf::Color>>(handle,
-			[this]() { return muzzleFlash.getColor(); }, [this](auto v) { muzzleFlash.setColor(v); },
-			sf::Color(0xFFFFFF00), 0.1f
-			);
-		muzzleFlashAnimation->setAfterKilled([this]() { renderMuzzleFlash = false; });
+			auto muzzleFlashAnimation = std::make_shared<LerpTweener<sf::Color>>(handle,
+				[this]() { return muzzleFlash.getColor(); }, [this](auto v) { muzzleFlash.setColor(v); },
+				sf::Color(0xFFFFFF00), muzzleFlashTime
+				);
+			muzzleFlashAnimation->setAfterKilled([this]() { renderMuzzleFlash = false; });
 
-		world::addTween(muzzleFlashAnimation);
+			world::addTween(muzzleFlashAnimation);
 
-		world::createNamedActor<Bullet>("Bullet",
-			muzzleFlash.getPosition(), gunRay.direction);
+			world::createNamedActor<Bullet>("Bullet",
+				muzzleFlash.getPosition(), m::rotate(gunRay.direction, ((rand() / (float)RAND_MAX) - 0.5f) * bulletSpread * 2.f));
+		}
+	}
+	else
+	{
+		shootCooldown -= time.delta;
 	}
 }
 

@@ -10,6 +10,25 @@ namespace wok
 {
 	class Player : public Actor, public wok::Drawable, public Tickable
 	{
+		const float shootInterval = 0.5f;
+		const float bulletSpread = 1.f;
+		const float muzzleFlashTime = 0.05f;
+
+		const float flipTime = 0.1f;
+
+		const float movementSpeed = 50.f;
+
+	public:
+		Player();
+
+		void setPosition(float x, float y);
+		void setPosition(sf::Vector2f v);
+		virtual void update(const GameClock& time) override;
+		virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
+
+		virtual float getSortingYPos() override { return body.getPosition().y; }
+
+	private:
 		std::shared_ptr<sf::Texture> texture;
 
 		sf::Sprite body;
@@ -22,18 +41,6 @@ namespace wok
 
 		bool facingRight = true;
 		bool renderMuzzleFlash = false;
-
-	public:
-		Player();
-
-		void setPosition(float x, float y);
-		void setPosition(sf::Vector2f v);
-		virtual void update(const GameClock& time) override;
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
-
-		virtual float getSortingYPos() override
-		{
-			return body.getPosition().y;
-		}
+		float shootCooldown = 0;
 	};
 }

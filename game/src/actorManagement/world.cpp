@@ -248,7 +248,7 @@ void world::dumpActors(bool detailed)
 		for (auto& actor : group.second)
 		{
 			std::stringstream s;
-			s << " [" << std::setw(3) << actor->handle.id << "] " << actor->name;
+			s << " [" << std::setw(4) << actor->handle.id << "] " << actor->name;
 
 			namedActors.emplace_back(actor, s.str());
 		}
