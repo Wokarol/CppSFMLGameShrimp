@@ -10,15 +10,14 @@
 #include <tweeners.h>
 #include <resources.h>
 
+#include <assets/tilesetData.h>
+
 constexpr auto ppu = 16;
 
-void createTilemap(nlohmann::json& json, std::string_view name, std::shared_ptr<Group>& group)
+void createTilemap(nlohmann::json& json, std::string_view name, 
+	TilesetData tileset, std::shared_ptr<Group>& group)
 {
-	// TODO: FIX HARDCODING
-
-	auto& ground = res::get<sf::Texture>("tilesets/desert_tiles");
-
-	auto& tilemap = *world::createNamedActor<Tilemap>(name, ground, ppu);
+	auto& tilemap = *world::createNamedActor<Tilemap>(name, tileset);
 	tilemap.group = group;
 
 	if (!json.is_array())
@@ -125,8 +124,9 @@ void levels::load(std::string_view levelPath)
 
 	try
 	{
-		createTilemap(level["Ground"], "Ground Tilemap", group);
-		createTilemap(level["Tiles"], "Free Tile Tilemap", group);
+		auto& groundTileset = res::get<TilesetData>("tilesets/desert");
+		createTilemap(level["Ground"], "Ground Tilemap", *groundTileset, group);
+		createTilemap(level["Tiles"], "Free Tile Tilemap", *groundTileset, group);
 		createActors(level["Actors"], group);
 	}
 	catch (const std::exception& e)
