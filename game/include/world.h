@@ -12,6 +12,7 @@
 #include <cassert>
 
 #include <physics/intersections.h>
+#include <physics/interactions.h>
 
 namespace wok
 {
@@ -155,7 +156,7 @@ namespace wok
 			}
 		}
 
-		static intersect::Intersection raycast(const m::Ray& ray);
+		static physics::RaycastResult raycast(const m::Ray& ray);
 
 		static void dumpActors(bool details = false);
 		static void clear();

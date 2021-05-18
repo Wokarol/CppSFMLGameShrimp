@@ -17,7 +17,7 @@ wok::Player::Player(std::shared_ptr<sf::Texture> texture, sf::IntRect playerSpri
 	this->gunOffset = gunOffset - pivot;
 	body.setOrigin(pivot);
 	gun.setOrigin(gunOrigin);
-	gunLine.setColor(sf::Color::Red);
+	gunLine.setColor(sf::Color(0xff000022));
 }
 
 void wok::Player::setPosition(float x, float y)
@@ -64,22 +64,22 @@ void wok::Player::update(const GameClock& time)
 	sf::Vector2f gunDirection = m::rotate(sf::Vector2f(body.getScale().x, 0), gun.getRotation());
 	m::Ray gunRay(gun.getPosition(), gunDirection);
 
-	if (input::attack.isPressed)
+	if (input::attack.wasPressedThisFrame)
 	{
+		gunLine.setColor(sf::Color(0xff0000ff));
+		auto flash = std::make_shared<LerpTweener<sf::Color>>(handle,
+			[this]() { return gunLine.getColor(); }, [this](auto v) { gunLine.setColor(v); },
+			sf::Color(0xff000022), 0.3f
+			);
+		world::addTween(flash);
+
 		auto& raycastResult = world::raycast(gunRay);
 
-		if (raycastResult.hit)
+		if (raycastResult.hitActor.isValid())
 		{
-			gunLine.setColor(sf::Color::Green);
+			cs::Print(raycastResult.hitActor->name);
+			raycastResult.hitActor.destroy();
 		}
-		else
-		{
-			gunLine.setColor(sf::Color(0xff000022));
-		}
-	}
-	else
-	{
-		gunLine.setColor(sf::Color(0));
 	}
 
 	gunLine.setStart(gunRay.origin);

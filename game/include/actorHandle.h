@@ -4,6 +4,7 @@
 
 namespace wok
 {
+	class Actor;
 	class world;
 
 	typedef uint32_t actor_id;

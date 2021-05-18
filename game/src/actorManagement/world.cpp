@@ -1,10 +1,11 @@
-#include "world.h"
+#include <world.h>
 #include <console.h>
 #include <iomanip>
 #include <sstream>
 #include <ios>
 #include <algorithm>
 #include <cassert>
+#include <physics/interactions.h>
 
 using namespace wok;
 
@@ -130,23 +131,30 @@ void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
 	}
 }
 
-intersect::Intersection world::raycast(const m::Ray& ray)
+physics::RaycastResult world::raycast(const m::Ray& ray)
 {
 
 	intersect::Intersection closestHit;
+	ActorHandle<Actor> hitActorHandle{};
 
 	for (auto& hittable : hittables)
 	{
 		assert(hittable);
-		auto hit = hittable->getClosestHit(ray);
+		auto castResult = hittable->getClosestHit(ray);
 
-		if (!closestHit.hit || (hit.hit && hit.distance < closestHit.distance))
+		if (!castResult.hit)
+			continue;
+
+		if (!closestHit.hit || (castResult.distance < closestHit.distance))
 		{
-			closestHit = hit;
+			closestHit = castResult;
+			auto hitActor = dynamic_cast<Actor*>(hittable);
+			assert(hitActor);
+			hitActorHandle = hitActor->getHandle();
 		}
 	}
 
-	return closestHit;
+	return { closestHit, hitActorHandle };
 }
 
 void world::dumpActors(bool detailed)
@@ -199,6 +207,7 @@ void world::dumpActors(bool detailed)
 		cs::Print("   Hittables: ", hittables.size());
 		cs::Print("   Tickables: ", tickables.size());
 		cs::Print("   Drawables: ", drawables.size());
+		cs::Print("   Tweeners:  ", tweeners.size());
 	}
 	cs::Print("--------------------------------------------");
 }
