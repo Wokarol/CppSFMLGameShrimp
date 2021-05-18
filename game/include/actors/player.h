@@ -15,7 +15,6 @@ namespace wok
 		sf::Sprite body;
 		sf::Sprite gun;
 		sf::Sprite muzzleFlash;
-		csf::LineShape gunLine;
 
 		sf::Vector2f gunOffset;
 		sf::Vector2f muzzleFlashOffset;

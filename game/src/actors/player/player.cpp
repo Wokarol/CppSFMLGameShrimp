@@ -12,8 +12,7 @@ wok::Player::Player() :
 	body(*texture, sf::IntRect(0, 0, 13, 14)),
 	gun(*texture, sf::IntRect(0, 17, 6, 4)),
 	muzzleFlash(*texture, sf::IntRect(7, 15, 7, 8)),
-	muzzleFlashOffset({5, 0}),
-	gunLine(1.0f)
+	muzzleFlashOffset({5, 0})
 {
 	auto playerSpriteRect = body.getTextureRect();
 
@@ -28,7 +27,6 @@ wok::Player::Player() :
 	this->gunOffset = gunOffset - pivot;
 	body.setOrigin(pivot);
 	gun.setOrigin(gunOrigin);
-	gunLine.setColor(sf::Color(0xff000022));
 
 	muzzleFlash.setOrigin(0, muzzleFlash.getTextureRect().height / 2.f);
 }
@@ -80,14 +78,6 @@ void wok::Player::update(const GameClock& time)
 
 	if (input::attack.wasPressedThisFrame)
 	{
-		gunLine.setColor(sf::Color(0xff0000ff));
-		auto flash = std::make_shared<LerpTweener<sf::Color>>(handle,
-			[this]() { return gunLine.getColor(); }, [this](auto v) { gunLine.setColor(v); },
-			sf::Color(0xff000022), 0.3f
-			);
-		world::addTween(flash);
-
-
 		muzzleFlash.setPosition(globalGunPos + m::rotate(muzzleFlashOffset, m::angle(gunRay.direction)));
 		muzzleFlash.setRotation(gun.getRotation());
 		muzzleFlash.setScale(body.getScale());
@@ -104,24 +94,13 @@ void wok::Player::update(const GameClock& time)
 		world::addTween(muzzleFlashAnimation);
 
 		world::createNamedActor<Bullet>("Bullet",
-			gunRay.origin, gunRay.direction);
-
-		//auto& raycastResult = world::raycast(gunRay);
-		//if (raycastResult.hitActor.isValid())
-		//{
-		//	cs::Print(raycastResult.hitActor.as<Actor>()->name);
-		//	raycastResult.hitActor->reactToHit(raycastResult.intersection, 1);
-		//}
+			muzzleFlash.getPosition(), gunRay.direction);
 	}
-
-	gunLine.setStart(gunRay.origin);
-	gunLine.setEnd(gunRay.getPoint(1000));
 }
 
 void wok::Player::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	target.draw(body);
-	//target.draw(gunLine);
 	target.draw(gun);
 
 	if (renderMuzzleFlash)
