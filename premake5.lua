@@ -17,6 +17,8 @@ project "Game"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+    warnings "Extra"
+
     files {
         "%{prj.location}/**.cpp",
         "%{prj.location}/**.hpp",

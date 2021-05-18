@@ -12,7 +12,7 @@ void wok::Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
 		ppu
 	);
 
-	sf::Sprite& tile = sf::Sprite(*tileset, sf::IntRect(tileRect));
+	sf::Sprite tile = sf::Sprite(*tileset, sf::IntRect(tileRect));
 	tile.setPosition(tilePos * (float)ppu);
 
 	tiles.push_back(tile);
@@ -22,7 +22,7 @@ void wok::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
 	for (auto& tile : tiles)
 	{
-		target.draw(tile);
+		target.draw(tile, states);
 	}
 }
 

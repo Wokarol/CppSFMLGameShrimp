@@ -1,15 +1,19 @@
 #include <actors/cactus.h>
 #include <world.h>
-#include "..\..\include\actors\cactus.h"
+#include <resources.h>
 
-wok::Cactus::Cactus(std::shared_ptr<sf::Texture> texture, sf::IntRect rect, float sizeScale) :
-	texture(texture),
-	Sprite(*texture, rect),
-	sizeScale(sizeScale)
+wok::Cactus::Cactus(CactusPreset preset) :
+	preset(preset)
 {
+	texture = res::get<sf::Texture>(preset.textureName);
+	health = preset.startingHealth;
+
+	setTexture(*texture);
+	setTextureRect(preset.textureRect);
+
 	setOrigin(
-		(float)(rect.width / 2),
-		(float)(rect.height)
+		(float)(preset.textureRect.width / 2),
+		(float)(preset.textureRect.height)
 	);
 }
 
@@ -18,7 +22,7 @@ void wok::Cactus::start()
 	animation = std::make_shared<SineTweener<float>>(
 		handle,
 		[this](float v) { setRotation(v); },
-		-sizeScale, sizeScale, sizeScale
+		-preset.animationScale, preset.animationScale, preset.animationScale
 		);
 	animation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
 
@@ -27,12 +31,12 @@ void wok::Cactus::start()
 
 void wok::Cactus::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
-	target.draw(*this);
+	target.draw(*this, states);
 }
 
 wok::intersect::Intersection wok::Cactus::getClosestHit(const m::Ray& ray)
 {
-	auto& bounds = getGlobalBounds();
+	auto bounds = getGlobalBounds();
 	sf::RectangleShape collider({ bounds.width, bounds.height });
 	collider.setPosition(bounds.left, bounds.top);
 
@@ -53,7 +57,7 @@ void wok::Cactus::reactToHit(const intersect::Intersection& intersection, int da
 	animation->paused = true;
 	auto hit = std::make_shared<LerpTweener<float>>(handle,
 		[this]() { return getRotation(); }, [this](float v) { setRotation(v); },
-		getRotation() + 2.f * dir * sizeScale, 1.f
+		getRotation() + 2.f * dir * preset.animationScale, 1.f
 		);
 
 	hit->setEasing([](float t) { return std::sin(t * 4 * 3.1415f) * pow(2.7182f, 0.4f * -t); });

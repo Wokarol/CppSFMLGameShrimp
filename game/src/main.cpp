@@ -68,7 +68,7 @@ int main()
 
 	initializeBoilerplate();
 
-	auto& window = createWindow();
+	auto window = createWindow();
 	//centreCamera(window);
 	setCornerCam(window);
 
@@ -92,7 +92,7 @@ int main()
 		wok::world::update(time);
 
 		window.clear(colors.background);
-		auto& states = sf::RenderStates();
+		auto states = sf::RenderStates();
 		wok::world::draw(window, states);
 		window.display();
 	}

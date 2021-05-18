@@ -67,13 +67,13 @@ namespace wok
 	class Tickable
 	{
 	public:
-		virtual void update(const GameClock& time) {};
+		virtual void update(const GameClock& time) = 0;
 	};
 
 	class Hittable
 	{
 	public:
 		virtual intersect::Intersection getClosestHit(const m::Ray& ray) = 0;
-		virtual void reactToHit(const intersect::Intersection& intersection, int damage) {};
+		virtual void reactToHit([[maybe_unused]] const intersect::Intersection& intersection, [[maybe_unused]] int damage) {};
 	};
 }

@@ -38,7 +38,7 @@ namespace wok
 		{
 			actor_id id = nextID++;
 
-			auto& result = actors.emplace(
+			auto result = actors.emplace(
 				id,
 				std::make_unique<T>(args...)
 			);
@@ -83,7 +83,7 @@ namespace wok
 		template< class T >
 		static bool isActorAliveAndMatchesType(const actor_id& id)
 		{
-			auto& pair = actors.find(id);
+			auto pair = actors.find(id);
 			if (pair == actors.end())
 			{
 				return false;
@@ -96,7 +96,7 @@ namespace wok
 		template< class T >
 		static T* getActorPointer(actor_id id)
 		{
-			auto& pair = actors.find(id);
+			auto pair = actors.find(id);
 			if (pair == actors.end())
 			{
 				return nullptr;
@@ -108,7 +108,7 @@ namespace wok
 		template< class T >
 		static T& getActor(actor_id id)
 		{
-			auto& pair = actors.find(id);
+			auto pair = actors.find(id);
 			if (pair == actors.end())
 			{
 				throw std::out_of_range("There is no actor with given id");

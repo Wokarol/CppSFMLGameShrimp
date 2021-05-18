@@ -42,44 +42,37 @@ void createTilemap(nlohmann::json& json, std::string_view name,
 	}
 }
 
-void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
+void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const CactusPreset& preset, std::string_view name)
 {
-	auto& cactiTexture = res::get<sf::Texture>("actors/cacti");
-	auto& playerTexture = res::get<sf::Texture>("actors/shrimp");
-
-	nlohmann::json& cacti = json["Cacti"];
-	if (cacti.is_array())
+	if (json.is_array())
 	{
-		for (auto& cactus : cacti)
+		for (auto& cactus : json)
 		{
-			auto& propHandle = world::createNamedActor<Cactus>("Cactus", 
-				cactiTexture, sf::IntRect(0, 16, 16, 16), 5.f);
-			auto& prop = *propHandle;
+			auto& prop = *world::createNamedActor<Cactus>(name, preset);
 			prop.group = group;
 
 			nlohmann::json posJ = cactus["pos"];
-
 			sf::Vector2f pos(posJ[0], posJ[1]);
+
 			prop.setPosition(pos.x * ppu, pos.y * ppu);
 		}
 	}
+}
 
-	nlohmann::json& tall_cacti = json["Tall_Cacti"];
-	if (tall_cacti.is_array())
-	{
-		for (auto& tall_cactus : tall_cacti)
-		{
-			auto& propHandle = world::createNamedActor<Cactus>("Tall Cactus", 
-				cactiTexture, sf::IntRect(16, 0, 16, 32), 4.f);
-			auto& prop = *propHandle;
-			prop.group = group;
+void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
+{
+	CactusPreset smallCactus;
+	smallCactus.textureRect = { 0, 16, 16, 16 };
+	smallCactus.animationScale = 5.f;
 
-			nlohmann::json posJ = tall_cactus["pos"];
+	generateCacti(json["Cacti"], group, smallCactus, "Cactus");
 
-			sf::Vector2f pos(posJ[0], posJ[1]);
-			prop.setPosition(pos.x * ppu, pos.y * ppu);
-		}
-	}
+
+	CactusPreset bigCactus;
+	bigCactus.textureRect = { 16, 0, 16, 32 };
+	bigCactus.animationScale = 4.f;
+
+	generateCacti(json["Tall_Cacti"], group, bigCactus, "Tall Cactus");
 
 	nlohmann::json& player = json["Player"];
 	if (player.is_object())
@@ -122,7 +115,7 @@ void wok::levels::load(std::string_view levelPath)
 
 	try
 	{
-		auto& groundTileset = res::get<TilesetData>("tilesets/desert");
+		auto groundTileset = res::get<TilesetData>("tilesets/desert");
 		createTilemap(level["Ground"], "Ground Tilemap", *groundTileset, group);
 		createTilemap(level["Tiles"], "Free Tile Tilemap", *groundTileset, group);
 		createActors(level["Actors"], group);

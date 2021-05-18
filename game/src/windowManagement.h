@@ -7,24 +7,24 @@
 
 #include <actors.h>
 
-static void initializeBoilerplate()
+inline void initializeBoilerplate()
 {
 	cs::HideConsole();
 }
 
-static sf::RenderWindow createWindow()
+inline sf::RenderWindow createWindow()
 {
 	auto settings = sf::ContextSettings::ContextSettings(0, 0, 8);
 	return sf::RenderWindow(sf::VideoMode(25 * 32, 16 * 32), "Surviving The Heat", 7U, settings);
 }
 
-static void centreCamera(sf::RenderTarget& target)
+inline void centreCamera(sf::RenderTarget& target)
 {
 	sf::View view(sf::Vector2f(0, 0), (sf::Vector2f)target.getSize());
 	target.setView(view);
 }
 
-static void setCornerCam(sf::RenderTarget& target)
+inline void setCornerCam(sf::RenderTarget& target)
 {
 	sf::Vector2f targetSize = (sf::Vector2f)target.getSize();
 	float ratio = targetSize.x / targetSize.y;
@@ -35,7 +35,7 @@ static void setCornerCam(sf::RenderTarget& target)
 	target.setView(view);
 }
 
-static void handleDebugKeys(const sf::Event& event)
+inline void handleDebugKeys(const sf::Event& event)
 {
 	if (event.key.code == sf::Keyboard::F10)
 	{
@@ -81,7 +81,7 @@ static void handleDebugKeys(const sf::Event& event)
 	//}
 }
 
-static void handleEventsAndInput(sf::RenderWindow& window)
+inline void handleEventsAndInput(sf::RenderWindow& window)
 {
 	wok::input::attack.wasPressedThisFrame = false;
 	wok::input::attack.wasReleasedThisFrame = false;
