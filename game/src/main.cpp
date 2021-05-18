@@ -15,7 +15,7 @@
 #include <world.h>
 
 #include <levelLoader.h>
-#include <assets/fonts.h>
+#include <resources.h>
 
 struct Pallete
 {
@@ -98,5 +98,5 @@ int main()
 	}
 
 	world::clear();
-	fonts::clear();
+	res::clear();
 }

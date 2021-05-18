@@ -1,5 +1,5 @@
 #include <actors/debugPopup.h>
-#include <assets/fonts.h>
+#include <resources.h>
 #include <world.h>
 #include <tweeners.h>
 #include <memory>
@@ -12,7 +12,7 @@ std::vector<DebugPopup*> popusActive;
 DebugPopup::DebugPopup(std::string message)
 {
 	text.setString(message);
-	font = fonts::get("RobotoMono");
+	font = res::get<sf::Font>("RobotoMono");
 
 	text.setFont(*font);
 	text.setColor(sf::Color(color + 0xff));
