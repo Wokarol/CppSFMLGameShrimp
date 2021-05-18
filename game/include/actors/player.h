@@ -18,6 +18,15 @@ namespace wok
 
 		const float movementSpeed = 50.f;
 
+		const std::string textureName = "actors/shrimp";
+		const sf::IntRect bodyTextureRect = { 0, 0, 13, 14 };
+		const sf::IntRect gunTextureRect = { 0, 17, 6, 4 };
+		const sf::IntRect muzzleFlashTextureRect = { 7, 15, 7, 8 };
+		
+		const sf::Vector2f gunOffset = { 8, 10 };
+		const sf::Vector2f gunOrigin = { 1, 1 };
+		const sf::Vector2f muzzleFlashOffset = { 5, 0 }; // In relation to a gun
+
 	public:
 		Player();
 
@@ -35,12 +44,11 @@ namespace wok
 		sf::Sprite gun;
 		sf::Sprite muzzleFlash;
 
-		sf::Vector2f gunOffset;
-		sf::Vector2f muzzleFlashOffset;
+		sf::Vector2f gunOffsetInRelationToPivot;
 		std::shared_ptr<LerpTweener<float>> flipTween;
 
 		bool facingRight = true;
-		bool renderMuzzleFlash = false;
+		bool shouldRenderMuzzleFlash = false;
 		float shootCooldown = 0;
 	};
 }
