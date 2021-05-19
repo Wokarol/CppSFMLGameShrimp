@@ -64,6 +64,12 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 	CactusPreset smallCactus;
 	smallCactus.textureRect = { 0, 16, 16, 16 };
 	smallCactus.animationScale = 5.f;
+	smallCactus.fractures = {
+		{ 1, 20, 4, 6 }, // Blue
+		{ 5, 17, 6, 9 }, // Green
+		{ 5, 26, 6, 6 }, // Orange
+		{ 11, 22, 5, 8 }, // Red
+	};
 
 	generateCacti(json["Cacti"], group, smallCactus, "Cactus");
 
@@ -71,6 +77,15 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 	CactusPreset bigCactus;
 	bigCactus.textureRect = { 16, 0, 16, 32 };
 	bigCactus.animationScale = 4.f;
+	bigCactus.fractures = {
+		{ 18, 8, 3, 4 }, // Yellow left
+		{ 21, 3, 6, 10 }, // Pink top
+		{ 20, 13, 7, 6 }, // Green
+		{ 27, 12, 4, 8 }, // Yellow right
+		{ 17, 19, 5, 7 }, // Blue
+		{ 22, 19, 5, 7 }, // Purple
+		{ 21, 26, 5, 6 }, // Orange
+	};
 
 	generateCacti(json["Tall_Cacti"], group, bigCactus, "Tall Cactus");
 

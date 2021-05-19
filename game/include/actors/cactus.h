@@ -13,6 +13,7 @@ namespace wok
 		sf::IntRect textureRect{};
 		float animationScale = 1.f;
 		int startingHealth = 3;
+		std::vector<sf::IntRect> fractures;
 	};
 
 	class Cactus : public sf::Sprite,
