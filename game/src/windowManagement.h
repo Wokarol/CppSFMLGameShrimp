@@ -39,8 +39,16 @@ inline void handleDebugKeys(const sf::Event& event)
 {
 	if (event.key.code == sf::Keyboard::F10)
 	{
-		wok::world::dumpActors(event.key.shift);
+		wok::world::dumpActors(!event.key.shift);
 		wok::DebugPopup::create("Actors dumped");
+	}
+	if (event.key.code == sf::Keyboard::F5)
+	{
+		wok::input::slowMode ^= true;
+		std::stringstream stream;
+		stream << "Slow mode ";
+		stream << (wok::input::slowMode ? "ON" : "OFF");
+		wok::DebugPopup::create(stream.str());
 	}
 	if (event.key.code == sf::Keyboard::F2)
 	{

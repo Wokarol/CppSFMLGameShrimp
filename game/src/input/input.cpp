@@ -5,6 +5,7 @@
 sf::Vector2f wok::input::movement = { 0, 0 };
 sf::Vector2f wok::input::mousePositionInWorld = { 0, 0 };
 wok::input::key wok::input::attack;
+bool wok::input::slowMode = false;
 
 struct DirectionKey
 {
