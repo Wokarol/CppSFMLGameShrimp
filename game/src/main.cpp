@@ -2,12 +2,20 @@
 
 #include <gameClock.h>
 #include <console.h>
-#include "shapes/line.h"
-#include "windowManagement.h"
+#include <customShapes/line.h>
 
-#include "actorHandle.h"
-#include "actorManagement/world.h"
-#include "actors.h"
+#include <actorHandle.h>
+#include <actors.h>
+
+#include <filesystem>
+#include <json.hpp>
+#include <utils/jsonHelpers.h>
+
+#include "windowManagement.h"
+#include <world.h>
+
+#include <levelLoader.h>
+#include <resources.h>
 
 struct Pallete
 {
@@ -18,6 +26,41 @@ struct Pallete
 	sf::Color yellow = sf::Color(0xFFD432FF);
 };
 
+bool startGame()
+{
+	std::string configPath = "assets/start.config";
+	if (!std::filesystem::exists(configPath))
+	{
+		cs::Print("start.config cannot be found in assets folder");
+		return false;
+	}
+
+	nlohmann::json config;
+	{
+		std::ifstream configFile(configPath);
+		configFile >> config;
+	}
+
+	try
+	{
+		std::string levelToLoad;
+
+		if(!wok::tryGetString(config, "start_level", levelToLoad))
+		{
+			cs::Print("Key 'start_level' was not found");
+			return false;
+		}
+
+		wok::levels::load(levelToLoad);
+	}
+	catch (const std::exception& e)
+	{
+		cs::Print(e.what());
+		return false;
+	}
+
+	return true;
+}
 
 int main()
 {
@@ -25,32 +68,35 @@ int main()
 
 	initializeBoilerplate();
 
-	auto& window = createWindow();
-	centreCamera(window);
+	auto window = createWindow();
+	//centreCamera(window);
+	setCornerCam(window);
 
 	Pallete colors;
-	GameClock time;
-	World world;
+	wok::GameClock time;
 
-	for (size_t i = 0; i < 30; i++)
+	wok::world::logging = false;
+
+	if (!startGame())
 	{
-		world.createActor<Box>(
-			50, 
-			sf::Vector2f(rand() % 500 - 250, rand() % 500 - 250),
-			colors.darkBlue,
-			colors.blue
-		);
+		window.close();
+		std::cout << std::endl;
+		system("pause");
 	}
 
 	while (window.isOpen())
 	{
-		handleEvents(window);
+		handleEventsAndInput(window);
 		time.Tick();
 
-		world.update(time);
+		wok::world::update(time);
 
 		window.clear(colors.background);
-		world.draw(window);
+		auto states = sf::RenderStates();
+		wok::world::draw(window, states);
 		window.display();
 	}
+
+	wok::world::clear();
+	wok::res::clear();
 }

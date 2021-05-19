@@ -6,22 +6,29 @@
 
 namespace cs
 {
-    static void HideConsole()
+    inline bool enableLock = false;
+
+    inline void HideConsole()
     {
 #if GAME_PLATFORM_WINDOWS
         ::ShowWindow(::GetConsoleWindow(), SW_HIDE);
 #endif
     }
 
-    static void ShowConsole()
+    inline void ShowConsole()
     {
+        if (enableLock)
+            return;
+
 #if GAME_PLATFORM_WINDOWS
+        auto window = ::GetActiveWindow();
         ::ShowWindow(::GetConsoleWindow(), SW_SHOW);
+        ::SetActiveWindow(window);
 #endif
     }
 
     template <typename... Params>
-    static void Print(Params&&... params)
+    inline void Print(Params&&... params)
     {
 #ifdef DEBUG
         ShowConsole();
@@ -30,7 +37,7 @@ namespace cs
 #endif // DEBUG
     }
 
-    static bool IsConsoleVisible()
+    inline bool IsConsoleVisible()
     {
 #if GAME_PLATFORM_WINDOWS
         return ::IsWindowVisible(::GetConsoleWindow()) != FALSE;

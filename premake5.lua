@@ -17,10 +17,12 @@ project "Game"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+    warnings "Extra"
+
     files {
-        "%{prj.location}/src/**.cpp",
-        "%{prj.location}/src/**.hpp",
-        "%{prj.location}/src/**.h",
+        "%{prj.location}/**.cpp",
+        "%{prj.location}/**.hpp",
+        "%{prj.location}/**.h",
     }
     includedirs { 
         "%{prj.location}/include",

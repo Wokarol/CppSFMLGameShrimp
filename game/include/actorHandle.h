@@ -2,60 +2,61 @@
 
 #include <stdint.h>
 
-class World;
-
-typedef uint32_t actor_id;
-
-template <class T>
-class ActorHandle
+namespace wok
 {
-	actor_id id;
-	World* world = nullptr;
+	class Actor;
+	class world;
 
-public:
-	ActorHandle() :
-		id(-1),
-		world(nullptr)
-	{}
+	typedef uint32_t actor_id;
 
-	ActorHandle(actor_id id_, World* world_) :
-		id(id_),
-		world(world_)
-	{}
-
-	bool isValid() const
+	template <class T>
+	class ActorHandle
 	{
-		if (world == nullptr)
-			return false;
+		actor_id id;
 
-		return world->isActorAliveAndMatchesType<T>(id);
-	}
+	public:
+		ActorHandle() :
+			id((actor_id)(-1))
+		{}
 
-	operator T* () const
-	{
-		return world->getActorPointer<T>(id);
-	}
+		ActorHandle(actor_id id_) :
+			id(id_)
+		{}
 
-	T& operator*() const
-	{
-		return world->getActor<T>(id);
-	}
+		bool isValid() const
+		{
+			if (id == -1)
+				return false;
 
-	T* operator->() const
-	{
-		return &world->getActor<T>(id);
-	}
+			return world::isActorAliveAndMatchesType<T>(id);
+		}
 
-	template <class NewT>
-	ActorHandle<NewT> as()
-	{
-		return ActorHandle<NewT>(id, world);
-	}
+		operator T* () const
+		{
+			return world::getActorPointer<T>(id);
+		}
 
-	void destroy() const
-	{
-		world->destroyActor(id);
-	}
+		T& operator*() const
+		{
+			return world::getActor<T>(id);
+		}
 
-	friend World;
-};
+		T* operator->() const
+		{
+			return &world::getActor<T>(id);
+		}
+
+		template <class NewT>
+		ActorHandle<NewT> as()
+		{
+			return ActorHandle<NewT>(id);
+		}
+
+		void destroy() const
+		{
+			world::destroyActor(id);
+		}
+
+		friend world;
+	};
+}

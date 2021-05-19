@@ -3,7 +3,7 @@
 #include <cmath>
 #include <SFML/Graphics.hpp>
 
-namespace m
+namespace wok::m
 {
     constexpr auto PI = 3.14159f;
 
@@ -81,6 +81,13 @@ namespace m
         return a.x * b.x + a.y * b.y;
     }
 
+    template <typename T>
+    inline sf::Vector2<T> scale(const sf::Vector2<T>& a, const sf::Vector2<T>& b)
+    {
+        return { a.x * b.x, a.y * b.y };
+    }
+
+
     inline sf::Vector2f limit(const sf::Vector2f& v, float maxLength)
     {
         if (length(v) <= maxLength)
@@ -121,6 +128,7 @@ namespace m
         sf::Vector2f origin;
         sf::Vector2f direction;
 
+        Ray() : origin(), direction() {}
         Ray(sf::Vector2f _origin, sf::Vector2f _direction) : origin(_origin), direction(m::normalize(_direction)) {}
 
         void rotateAround(sf::Vector2f pivot, float degrees)

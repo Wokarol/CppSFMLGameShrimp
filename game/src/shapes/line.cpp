@@ -1,9 +1,9 @@
-#include "line.h"
-#include <mathUtils.h>
+#include <customShapes/line.h>
+#include <utils/mathUtils.h>
 
-sf::LineShape::LineShape(float thickness)
+wok::csf::LineShape::LineShape(float thickness)
 {
-	body.setFillColor(Color::White);
+	body.setFillColor(sf::Color::White);
 	start = sf::Vector2f(0, 0);
 	end = sf::Vector2f(100, 0);
 	this->thickness = thickness;
@@ -11,48 +11,48 @@ sf::LineShape::LineShape(float thickness)
 	isDirty = true;
 }
 
-void sf::LineShape::setStart(Vector2f v)
+void wok::csf::LineShape::setStart(sf::Vector2f v)
 {
 	start = v;
 	isDirty = true;
 }
 
-sf::Vector2f sf::LineShape::getStart() const
+sf::Vector2f wok::csf::LineShape::getStart() const
 {
 	return start;
 }
 
-void sf::LineShape::setEnd(Vector2f v)
+void wok::csf::LineShape::setEnd(sf::Vector2f v)
 {
 	end = v;
 	isDirty = true;
 }
 
-sf::Vector2f sf::LineShape::getEnd() const
+sf::Vector2f wok::csf::LineShape::getEnd() const
 {
 	return end;
 }
 
-void sf::LineShape::setThickness(float t)
+void wok::csf::LineShape::setThickness(float t)
 {
 	thickness = t;
 	isDirty = true;
 }
-float sf::LineShape::getThickness() const
+float wok::csf::LineShape::getThickness() const
 {
 	return thickness;
 }
 
-void sf::LineShape::setColor(sf::Color speedX)
+void wok::csf::LineShape::setColor(sf::Color speedX)
 {
 	body.setFillColor(speedX);
 }
-sf::Color sf::LineShape::getColor() const
+sf::Color wok::csf::LineShape::getColor() const
 {
 	return body.getFillColor();
 }
 
-void sf::LineShape::draw(RenderTarget& target, RenderStates states) const
+void wok::csf::LineShape::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (isDirty)
 	{
@@ -61,7 +61,7 @@ void sf::LineShape::draw(RenderTarget& target, RenderStates states) const
 	target.draw(body, states);
 }
 
-void sf::LineShape::updateShape() const
+void wok::csf::LineShape::updateShape() const
 {
 	isDirty = false;
 
