@@ -10,8 +10,8 @@ namespace wok
 {
 	class Player : public Actor, public wok::Drawable, public Tickable
 	{
-		const float shootInterval = 0.5f;
-		const float bulletSpread = 1.f;
+		const float shootInterval = 0.2f;
+		const float bulletSpread = 4.f;
 		const float muzzleFlashTime = 0.05f;
 
 		const float flipTime = 0.1f;

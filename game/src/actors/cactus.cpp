@@ -36,6 +36,11 @@ void wok::Cactus::draw(sf::RenderTarget& target, sf::RenderStates& states)
 
 wok::intersect::Intersection wok::Cactus::getClosestHit(const m::Ray& ray)
 {
+	if (dying)
+	{
+		return {};
+	}
+
 	auto bounds = getGlobalBounds();
 	sf::RectangleShape collider({ bounds.width, bounds.height });
 	collider.setPosition(bounds.left, bounds.top);
@@ -75,12 +80,21 @@ void wok::Cactus::reactToHit(const intersect::Intersection& intersection, int da
 
 	if (shouldDie)
 	{
-		auto deathAnim = std::make_shared<LerpTweener<float>>(handle,
+		auto deathAnimScale = std::make_shared<LerpTweener<float>>(handle,
 			[this]() { return getScale().x; }, [this](float v) { setScale(v, v); },
-			0.f, 1.f
+			1.2f, 0.15f
 			);
 
-		world::addTween(deathAnim);
+		world::addTween(deathAnimScale);
+
+		auto deathAnimColor = std::make_shared<LerpTweener<sf::Color>>(handle,
+			[this]() { return getColor(); }, [this](auto v) { setColor(v); },
+			sf::Color(0xffffff00), 0.15f
+			);
+
+		world::addTween(deathAnimColor);
+
+		dying = true;
 	}
 	world::addTween(hit);
 }

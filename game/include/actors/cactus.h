@@ -33,6 +33,7 @@ namespace wok
 
 	private:
 		int health;
+		bool dying = false;
 		std::shared_ptr<sf::Texture> texture;
 		std::shared_ptr<SineTweener<float>> animation;
 	};
