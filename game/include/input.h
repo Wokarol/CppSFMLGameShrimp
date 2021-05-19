@@ -17,6 +17,7 @@ namespace wok
 		static sf::Vector2f mousePositionInWorld;
 
 		static key attack;
+		static bool slowMode;
 
 		static void handleInputKeysPressed(const sf::Event& event);
 		static void handleInputKeysReleased(const sf::Event& event);

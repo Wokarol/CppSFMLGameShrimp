@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <input.h>
 
 namespace wok
 {
@@ -16,6 +17,11 @@ namespace wok
 		void Tick()
 		{
 			delta = clock.restart().asSeconds();
+
+			if (input::slowMode)
+			  delta *= 0.25f;
+
+
 			absolute += delta;
 			frames++;
 		}

@@ -1,6 +1,7 @@
 #include <actors/cactus.h>
 #include <world.h>
 #include <resources.h>
+#include <actors.h>
 
 wok::Cactus::Cactus(CactusPreset preset) :
 	preset(preset)
@@ -59,42 +60,28 @@ void wok::Cactus::reactToHit(const intersect::Intersection& intersection, int da
 	health -= damage;
 	bool shouldDie = health <= 0;
 
-	animation->paused = true;
-	auto hit = std::make_shared<LerpTweener<float>>(handle,
-		[this]() { return getRotation(); }, [this](float v) { setRotation(v); },
-		getRotation() + 2.f * dir * preset.animationScale, 1.f
-		);
-
-	hit->setEasing([](float t) { return std::sin(t * 4 * 3.1415f) * pow(2.7182f, 0.4f * -t); });
-
-	auto h = handle;
-	auto anim = animation;
-	hit->setAfterKilled([anim, shouldDie, h]() 
-		{ 
-			if(anim) anim->paused = false;
-			if (shouldDie)
-			{
-				h.destroy();
-			}
-		});
-
 	if (shouldDie)
 	{
-		auto deathAnimScale = std::make_shared<LerpTweener<float>>(handle,
-			[this]() { return getScale().x; }, [this](float v) { setScale(v, v); },
-			1.2f, 0.15f
-			);
-
-		world::addTween(deathAnimScale);
-
-		auto deathAnimColor = std::make_shared<LerpTweener<sf::Color>>(handle,
-			[this]() { return getColor(); }, [this](auto v) { setColor(v); },
-			sf::Color(0xffffff00), 0.15f
-			);
-
-		world::addTween(deathAnimColor);
-
-		dying = true;
+		world::createNamedActor<FracturedSprite>("Fracture", *this, texture, preset.fractures, dir);
+		handle.destroy();
 	}
-	world::addTween(hit);
+	else
+	{
+		animation->paused = true;
+		auto hit = std::make_shared<LerpTweener<float>>(handle,
+			[this]() { return getRotation(); }, [this](float v) { setRotation(v); },
+			getRotation() + 2.f * dir * preset.animationScale, 1.f
+			);
+
+		hit->setEasing([](float t) { return std::sin(t * 4 * 3.1415f) * pow(2.7182f, 0.4f * -t); });
+
+		auto h = handle;
+		auto anim = animation;
+		hit->setAfterKilled([anim, shouldDie, h]()
+			{
+				if (anim) anim->paused = false;
+			});
+
+		world::addTween(hit);
+	}
 }
