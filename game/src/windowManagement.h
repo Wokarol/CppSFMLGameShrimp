@@ -9,7 +9,7 @@
 
 inline void initializeBoilerplate()
 {
-	cs::HideConsole();
+	cs::hideConsole();
 }
 
 inline sf::RenderWindow createWindow()
@@ -52,9 +52,9 @@ inline void handleDebugKeys(const sf::Event& event)
 	}
 	if (event.key.code == sf::Keyboard::F2)
 	{
-		if (cs::IsConsoleVisible())
+		if (cs::isConsoleVisible())
 		{
-			cs::HideConsole();
+			cs::hideConsole();
 			cs::enableLock = true;
 			wok::DebugPopup::create("Console locked");
 		}
@@ -66,9 +66,9 @@ inline void handleDebugKeys(const sf::Event& event)
 	}
 	if (event.key.code == sf::Keyboard::F3)
 	{
-		if (cs::IsConsoleVisible())
+		if (cs::isConsoleVisible())
 		{
-			cs::HideConsole();
+			cs::hideConsole();
 			wok::DebugPopup::create("Console hidden");
 		}
 		else
@@ -78,7 +78,14 @@ inline void handleDebugKeys(const sf::Event& event)
 				cs::enableLock = false;
 				wok::DebugPopup::create("Console unlocked");
 			}
-			cs::ShowConsole();
+			if (event.key.shift)
+			{
+				cs::showConsoleImportant();
+			}
+			else
+			{
+				cs::showConsole();
+			}
 			wok::DebugPopup::create("Console shown");
 		}
 	}

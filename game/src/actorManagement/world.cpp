@@ -28,7 +28,7 @@ void world::updateActors(const GameClock& time)
 	{
 		if (logging)
 		{
-			cs::Print("WORLD: ", "Starting ", actor->name, " [", actor->handle.id, "]");
+			cs::printLog("WORLD: ", "Starting ", actor->name, " [", actor->handle.id, "]");
 		}
 		actor->start();
 	}
@@ -61,7 +61,7 @@ void world::removeDeadTweens()
 				bool noLongerRunning = !t->getIsRunning();
 				if (noLongerRunning && logging)
 				{
-					cs::Print("WORLD: ", "Tween for ", t->name, " is no longer running");
+					cs::printLog("WORLD: ", "Tween for ", t->name, " is no longer running");
 				}
 				if (noLongerRunning)
 					t->afterKilled();
@@ -91,7 +91,7 @@ void world::removeDeadActors()
 
 		if (logging)
 		{
-			cs::Print("WORLD: ", "Destroying actor: ", actor->name, " [", id, "]");
+			cs::printLog("WORLD: ", "Destroying actor: ", actor->name, " [", id, "]");
 		}
 		clearActorFromCache(actor);
 
@@ -113,14 +113,14 @@ void wok::world::fillCacheIfNeeded()
 void wok::world::addActorToCache(Actor* actor)
 {
 	if (logging) 
-		cs::Print("WORLD: ", "Adding: ", actor->name, " [", actor->handle.id, "] to cache");
+		cs::printLog("WORLD: ", "Adding: ", actor->name, " [", actor->handle.id, "] to cache");
 	
 	if (auto tickable = dynamic_cast<Tickable*>(actor))
 	{
 		tickables.push_back(tickable);
 
 		if (logging)
-			cs::Print("    ", "Actor is tickable");
+			cs::printLog("    ", "Actor is tickable");
 	}
 
 	if (auto drawable = dynamic_cast<Drawable*>(actor))
@@ -128,7 +128,7 @@ void wok::world::addActorToCache(Actor* actor)
 		drawables.push_back(drawable);
 
 		if (logging)
-			cs::Print("    ", "Actor is drawable");
+			cs::printLog("    ", "Actor is drawable");
 	}
 
 	if (auto hittable = dynamic_cast<Hittable*>(actor))
@@ -136,7 +136,7 @@ void wok::world::addActorToCache(Actor* actor)
 		hittables.push_back(hittable);
 
 		if (logging)
-			cs::Print("    ", "Actor is hittable");
+			cs::printLog("    ", "Actor is hittable");
 	}
 }
 
@@ -231,16 +231,16 @@ void world::dumpActors(bool detailed)
 		actorsByGroups[actor->group].push_back(actor);
 	}
 
-	cs::Print("---------------- Actor Dump ----------------");
+	cs::printLog("---------------- Actor Dump ----------------");
 	for (auto& group : actorsByGroups)
 	{
 		if (group.first)
 		{
-			cs::Print(group.first->getName());
+			cs::printLog(group.first->getName());
 		}
 		else
 		{
-			cs::Print("[global]");
+			cs::printLog("[global]");
 		}
 
 		std::vector<std::pair<Actor*, std::string>> namedActors;
@@ -261,18 +261,18 @@ void world::dumpActors(bool detailed)
 
 		for (auto& namedActor : namedActors)
 		{
-			cs::Print("    ", std::left, std::setw(padding), namedActor.second, typeid(*namedActor.first).name());
+			cs::printLog("    ", std::left, std::setw(padding), namedActor.second, typeid(*namedActor.first).name());
 		}
 	}
 	if (detailed)
 	{
-		cs::Print("----------------- Details ------------------");
-		cs::Print("   Hittables: ", hittables.size());
-		cs::Print("   Tickables: ", tickables.size());
-		cs::Print("   Drawables: ", drawables.size());
-		cs::Print("   Tweeners:  ", tweeners.size());
+		cs::printLog("----------------- Details ------------------");
+		cs::printLog("   Hittables: ", hittables.size());
+		cs::printLog("   Tickables: ", tickables.size());
+		cs::printLog("   Drawables: ", drawables.size());
+		cs::printLog("   Tweeners:  ", tweeners.size());
 	}
-	cs::Print("--------------------------------------------");
+	cs::printLog("--------------------------------------------");
 }
 
 void world::clear()

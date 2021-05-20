@@ -19,12 +19,12 @@ namespace wok
 		Group(std::string name_) :
 			name(name_)
 		{
-			cs::Print("Created group ", name);
+			cs::printLog("Created group ", name);
 		}
 
 		~Group()
 		{
-			cs::Print("Removed group ", name);
+			cs::printLog("Removed group ", name);
 		}
 
 		std::string getName() const

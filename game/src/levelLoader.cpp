@@ -24,7 +24,7 @@ void createTilemap(nlohmann::json& json, std::string_view name,
 
 	if (!json.is_array())
 	{
-		cs::Print("Ground key in .level is not an array");
+		cs::printError("Ground key in .level is not an array");
 		return;
 	}
 
@@ -111,7 +111,7 @@ void wok::levels::load(std::string_view levelPath)
 	std::string path = pathStream.str();
 	if (!std::filesystem::exists(path))
 	{
-		cs::Print(path, " cannot be found in assets folder");
+		cs::printError(path, " cannot be found in assets folder");
 		return;
 	}
 
@@ -137,6 +137,6 @@ void wok::levels::load(std::string_view levelPath)
 	}
 	catch (const std::exception& e)
 	{
-		cs::Print(e.what());
+		cs::printError(e.what());
 	}
 }
