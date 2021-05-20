@@ -21,7 +21,7 @@ wok::FracturedSprite::FracturedSprite(const sf::Sprite& original, std::shared_pt
 		sf::Vector2i rectPos = { rect.left, rect.top };
 
 		sf::Sprite fracture(*texture, rect);
-		fracture.setOrigin(rect.width / 2, rect.height / 2);
+		fracture.setOrigin((float)(rect.width / 2), (float)(rect.height / 2));
 
 		sf::Vector2i fractureInTextureSpace = rectPos + (sf::Vector2i)fracture.getOrigin();
 
@@ -35,13 +35,13 @@ wok::FracturedSprite::FracturedSprite(const sf::Sprite& original, std::shared_pt
 		fracture.setRotation(rotation);
 
 		// Point right-ish
-		sf::Vector2f randomDirection = m::rotate(sf::Vector2f(70, 0), m::lerp(-30, -50, rand() / (float)RAND_MAX));
+		sf::Vector2f randomDirection = m::rotate(sf::Vector2f(70.f, 0.f), m::lerp(-30.f, -50.f, rand() / (float)RAND_MAX));
 		randomDirection.x *= direction;
 
 		fractures.emplace_back(
 			fracture, 
 			randomDirection,
-			direction * m::lerp(120, 240, rand() / (float)RAND_MAX),
+			direction * m::lerp(120.f, 240.f, rand() / (float)RAND_MAX),
 			m::lerp(1.3f, 1.6f, rand() / (float)RAND_MAX));
 	}
 }
@@ -58,7 +58,7 @@ void wok::FracturedSprite::update(const GameClock& time)
 		{
 			fract.sprite.move(fract.velocity * time.delta);
 			fract.sprite.rotate(fract.angularVelocity * time.delta);
-			float scale = -std::pow(1.f - fract.lifetime, 2) + 1.f;
+			float scale = -std::pow(1.f - fract.lifetime, 2.f) + 1.f;
 			fract.sprite.setScale(scale, scale);
 			anyLives = true;
 		}
