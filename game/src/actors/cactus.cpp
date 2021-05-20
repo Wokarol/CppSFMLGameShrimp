@@ -62,7 +62,7 @@ void wok::Cactus::reactToHit(const intersect::Intersection& intersection, int da
 
 	if (shouldDie)
 	{
-		world::createNamedActor<FracturedSprite>("Fracture", *this, texture, preset.fractures, dir);
+		world::createNamedActor<FracturedSprite>("Cactus Fracture", *this, texture, preset.fractures, dir);
 		handle.destroy();
 	}
 	else

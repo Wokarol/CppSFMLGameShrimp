@@ -8,7 +8,7 @@ template<>
 static void wok::res::create(const std::string& name, std::shared_ptr<TilesetData>& asset)
 {
 	std::string tilesetPath = (std::stringstream()
-		<< "assets/" << name << ".tileset"
+		<< "assets/" << name << ".json"
 		).str();
 
 	nlohmann::json data;
