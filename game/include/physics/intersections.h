@@ -75,7 +75,7 @@ namespace wok::intersect
 		ray.direction = m::normalize(ray.direction);
 		auto size = aabb.getSize();
 
-		//cs::Print(ray.origin.x);
+		//console::log(ray.origin.x);
 
 		if (ray.direction.x > 0 && ray.origin.x < 0)
 		{

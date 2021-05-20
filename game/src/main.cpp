@@ -31,7 +31,7 @@ bool startGame()
 	std::string configPath = "assets/start.config";
 	if (!std::filesystem::exists(configPath))
 	{
-		cs::printError("start.config cannot be found in assets folder");
+		console::error("start.config cannot be found in assets folder");
 		return false;
 	}
 
@@ -47,7 +47,7 @@ bool startGame()
 
 		if(!wok::tryGetString(config, "start_level", levelToLoad))
 		{
-			cs::printError("Key 'start_level' was not found");
+			console::error("Key 'start_level' was not found");
 			return false;
 		}
 
@@ -55,7 +55,7 @@ bool startGame()
 	}
 	catch (const std::exception& e)
 	{
-		cs::printError(e.what());
+		console::error(e.what());
 		return false;
 	}
 

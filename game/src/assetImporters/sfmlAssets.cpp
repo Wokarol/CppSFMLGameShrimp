@@ -9,7 +9,7 @@ static void wok::res::create(const std::string& name, std::shared_ptr<sf::Font>&
 
 	if (!asset->loadFromFile(fontPath))
 	{
-		cs::showConsoleImportant();
+		console::showImportant();
 	}
 }
 
@@ -22,6 +22,6 @@ static void wok::res::create(const std::string& name, std::shared_ptr<sf::Textur
 
 	if (!asset->loadFromFile(texturePath))
 	{
-		cs::showConsoleImportant();
+		console::showImportant();
 	}
 }

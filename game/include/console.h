@@ -4,7 +4,7 @@
 #endif
 #include <iostream>
 
-namespace cs
+namespace console
 {
     inline bool enableLock = false;
 
@@ -33,7 +33,7 @@ namespace cs
 
         inline void showConsole()
         {
-            if (cs::enableLock)
+            if (console::enableLock)
                 return;
 
 #if GAME_PLATFORM_WINDOWS
@@ -56,7 +56,7 @@ namespace cs
     }
 
     template <typename... Params>
-    inline void printLog(Params&&... params)
+    inline void log(Params&&... params)
     {
 #if DEBUG
         implementation::printToConsole(params...);
@@ -64,29 +64,29 @@ namespace cs
     }
 
     template <typename... Params>
-    inline void printError(Params&&... params)
+    inline void error(Params&&... params)
     {
         implementation::printToConsole(params...);
     }
 
-    inline void showConsole()
+    inline void show()
     {
 #if DEBUG
         implementation::showConsole();
 #endif // DEBUG
     }
 
-    inline void showConsoleImportant()
+    inline void showImportant()
     {
         implementation::showConsole();
     }
 
-    inline void hideConsole()
+    inline void hide()
     {
         implementation::hideConsole();
     }
 
-    inline bool isConsoleVisible()
+    inline bool isVisible()
     {
         return implementation::isConsoleVisible();
     }

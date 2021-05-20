@@ -50,7 +50,7 @@ namespace wok
 
 			if (logging)
 			{
-				cs::printLog("WORLD: ", "Creating actor: ", name, " [", id, "]");
+				console::log("WORLD: ", "Creating actor: ", name, " [", id, "]");
 			}
 			actorsToAddToCache.push_back(actor);
 
@@ -72,7 +72,7 @@ namespace wok
 
 			if (logging)
 			{
-				cs::printLog("WORLD: ", "Added tween ", tweener->name);
+				console::log("WORLD: ", "Added tween ", tweener->name);
 			}
 		}
 
