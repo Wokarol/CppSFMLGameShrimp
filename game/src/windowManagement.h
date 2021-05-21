@@ -86,17 +86,11 @@ inline void handleDebugKeys(const sf::Event& event)
             wok::DebugPopup::create("Console shown");
         }
     }
-
-    //if (event.key.code == sf::Keyboard::F5)
-    //{
-    //	DebugPopup::create("Hello world!");
-    //}
 }
 
 inline void handleEventsAndInput(sf::RenderWindow& window)
 {
-    wok::input::attack.wasPressedThisFrame = false;
-    wok::input::attack.wasReleasedThisFrame = false;
+    wok::input::resetKeyStateBeforeTheFrame();
 
     sf::Event event;
     while (window.pollEvent(event))

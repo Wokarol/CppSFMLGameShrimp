@@ -6,22 +6,50 @@ namespace wok
 {
     struct input
     {
+        template <class T>
         struct key
         {
+            const T boundKey;
+
             bool wasPressedThisFrame = false;
             bool wasReleasedThisFrame = false;
             bool isPressed = false;
+
+            key(T key) : boundKey(key) {}
+
+            void resetSingleFrameData()
+            {
+                attack.wasPressedThisFrame = false;
+                attack.wasReleasedThisFrame = false;
+            }
+            void checkForKeyPressed(T key)
+            {
+                if (key == boundKey)
+                {
+                    wasPressedThisFrame = true;
+                    isPressed = true;
+                }
+            }
+            void checkForKeyReleased(T key)
+            {
+                if (key == boundKey)
+                {
+                    wasReleasedThisFrame = true;
+                    isPressed = false;
+                }
+            }
         };
 
-        static sf::Vector2f movement;
-        static sf::Vector2f mousePositionInWorld;
+        static inline sf::Vector2f movement;
+        static inline sf::Vector2f mousePositionInWorld;
 
-        static key attack;
-        static bool slowMode;
+        static inline key<sf::Mouse::Button> attack{ sf::Mouse::Left };
+        static inline bool slowMode;
 
         static void handleInputKeysPressed(const sf::Event& event);
         static void handleInputKeysReleased(const sf::Event& event);
         static void handleMouseButtonsPressed(const sf::Event& event);
         static void handleMouseButtonsReleased(const sf::Event& event);
+        static void resetKeyStateBeforeTheFrame();
     };
 }

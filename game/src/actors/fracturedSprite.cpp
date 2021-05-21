@@ -5,28 +5,33 @@
 wok::FracturedSprite::FracturedSprite(const sf::Sprite& original, std::shared_ptr<sf::Texture> texture, std::vector<sf::IntRect> rects, float direction) :
     texture(texture)
 {
+    // Data from the original sprite that gets fractured, used later for offset calculation
     sf::Vector2f spritePos = original.getPosition();
     sf::Vector2f spriteOrigin = original.getOrigin();
     float rotation = original.getRotation();
 
+    // Rect of the original sprite, used later for fracture rect calculation
     sf::IntRect spriteRect = original.getTextureRect();
     sf::Vector2i spriteRectPos = sf::Vector2i(spriteRect.left, spriteRect.top);
 
     yPos = spritePos.y;
 
+    // Position in texture space with default pivot
     sf::Vector2i originalInTextureSpace = spriteRectPos + (sf::Vector2i)spriteOrigin;
 
+    // Creating fracture based on provided rects
     for (auto& rect : rects)
     {
         sf::Vector2i rectPos = { rect.left, rect.top };
 
         sf::Sprite fracture(*texture, rect);
-        fracture.setOrigin((float)(rect.width / 2), (float)(rect.height / 2));
+        fracture.setOrigin((float)(rect.width / 2), (float)(rect.height / 2)); // Centre
 
+        // Calculating difference between original's position and fracture position with respect to their origins
         sf::Vector2i fractureInTextureSpace = rectPos + (sf::Vector2i)fracture.getOrigin();
-
         sf::Vector2i differenceOnTexture = fractureInTextureSpace - originalInTextureSpace;
 
+        // We add original's position and rotated offset to accommodate for possible sprite rotation
         sf::Vector2f pos;
         pos += spritePos;
         pos += m::rotate((sf::Vector2f)differenceOnTexture, rotation);
@@ -34,7 +39,7 @@ wok::FracturedSprite::FracturedSprite(const sf::Sprite& original, std::shared_pt
         fracture.setPosition(pos);
         fracture.setRotation(rotation);
 
-        // Point right-ish
+        // Points right-ish
         sf::Vector2f randomDirection = m::rotate(sf::Vector2f(70.f, 0.f), m::lerp(-30.f, -50.f, rand() / (float)RAND_MAX));
         randomDirection.x *= direction;
 

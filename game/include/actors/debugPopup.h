@@ -9,6 +9,9 @@ namespace wok
 {
     class DebugPopup : public Actor, public wok::Drawable, public Tickable
     {
+        const std::string fontName = "RobotoMono";
+        const sf::Uint32 fontColor = 0xb03a2000; // Last two hexes do not matter
+
     public:
         DebugPopup(std::string message);
 
@@ -17,7 +20,16 @@ namespace wok
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
         virtual int getSortingOrder() override;
+        virtual ~DebugPopup();
 
+    private:
+        void updatePositionTo(sf::Vector2f pos);
+
+        std::shared_ptr<sf::Font> font;
+        sf::Text text;
+        int lastPos = -1;
+
+    public:
         template <class... Params>
         static void create(Params&&... params)
         {
@@ -29,12 +41,5 @@ namespace wok
 
             world::createNamedActor<DebugPopup>(name, message);
         }
-
-        virtual ~DebugPopup();
-
-    private:
-        std::shared_ptr<sf::Font> font;
-        sf::Text text;
-        int lastPos = -1;
     };
 }

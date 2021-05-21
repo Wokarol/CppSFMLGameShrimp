@@ -33,9 +33,12 @@ namespace wok
         virtual void reactToHit(const intersect::Intersection& intersection, int damage) override;
 
     private:
+        void addWindTween();
+        std::shared_ptr<LerpTweener<float>> createHitTweener(float dir);
+
         int health;
         bool dying = false;
         std::shared_ptr<sf::Texture> texture;
-        std::shared_ptr<SineTweener<float>> animation;
+        std::shared_ptr<SineTweener<float>> windAnimation;
     };
 }

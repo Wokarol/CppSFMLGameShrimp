@@ -11,7 +11,7 @@ wok::Bullet::Bullet(sf::Vector2f position, sf::Vector2f direction) :
 
     setTexture(*texture);
     setTextureRect(textureRect);
-    setOrigin(getTextureRect().width / 2.f, getTextureRect().width / 2.f);
+    setOrigin(getTextureRect().width / 2.f, getTextureRect().width / 2.f); // Centre
 }
 
 void wok::Bullet::update(const GameClock& time)
@@ -22,7 +22,6 @@ void wok::Bullet::update(const GameClock& time)
         handle.destroy();
         return;
     }
-
 
     float distanceDelta = velocity * time.delta;
 

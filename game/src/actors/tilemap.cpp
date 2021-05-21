@@ -12,6 +12,7 @@ void wok::Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
         ppu
     );
 
+    // We use basic sprites for now, could be changed to mesh generation later
     sf::Sprite tile = sf::Sprite(*tileset, sf::IntRect(tileRect));
     tile.setPosition(tilePos * (float)ppu);
 
@@ -28,5 +29,7 @@ void wok::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates& states)
 
 int wok::Tilemap::getSortingOrder()
 {
+    // Tilemap should be rendered below everything else 
+    // Should be changed to parameter later
     return -100;
 }

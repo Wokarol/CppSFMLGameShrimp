@@ -21,16 +21,16 @@ namespace wok
             {}
         };
 
-    private:
-        const std::shared_ptr<sf::Texture> texture;
-        std::vector<Fracture> fractures;
-        float yPos;
-
     public:
         FracturedSprite(const sf::Sprite& original, std::shared_ptr<sf::Texture> texture, std::vector<sf::IntRect> rects, float direction);
 
         virtual void update(const GameClock& time) override;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
         virtual float getSortingYPos() { return yPos; }
+
+    private:
+        const std::shared_ptr<sf::Texture> texture;
+        std::vector<Fracture> fractures;
+        float yPos;
     };
 }
