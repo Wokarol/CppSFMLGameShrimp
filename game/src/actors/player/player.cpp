@@ -27,11 +27,6 @@ wok::Player::Player() :
     muzzleFlash.setOrigin(0, muzzleFlash.getTextureRect().height / 2.f);
 }
 
-void wok::Player::setPosition(float x, float y)
-{
-    setPosition(sf::Vector2f(x, y));
-}
-
 void wok::Player::setPosition(sf::Vector2f v)
 {
     body.setPosition(v);

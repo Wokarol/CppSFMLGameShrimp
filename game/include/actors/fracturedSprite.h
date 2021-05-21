@@ -21,6 +21,7 @@ namespace wok
             {}
         };
 
+    private:
         const std::shared_ptr<sf::Texture> texture;
         std::vector<Fracture> fractures;
         float yPos;

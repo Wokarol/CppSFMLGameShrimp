@@ -9,14 +9,6 @@ namespace wok
     template <class T>
     class LerpTweener : public Tweener
     {
-        std::function<void(T)> setter;
-        std::function<T()> getter;
-        float t = 0;
-        float speed;
-        T start, end;
-
-        std::function<float(float)> easingFormula = [](float t) { return t; };
-
     public:
         LerpTweener(ActorHandle<Actor> actor,
             std::function<T()> getter, std::function<void(T)> setter,
@@ -46,5 +38,15 @@ namespace wok
         {
             this->easingFormula = easing;
         }
+
+    private:
+        const std::function<void(T)> setter;
+        const std::function<T()> getter;
+
+        float t = 0;
+        float speed;
+        T start, end;
+
+        std::function<float(float)> easingFormula = [](float t) { return t; };
     };
 }

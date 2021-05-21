@@ -23,14 +23,16 @@ namespace wok
         const sf::IntRect gunTextureRect = { 0, 17, 6, 4 };
         const sf::IntRect muzzleFlashTextureRect = { 7, 15, 7, 8 };
 
+        /// In texture space of the player
         const sf::Vector2f gunOffset = { 8, 10 };
+        /// In texture space of the gun
         const sf::Vector2f gunOrigin = { 1, 1 };
-        const sf::Vector2f muzzleFlashOffset = { 5, 0 }; // In relation to a gun
+        /// In relation to a gun
+        const sf::Vector2f muzzleFlashOffset = { 5, 0 };
 
     public:
         Player();
 
-        void setPosition(float x, float y);
         void setPosition(sf::Vector2f v);
         virtual void update(const GameClock& time) override;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;

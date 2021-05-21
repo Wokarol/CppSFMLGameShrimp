@@ -7,6 +7,7 @@ namespace wok
 {
     class StaticProp : public Actor, public sf::Sprite, public wok::Drawable
     {
+    private:
         std::shared_ptr<sf::Texture> texture;
 
     public:

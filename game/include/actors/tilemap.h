@@ -10,6 +10,7 @@ namespace wok
 {
     class Tilemap : public Actor, public wok::Drawable
     {
+    private:
         std::shared_ptr<sf::Texture> tileset;
         int ppu;
 

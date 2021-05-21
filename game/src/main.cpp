@@ -2,10 +2,6 @@
 
 #include <gameClock.h>
 #include <console.h>
-#include <customShapes/line.h>
-
-#include <actorHandle.h>
-#include <actors.h>
 
 #include <filesystem>
 #include <json.hpp>
@@ -44,7 +40,6 @@ bool startGame()
     try
     {
         std::string levelToLoad;
-
         if (!wok::tryGetString(config, "start_level", levelToLoad))
         {
             console::error("Key 'start_level' was not found");
@@ -58,7 +53,6 @@ bool startGame()
         console::error(e.what());
         return false;
     }
-
     return true;
 }
 

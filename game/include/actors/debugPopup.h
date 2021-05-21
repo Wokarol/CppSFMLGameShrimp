@@ -9,10 +9,6 @@ namespace wok
 {
     class DebugPopup : public Actor, public wok::Drawable, public Tickable
     {
-        std::shared_ptr<sf::Font> font;
-        sf::Text text;
-        int lastPos = -1;
-
     public:
         DebugPopup(std::string message);
 
@@ -35,5 +31,10 @@ namespace wok
         }
 
         virtual ~DebugPopup();
+
+    private:
+        std::shared_ptr<sf::Font> font;
+        sf::Text text;
+        int lastPos = -1;
     };
 }

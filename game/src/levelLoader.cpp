@@ -99,7 +99,7 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 
         sf::Vector2f pos(posJ[0], posJ[1]);
 
-        playerActor.setPosition(pos.x * ppu, pos.y * ppu);
+        playerActor.setPosition({ pos.x * ppu, pos.y * ppu });
     }
 }
 

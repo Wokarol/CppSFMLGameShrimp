@@ -6,13 +6,6 @@ namespace wok::csf
 {
     class LineShape : public sf::Drawable
     {
-        mutable sf::RectangleShape body;
-        sf::Vector2f start;
-        sf::Vector2f end;
-        float thickness;
-
-        mutable bool isDirty;
-
     public:
         LineShape(float thickness = 10.f);
 
@@ -31,5 +24,12 @@ namespace wok::csf
 
     private:
         void updateShape() const;
+
+        mutable sf::RectangleShape body;
+        mutable bool isDirty;
+
+        sf::Vector2f start;
+        sf::Vector2f end;
+        float thickness;
     };
 }

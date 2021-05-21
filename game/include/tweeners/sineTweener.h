@@ -9,11 +9,6 @@ namespace wok
     template <class T>
     class SineTweener : public Tweener
     {
-        std::function<void(T)> setter;
-        float elapsedTime = 0;
-        float speed;
-        T min, max;
-
     public:
         SineTweener(ActorHandle<Actor> actor, std::function<void(T)> setter, T min, T max, float speed) :
             Tweener(actor),
@@ -35,5 +30,12 @@ namespace wok
 
             setter(m::lerp(min, max, t));
         }
+
+    private:
+        const std::function<void(T)> setter;
+
+        float elapsedTime = 0;
+        float speed;
+        T min, max;
     };
 }
