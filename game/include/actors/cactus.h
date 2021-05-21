@@ -4,18 +4,10 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <tweeners.h>
+#include <assets/cactusPreset.h>
 
 namespace wok
 {
-    struct CactusPreset
-    {
-        std::string textureName = "actors/cacti";
-        sf::IntRect textureRect{};
-        float animationScale = 1.f;
-        int startingHealth = 3;
-        std::vector<sf::IntRect> fractures;
-    };
-
     class Cactus : public sf::Sprite,
         public Actor, public wok::Drawable, public Hittable
     {

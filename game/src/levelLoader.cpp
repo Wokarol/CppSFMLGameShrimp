@@ -4,6 +4,7 @@
 #include <world.h>
 #include <actors.h>
 #include <json.hpp>
+#include <jsonImporters.h>
 #include <fstream>
 #include <console.h>
 
@@ -11,6 +12,8 @@
 #include <resources.h>
 
 #include <assets/tilesetData.h>
+#include <assets/cactusPreset.h>
+#include <assets/playerSettings.h>
 
 constexpr auto ppu = 16;
 
@@ -32,11 +35,8 @@ void createTilemap(nlohmann::json& json, std::string_view name,
 
     for (auto& tile : tiles)
     {
-        nlohmann::json posJ = tile["pos"];
-        nlohmann::json tPosJ = tile["tPos"];
-
-        sf::Vector2f pos(posJ[0], posJ[1]);
-        sf::Vector2f tPos(tPosJ[0], tPosJ[1]);
+        sf::Vector2f pos = tile["pos"];
+        sf::Vector2f tPos = tile["tPos"];
 
         tilemap.add_tile(pos, tPos);
     }
@@ -51,8 +51,7 @@ void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const Ca
             auto& prop = *world::createNamedActor<Cactus>(name, preset);
             prop.group = group;
 
-            nlohmann::json posJ = cactus["pos"];
-            sf::Vector2f pos(posJ[0], posJ[1]);
+            sf::Vector2f pos = cactus["pos"];
 
             prop.setPosition(pos.x * ppu, pos.y * ppu);
         }
@@ -61,44 +60,21 @@ void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const Ca
 
 void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 {
-    CactusPreset smallCactus;
-    smallCactus.textureRect = { 0, 16, 16, 16 };
-    smallCactus.animationScale = 5.f;
-    smallCactus.fractures = {
-        { 1, 20, 4, 6 }, // Blue
-        { 5, 17, 6, 9 }, // Green
-        { 5, 26, 6, 6 }, // Orange
-        { 11, 22, 5, 8 }, // Red
-    };
-
+    CactusPreset smallCactus = *res::get<CactusPreset>("actors/smallCactus");
     generateCacti(json["Cacti"], group, smallCactus, "Cactus");
 
 
-    CactusPreset bigCactus;
-    bigCactus.textureRect = { 16, 0, 16, 32 };
-    bigCactus.animationScale = 4.f;
-    bigCactus.fractures = {
-        { 18, 8, 3, 4 }, // Yellow left
-        { 21, 3, 6, 10 }, // Pink top
-        { 20, 13, 7, 6 }, // Green
-        { 27, 12, 4, 8 }, // Yellow right
-        { 17, 19, 5, 7 }, // Blue
-        { 22, 19, 5, 7 }, // Purple
-        { 21, 26, 5, 6 }, // Orange
-    };
-
+    CactusPreset bigCactus = *res::get<CactusPreset>("actors/tallCactus");
     generateCacti(json["Tall_Cacti"], group, bigCactus, "Tall Cactus");
 
     nlohmann::json& player = json["Player"];
     if (player.is_object())
     {
-        auto& playerActor = *world::createNamedActor<Player>("Player");
+        PlayerSettings settings = *res::get<PlayerSettings>("actors/player");
+        auto& playerActor = *world::createNamedActor<Player>("Player", settings);
         playerActor.group = group;
 
-        nlohmann::json posJ = player["pos"];
-
-        sf::Vector2f pos(posJ[0], posJ[1]);
-
+        sf::Vector2f pos = player["pos"];
         playerActor.setPosition({ pos.x * ppu, pos.y * ppu });
     }
 }
@@ -130,7 +106,7 @@ void wok::levels::load(std::string_view levelPath)
 
     try
     {
-        auto groundTileset = res::get<TilesetData>("tilesets/desert");
+        auto groundTileset = res::get<TilesetData>("actors/tilesets/desert");
         createTilemap(level["Ground"], "Ground Tilemap", *groundTileset, group);
         createTilemap(level["Tiles"], "Free Tile Tilemap", *groundTileset, group);
         createActors(level["Actors"], group);
