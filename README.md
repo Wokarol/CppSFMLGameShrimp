@@ -2,7 +2,7 @@
 
 A game made in C++ using SFML for Uni assigment
 
-![Game screenshot](\screenshots\SurvivingTheHeat.png)
+![Game screenshot](/screenshots/SurvivingTheHeat.png)
 
 ## File structure
 ```cs
@@ -31,7 +31,7 @@ A game made in C++ using SFML for Uni assigment
 [You can get it here](https://ldtk.io/), this is a handy tool for simple level creation with suport for tilesets and entities.
 
 This program outputs ` .ldtk ` file. Said file is in ` .json ` format and contains a lot of data not useful at runtime. We strip this additional data externally and output ` .level ` file which looks like so:
-```json
+```jsonc
 {
     "Title": "Intro",
     "Actors": {
@@ -39,23 +39,23 @@ This program outputs ` .ldtk ` file. Said file is in ` .json ` format and contai
         "Cacti": [
             { "pos": [13.5, 7] },
             { "pos": [10.5, 5] },
-            ...
+            // ... //
         ],
         "Tall_Cacti": [
             { "pos": [22.5, 15] },
             { "pos": [6.5, 15] },
-            ...
+            // ... //
         ]
     },
     "Tiles": [
         { "pos": [10, 1], "tPos": [2, 0] },
         { "pos": [11, 1], "tPos": [3, 0] },
-        ...
+        // ... //
     ],
     "Ground": [
         { "pos": [0, 0], "tPos": [0, 0] },
         { "pos": [1, 0], "tPos": [0, 0] },
-        ...
+        // ... //
     ]
 }
 ```
