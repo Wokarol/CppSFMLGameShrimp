@@ -1,0 +1,20 @@
+{
+    "shoot_interval": 0.2,
+    "bullet_spread": 4.0,
+    "muzzle_flash_time": 0.05,
+
+    "flip_time": 0.1,
+
+    "movement_speed": 50.0,
+
+    "bullet_name": "actors/bullet",
+
+    "texture_name": "actors/sprites/shrimp",
+    "body_texture_rect": [0, 0, 13, 14],
+    "gun_texture_rect": [0, 17, 6, 4],
+    "muzzle_flash_texture_rect": [7, 15, 7, 8],
+
+    "gun_offset": [8, 10],
+    "gun_origin": [1, 1],
+    "muzzle_flash_offset": [5, 0]
+}

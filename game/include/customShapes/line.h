@@ -4,33 +4,32 @@
 
 namespace wok::csf
 {
-	class LineShape : public sf::Drawable
-	{
-		mutable sf::RectangleShape body;
-		sf::Vector2f start;
-		sf::Vector2f end;
-		float thickness;
+    class LineShape : public sf::Drawable
+    {
+    public:
+        LineShape(float thickness = 10.f);
 
-		mutable bool isDirty;
+        void setStart(sf::Vector2f);
+        sf::Vector2f getStart() const;
+        void setEnd(sf::Vector2f);
+        sf::Vector2f getEnd() const;
 
-	public:
-		LineShape(float thickness = 10.f);
+        void setThickness(float);
+        float getThickness() const;
 
-		void setStart(sf::Vector2f);
-		sf::Vector2f getStart() const;
-		void setEnd(sf::Vector2f);
-		sf::Vector2f getEnd() const;
+        void setColor(sf::Color);
+        sf::Color getColor() const;
 
-		void setThickness(float);
-		float getThickness() const;
+        virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
 
-		void setColor(sf::Color);
-		sf::Color getColor() const;
+    private:
+        void updateShape() const;
 
-		virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
+        mutable sf::RectangleShape body;
+        mutable bool isDirty;
 
-	private:
-		void updateShape() const;
-	};
+        sf::Vector2f start;
+        sf::Vector2f end;
+        float thickness;
+    };
 }
-

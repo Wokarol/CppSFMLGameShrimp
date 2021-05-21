@@ -5,28 +5,31 @@
 
 void wok::Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
 {
-	sf::IntRect tileRect(
-		(int)(tilesetCoord.x * ppu),
-		(int)(tilesetCoord.y * ppu),
-		ppu,
-		ppu
-	);
+    sf::IntRect tileRect(
+        (int)(tilesetCoord.x * ppu),
+        (int)(tilesetCoord.y * ppu),
+        ppu,
+        ppu
+    );
 
-	sf::Sprite tile = sf::Sprite(*tileset, sf::IntRect(tileRect));
-	tile.setPosition(tilePos * (float)ppu);
+    // We use basic sprites for now, could be changed to mesh generation later
+    sf::Sprite tile = sf::Sprite(*tileset, sf::IntRect(tileRect));
+    tile.setPosition(tilePos * (float)ppu);
 
-	tiles.push_back(tile);
+    tiles.push_back(tile);
 }
 
 void wok::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
-	for (auto& tile : tiles)
-	{
-		target.draw(tile, states);
-	}
+    for (auto& tile : tiles)
+    {
+        target.draw(tile, states);
+    }
 }
 
 int wok::Tilemap::getSortingOrder()
 {
-	return -100;
+    // Tilemap should be rendered below everything else 
+    // Should be changed to parameter later
+    return -100;
 }
