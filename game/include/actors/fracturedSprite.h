@@ -6,30 +6,30 @@
 
 namespace wok
 {
-	class FracturedSprite : public Actor, public Drawable, public Tickable
-	{
-		struct Fracture 
-		{
-			sf::Sprite sprite;
-			sf::Vector2f velocity;
-			float angularVelocity;
-			float lifetime = 1.f;
-			float lifetimeDropRate;
+    class FracturedSprite : public Actor, public Drawable, public Tickable
+    {
+        struct Fracture
+        {
+            sf::Sprite sprite;
+            sf::Vector2f velocity;
+            float angularVelocity;
+            float lifetime = 1.f;
+            float lifetimeDropRate;
 
-			Fracture(sf::Sprite sprite, sf::Vector2f direction, float rotation, float lifetimeDropRate) :
-				sprite(sprite), velocity(direction), angularVelocity(rotation), lifetimeDropRate(lifetimeDropRate)
-			{}
-		};
+            Fracture(sf::Sprite sprite, sf::Vector2f direction, float rotation, float lifetimeDropRate) :
+                sprite(sprite), velocity(direction), angularVelocity(rotation), lifetimeDropRate(lifetimeDropRate)
+            {}
+        };
 
-		const std::shared_ptr<sf::Texture> texture;
-		std::vector<Fracture> fractures;
-		float yPos;
+        const std::shared_ptr<sf::Texture> texture;
+        std::vector<Fracture> fractures;
+        float yPos;
 
-	public:
-		FracturedSprite(const sf::Sprite& original, std::shared_ptr<sf::Texture> texture, std::vector<sf::IntRect> rects, float direction);
+    public:
+        FracturedSprite(const sf::Sprite& original, std::shared_ptr<sf::Texture> texture, std::vector<sf::IntRect> rects, float direction);
 
-		virtual void update(const GameClock& time) override;		
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
-		virtual float getSortingYPos() { return yPos; }
-	};
+        virtual void update(const GameClock& time) override;
+        virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
+        virtual float getSortingYPos() { return yPos; }
+    };
 }

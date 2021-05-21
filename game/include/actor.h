@@ -9,71 +9,71 @@
 
 namespace wok
 {
-	class world;
+    class world;
 
-	class Group
-	{
-		std::string name;
+    class Group
+    {
+        std::string name;
 
-	public:
-		Group(std::string name_) :
-			name(name_)
-		{
-			console::log("Created group ", name);
-		}
+    public:
+        Group(std::string name_) :
+            name(name_)
+        {
+            console::log("Created group ", name);
+        }
 
-		~Group()
-		{
-			console::log("Removed group ", name);
-		}
+        ~Group()
+        {
+            console::log("Removed group ", name);
+        }
 
-		std::string getName() const
-		{
-			return name;
-		}
+        std::string getName() const
+        {
+            return name;
+        }
 
-		static std::shared_ptr<Group> create(std::string name_)
-		{
-			return std::make_shared<Group>(name_);
-		}
-	};
+        static std::shared_ptr<Group> create(std::string name_)
+        {
+            return std::make_shared<Group>(name_);
+        }
+    };
 
-	class Actor
-	{
-	protected:
-		ActorHandle<Actor> handle;
+    class Actor
+    {
+    protected:
+        ActorHandle<Actor> handle;
 
-	public:
-		std::shared_ptr<Group> group;
-		std::string name;
+    public:
+        std::shared_ptr<Group> group;
+        std::string name;
 
-		virtual void start() {};
+        virtual void start() {};
 
-		virtual ~Actor() = default;
+        virtual ~Actor() = default;
 
-		ActorHandle<Actor> getHandle() { return handle; }
+        ActorHandle<Actor> getHandle() { return handle; }
 
-		friend world;
-	};
+        friend world;
+    };
 
-	class Drawable
-	{
-	public:
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) = 0;
-		virtual int getSortingOrder() { return 0; }
-		virtual float getSortingYPos() { return 0; }
-	};
+    class Drawable
+    {
+    public:
+        virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) = 0;
+        virtual int getSortingOrder() { return 0; }
+        virtual float getSortingYPos() { return 0; }
+    };
 
-	class Tickable
-	{
-	public:
-		virtual void update(const GameClock& time) = 0;
-	};
+    class Tickable
+    {
+    public:
+        virtual void update(const GameClock& time) = 0;
+    };
 
-	class Hittable
-	{
-	public:
-		virtual intersect::Intersection getClosestHit(const m::Ray& ray) = 0;
-		virtual void reactToHit([[maybe_unused]] const intersect::Intersection& intersection, [[maybe_unused]] int damage) {};
-	};
+    class Hittable
+    {
+    public:
+        virtual intersect::Intersection getClosestHit(const m::Ray& ray) = 0;
+        virtual void reactToHit([[maybe_unused]] const intersect::Intersection& intersection, [[maybe_unused]] int damage) {};
+    };
 }

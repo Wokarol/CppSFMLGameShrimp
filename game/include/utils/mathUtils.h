@@ -94,11 +94,11 @@ namespace wok::m
         {
             return v;
         }
-        
+
         auto n = normalize(v);
         return n * maxLength;
-    }    
-    
+    }
+
     inline sf::Vector2f setMag(const sf::Vector2f& v, float mag)
     {
         auto n = normalize(v);

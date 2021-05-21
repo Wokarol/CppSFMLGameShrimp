@@ -7,10 +7,10 @@
 
 namespace wok::levels
 {
-	namespace
-	{
-		std::vector<std::shared_ptr<Group>> loadedLevels = {};
-	}
+    namespace
+    {
+        std::vector<std::shared_ptr<Group>> loadedLevels = {};
+    }
 
-	void load(std::string_view name);
+    void load(std::string_view name);
 }

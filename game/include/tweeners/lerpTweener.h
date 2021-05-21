@@ -6,45 +6,45 @@
 
 namespace wok
 {
-	template <class T>
-	class LerpTweener : public Tweener
-	{
-		std::function<void(T)> setter;
-		std::function<T()> getter;
-		float t = 0;
-		float speed;
-		T start, end;
+    template <class T>
+    class LerpTweener : public Tweener
+    {
+        std::function<void(T)> setter;
+        std::function<T()> getter;
+        float t = 0;
+        float speed;
+        T start, end;
 
-		std::function<float(float)> easingFormula = [](float t) { return t; };
+        std::function<float(float)> easingFormula = [](float t) { return t; };
 
-	public:
-		LerpTweener(ActorHandle<Actor> actor,
-			std::function<T()> getter, std::function<void(T)> setter,
-			T target, float duration
-		) :
-			Tweener(actor),
-			getter(getter), setter(setter),
-			speed(1.f / duration),
-			start(getter()), end(target)
-		{ }
+    public:
+        LerpTweener(ActorHandle<Actor> actor,
+            std::function<T()> getter, std::function<void(T)> setter,
+            T target, float duration
+        ) :
+            Tweener(actor),
+            getter(getter), setter(setter),
+            speed(1.f / duration),
+            start(getter()), end(target)
+        { }
 
-		virtual void tween(const GameClock& time) override
-		{
-			t += time.delta * speed;
-			if (t < 1)
-			{
-				setter(m::lerp(start, end, easingFormula(t)));
-			}
-			else
-			{
-				setter(end);
-				kill();
-			}
-		}
+        virtual void tween(const GameClock& time) override
+        {
+            t += time.delta * speed;
+            if (t < 1)
+            {
+                setter(m::lerp(start, end, easingFormula(t)));
+            }
+            else
+            {
+                setter(end);
+                kill();
+            }
+        }
 
-		void setEasing(std::function<float(float)> easing)
-		{
-			this->easingFormula = easing;
-		}
-	};
+        void setEasing(std::function<float(float)> easing)
+        {
+            this->easingFormula = easing;
+        }
+    };
 }

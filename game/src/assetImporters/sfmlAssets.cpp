@@ -3,25 +3,25 @@
 template <>
 static void wok::res::create(const std::string& name, std::shared_ptr<sf::Font>& asset)
 {
-	std::string fontPath = (std::stringstream()
-		<< "assets/fonts/" << name << ".ttf"
-		).str();
+    std::string fontPath = (std::stringstream()
+        << "assets/fonts/" << name << ".ttf"
+        ).str();
 
-	if (!asset->loadFromFile(fontPath))
-	{
-		console::showImportant();
-	}
+    if (!asset->loadFromFile(fontPath))
+    {
+        console::showImportant();
+    }
 }
 
 template<>
 static void wok::res::create(const std::string& name, std::shared_ptr<sf::Texture>& asset)
 {
-	std::string texturePath = (std::stringstream()
-		<< "assets/" << name << ".png"
-		).str();
+    std::string texturePath = (std::stringstream()
+        << "assets/" << name << ".png"
+        ).str();
 
-	if (!asset->loadFromFile(texturePath))
-	{
-		console::showImportant();
-	}
+    if (!asset->loadFromFile(texturePath))
+    {
+        console::showImportant();
+    }
 }

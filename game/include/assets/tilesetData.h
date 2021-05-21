@@ -3,10 +3,9 @@
 
 namespace wok
 {
-	struct TilesetData
-	{
-		std::string path;
-		int tileSize = 0;
-	};
+    struct TilesetData
+    {
+        std::string path;
+        int tileSize = 0;
+    };
 }
-

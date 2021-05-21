@@ -5,25 +5,25 @@
 
 namespace wok
 {
-	class GameClock
-	{
-		sf::Clock clock;
+    class GameClock
+    {
+        sf::Clock clock;
 
-	public:
-		float delta = 0.f;
-		float absolute = 0.f;
-		uint32_t frames = 0;
+    public:
+        float delta = 0.f;
+        float absolute = 0.f;
+        uint32_t frames = 0;
 
-		void Tick()
-		{
-			delta = clock.restart().asSeconds();
+        void Tick()
+        {
+            delta = clock.restart().asSeconds();
 
-			if (input::slowMode)
-			  delta *= 0.25f;
+            if (input::slowMode)
+                delta *= 0.25f;
 
 
-			absolute += delta;
-			frames++;
-		}
-	};
+            absolute += delta;
+            frames++;
+        }
+    };
 }
