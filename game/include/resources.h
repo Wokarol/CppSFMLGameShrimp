@@ -28,7 +28,14 @@ namespace wok
             if (!castedAsset)
             {
                 castedAsset = std::make_shared<T>();
-                create<T>(name, castedAsset);
+                try
+                {
+                    create<T>(name, castedAsset);
+                }
+                catch (const std::exception& e)
+                {
+                    console::error(e.what());
+                }
                 asset = std::static_pointer_cast<void>(castedAsset);
             }
 

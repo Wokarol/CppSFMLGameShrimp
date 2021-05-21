@@ -1,0 +1,12 @@
+{
+    "texture_name": "actors/sprites/cacti",
+    "texture_rect": [0, 16, 16, 16],
+    "animation_scale": 5,
+    "starting_health": 3,
+    "fractures": [
+        [ 1, 20, 4, 6  ], // Blue
+        [ 5, 17, 6, 9  ], // Green
+        [ 5, 26, 6, 6  ], // Orange
+        [ 11, 22, 5, 8 ]  // Red
+    ]
+}

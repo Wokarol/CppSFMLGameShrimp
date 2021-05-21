@@ -66,7 +66,9 @@ This file is then directly read by the game
 Game assets are stored in ` .jsonc ` or ` .json ` format and later parsed at runtime
 
 #### Supported custom data types:
-- (soon) *` sf::Rect ` - ` [x, y, width, heigh] `*
+- ` sf::Rect ` - ` [x, y, width, heigh] `
+- ` sf::Vector2 ` - ` [x, y] `
+- ` sf::Vector3 ` - ` [x, y, z] `
 <br><br>
 
 ## Code architecture
