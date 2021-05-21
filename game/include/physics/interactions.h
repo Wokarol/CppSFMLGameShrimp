@@ -5,9 +5,9 @@
 
 namespace wok::physics
 {
-	struct RaycastResult
-	{
-		intersect::Intersection intersection;
-		ActorHandle<Hittable> hitActor;
-	};
+    struct RaycastResult
+    {
+        intersect::Intersection intersection;
+        ActorHandle<Hittable> hitActor;
+    };
 }
