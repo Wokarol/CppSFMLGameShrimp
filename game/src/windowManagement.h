@@ -45,10 +45,7 @@ inline void handleDebugKeys(const sf::Event& event)
     if (event.key.code == sf::Keyboard::F5)
     {
         wok::input::slowMode ^= true;
-        std::stringstream stream;
-        stream << "Slow mode ";
-        stream << (wok::input::slowMode ? "ON" : "OFF");
-        wok::DebugPopup::create(stream.str());
+        wok::DebugPopup::create("Slow mode ", (wok::input::slowMode ? "ON" : "OFF"));
     }
     if (event.key.code == sf::Keyboard::F2)
     {

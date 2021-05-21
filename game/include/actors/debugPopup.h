@@ -22,9 +22,15 @@ namespace wok
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
         virtual int getSortingOrder() override;
 
-        static void create(std::string message)
+        template <class... Params>
+        static void create(Params&&... params)
         {
+            std::stringstream messageStream;
+            ((messageStream << std::forward<Params>(params)), ...);
+            std::string message = messageStream.str();
+
             std::string name = (std::stringstream() << message.substr(0, 10) << "...").str();
+
             world::createNamedActor<DebugPopup>(name, message);
         }
 
