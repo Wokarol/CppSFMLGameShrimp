@@ -1,7 +1,7 @@
 #pragma once
 
-#include "gameClock.h"
-#include <actorHandle.h>
+#include <gameClock.h>
+#include <actorSystem/actorHandle.h>
 #include <functional>
 #include <console.h>
 
@@ -12,12 +12,6 @@ namespace wok
 
     class Tweener
     {
-    protected:
-        bool isRunning = true;
-        ActorHandle<Actor> actor;
-        std::function<void()> afterKilled = []() {};
-        std::string name;
-
     public:
         bool paused = false;
 
@@ -28,13 +22,11 @@ namespace wok
         }
 
         virtual void tween(const GameClock& time) = 0;
+
         bool isTweensActorAlive() { return actor.isValid(); }
         bool getIsRunning() { return isRunning && isTweensActorAlive(); }
 
-        void setAfterKilled(std::function<void()> callback)
-        {
-            this->afterKilled = callback;
-        }
+        void setAfterKilled(std::function<void()> callback) { this->afterKilled = callback; }
 
         void kill()
         {
@@ -42,6 +34,12 @@ namespace wok
         }
 
         virtual ~Tweener() = default;
+
+    protected:
+        bool isRunning = true;
+        ActorHandle<Actor> actor;
+        std::function<void()> afterKilled = []() {};
+        std::string name;
 
         friend world;
     };

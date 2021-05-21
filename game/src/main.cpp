@@ -69,7 +69,7 @@ int main()
     Pallete colors;
     wok::GameClock time;
 
-    wok::world::logging = false;
+    wok::world::shouldLog = false;
 
     if (!startGame())
     {

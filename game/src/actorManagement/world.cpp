@@ -18,15 +18,15 @@ std::vector<Actor*> world::actorsToAddToCache = {};
 
 std::vector<std::shared_ptr<Tweener>> world::tweeners = {};
 std::vector<actor_id> world::actorsToRemove = {};
-actor_id world::nextID = 0;
+actor_id world::nextFreeID = 0;
 
-bool world::logging = false;
+bool world::shouldLog = false;
 
 void world::updateActors(const GameClock& time)
 {
     for (auto& actor : actorsToCallStartOn)
     {
-        if (logging)
+        if (shouldLog)
         {
             console::log("WORLD: ", "Starting ", actor->name, " [", actor->handle.id, "]");
         }
@@ -59,7 +59,7 @@ void world::removeDeadTweens()
         auto toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const auto& t)
             {
                 bool noLongerRunning = !t->getIsRunning();
-                if (noLongerRunning && logging)
+                if (noLongerRunning && shouldLog)
                 {
                     console::log("WORLD: ", "Tween for ", t->name, " is no longer running");
                 }
@@ -89,7 +89,7 @@ void world::removeDeadActors()
             continue;
         }
 
-        if (logging)
+        if (shouldLog)
         {
             console::log("WORLD: ", "Destroying actor: ", actor->name, " [", id, "]");
         }
@@ -112,14 +112,14 @@ void wok::world::fillCacheIfNeeded()
 
 void wok::world::addActorToCache(Actor* actor)
 {
-    if (logging)
+    if (shouldLog)
         console::log("WORLD: ", "Adding: ", actor->name, " [", actor->handle.id, "] to cache");
 
     if (auto tickable = dynamic_cast<Tickable*>(actor))
     {
         tickables.push_back(tickable);
 
-        if (logging)
+        if (shouldLog)
             console::log("    ", "Actor is tickable");
     }
 
@@ -127,7 +127,7 @@ void wok::world::addActorToCache(Actor* actor)
     {
         drawables.push_back(drawable);
 
-        if (logging)
+        if (shouldLog)
             console::log("    ", "Actor is drawable");
     }
 
@@ -135,7 +135,7 @@ void wok::world::addActorToCache(Actor* actor)
     {
         hittables.push_back(hittable);
 
-        if (logging)
+        if (shouldLog)
             console::log("    ", "Actor is hittable");
     }
 }
@@ -285,5 +285,5 @@ void world::clear()
     hittables.clear();
     actorsToRemove.clear();
     actorsToAddToCache.clear();
-    nextID = 0;
+    nextFreeID = 0;
 }

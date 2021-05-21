@@ -2,7 +2,7 @@
 
 #include <map>
 #include <memory>
-#include <actorHandle.h>
+#include <actorSystem/actorHandle.h>
 #include <actor.h>
 #include <gameClock.h>
 #include <exception>
@@ -18,25 +18,30 @@ namespace wok
 {
     class world
     {
+        // Objects in world
         static std::map<actor_id, std::unique_ptr<Actor>> actors;
+        static std::vector<std::shared_ptr<Tweener>> tweeners;
+
+        // Short Cache
         static std::vector<Actor*> actorsToCallStartOn;
+        static std::vector<Actor*> actorsToAddToCache;
+        static std::vector<actor_id> actorsToRemove;
+
+        // Long Cache
         static std::vector<Drawable*> drawables;
         static std::vector<Tickable*> tickables;
         static std::vector<Hittable*> hittables;
 
-        static std::vector<Actor*> actorsToAddToCache;
 
-        static std::vector<std::shared_ptr<Tweener>> tweeners;
-        static std::vector<actor_id> actorsToRemove;
-        static actor_id nextID;
+        static actor_id nextFreeID;
 
     public:
-        static bool logging;
+        static bool shouldLog;
 
         template< class T, class... Args >
         static ActorHandle<T> createNamedActor(std::string_view name, Args&&... args)
         {
-            actor_id id = nextID++;
+            actor_id id = nextFreeID++;
 
             auto result = actors.emplace(
                 id,
@@ -48,7 +53,7 @@ namespace wok
 
             actorsToCallStartOn.push_back(actor);
 
-            if (logging)
+            if (shouldLog)
             {
                 console::log("WORLD: ", "Creating actor: ", name, " [", id, "]");
             }
@@ -70,7 +75,7 @@ namespace wok
 
             tweeners.push_back(tweener);
 
-            if (logging)
+            if (shouldLog)
             {
                 console::log("WORLD: ", "Added tween ", tweener->name);
             }
