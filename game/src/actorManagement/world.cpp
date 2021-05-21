@@ -9,33 +9,19 @@
 
 using namespace wok;
 
-std::map<actor_id, std::unique_ptr<Actor>> world::actors = {};
-std::vector<Actor*> world::actorsToCallStartOn = {};
-std::vector<Drawable*> world::drawables = {};
-std::vector<Tickable*> world::tickables = {};
-std::vector<Hittable*> world::hittables = {};
-std::vector<Actor*> world::actorsToAddToCache = {};
-
-std::vector<std::shared_ptr<Tweener>> world::tweeners = {};
-std::vector<actor_id> world::actorsToRemove = {};
-actor_id world::nextFreeID = 0;
-
-bool world::shouldLog = false;
-
 void world::updateActors(const GameClock& time)
 {
     for (auto& actor : actorsToCallStartOn)
     {
-        if (shouldLog)
-        {
-            console::log("WORLD: ", "Starting ", actor->name, " [", actor->handle.id, "]");
-        }
+        if (shouldLog) console::log("WORLD: ", "Starting ", actor->name, " [", actor->handle.id, "]");
+
         actor->start();
     }
     actorsToCallStartOn.clear();
 
     for (auto& actor : tickables)
     {
+        assert(actor);
         actor->update(time);
     }
 }
@@ -54,52 +40,36 @@ void world::updateTweeners(const GameClock& time)
 
 void world::removeDeadTweens()
 {
-    if (tweeners.size() > 0)
-    {
-        auto toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const auto& t)
-            {
-                bool noLongerRunning = !t->getIsRunning();
-                if (noLongerRunning && shouldLog)
-                {
-                    console::log("WORLD: ", "Tween for ", t->name, " is no longer running");
-                }
-                if (noLongerRunning)
-                    t->afterKilled();
-                return noLongerRunning;
-            });
+    if (tweeners.size() <= 0)
+        return;
 
-        tweeners.erase(toErase, tweeners.end());
-
-        for (auto& tweener : tweeners)
+    auto toErase = std::remove_if(tweeners.begin(), tweeners.end(), [](const auto& t)
         {
-            assert(tweener);
-        }
-    }
+            if (t->getIsRunning())
+                return false;
+
+            if (shouldLog) console::log("WORLD: ", "Tween for ", t->name, " is no longer running");
+            t->afterKilled();
+            return true;
+        });
+
+    tweeners.erase(toErase, tweeners.end());
 }
 
 void world::removeDeadActors()
 {
-    auto end = std::unique(actorsToRemove.begin(), actorsToRemove.end());
-    for (auto it = actorsToRemove.begin(); it != end; it++)
+    for (auto& id : actorsToRemove)
     {
-        auto id = *it;
         Actor* actor = getActorPointer<Actor>(id);
-        if (!actor)
-        {
-            continue;
-        }
+        assert(actor);
 
-        if (shouldLog)
-        {
-            console::log("WORLD: ", "Destroying actor: ", actor->name, " [", id, "]");
-        }
+        if (shouldLog) console::log("WORLD: ", "Destroying actor: ", actor->name, " [", id, "]");
+
         clearActorFromCache(actor);
-
         actors.erase(id);
     }
     actorsToRemove.clear();
 }
-
 
 void wok::world::fillCacheIfNeeded()
 {
@@ -112,31 +82,26 @@ void wok::world::fillCacheIfNeeded()
 
 void wok::world::addActorToCache(Actor* actor)
 {
-    if (shouldLog)
-        console::log("WORLD: ", "Adding: ", actor->name, " [", actor->handle.id, "] to cache");
+    assert(actor);
+
+    if (shouldLog) console::log("WORLD: ", "Adding: ", actor->name, " [", actor->handle.id, "] to cache");
 
     if (auto tickable = dynamic_cast<Tickable*>(actor))
     {
+        if (shouldLog) console::log("    ", "Actor is tickable");
         tickables.push_back(tickable);
-
-        if (shouldLog)
-            console::log("    ", "Actor is tickable");
     }
 
     if (auto drawable = dynamic_cast<Drawable*>(actor))
     {
+        if (shouldLog) console::log("    ", "Actor is drawable");
         drawables.push_back(drawable);
-
-        if (shouldLog)
-            console::log("    ", "Actor is drawable");
     }
 
     if (auto hittable = dynamic_cast<Hittable*>(actor))
     {
+        if (shouldLog) console::log("    ", "Actor is hittable");
         hittables.push_back(hittable);
-
-        if (shouldLog)
-            console::log("    ", "Actor is hittable");
     }
 }
 
@@ -174,9 +139,9 @@ void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
     std::sort(drawables.begin(), drawables.end(), [](const auto& a, const auto& b)
         {
-            auto sa = std::make_tuple(a->getSortingOrder(), a->getSortingYPos());
-            auto sb = std::make_tuple(b->getSortingOrder(), b->getSortingYPos());
-            return sa < sb;
+            auto orderOfA = std::make_tuple(a->getSortingOrder(), a->getSortingYPos());
+            auto orderOfB = std::make_tuple(b->getSortingOrder(), b->getSortingYPos());
+            return orderOfA < orderOfB;
         });
 
     for (auto& drawable : drawables)
@@ -186,35 +151,43 @@ void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
     }
 }
 
-physics::RaycastResult world::raycast(const m::Ray& ray, float maxDist)
+physics::RaycastResult world::raycast(const m::Ray& ray, float maxRaycastDistance)
 {
-
     intersect::Intersection closestHit;
-    ActorHandle<Actor> hitActorHandle{};
+    ActorHandle<Actor> hitActorHandle;
 
     for (auto& hittable : hittables)
     {
         assert(hittable);
-        auto castResult = hittable->getClosestHit(ray);
+        auto raycastResult = hittable->getClosestHit(ray);
 
-        if (!castResult.hit)
+        if (!raycastResult.hit)
             continue;
 
-        if (!closestHit.hit || (castResult.distance < closestHit.distance))
+        bool thereWasAHitAlread = closestHit.hit;
+        bool myHitIsCloser = raycastResult.distance < closestHit.distance;
+
+        if (!thereWasAHitAlread || myHitIsCloser)
         {
-            closestHit = castResult;
             auto hitActor = dynamic_cast<Actor*>(hittable);
             assert(hitActor);
+
+            closestHit = raycastResult;
             hitActorHandle = hitActor->getHandle();
         }
     }
 
-    if (maxDist < 0 || closestHit.distance <= maxDist)
+    bool raycastIsInfinite = maxRaycastDistance < 0;
+    bool closestHitIsInRange = closestHit.distance <= maxRaycastDistance;
+
+    if (closestHitIsInRange || raycastIsInfinite)
     {
+        // We hit something
         return { closestHit, hitActorHandle.as<Hittable>() };
     }
     else
     {
+        // We hit nothing
         return { };
     }
 
@@ -279,11 +252,14 @@ void world::clear()
 {
     actors.clear();
     tweeners.clear();
+
     actorsToCallStartOn.clear();
+    actorsToAddToCache.clear();
+    actorsToRemove.clear();
+
     drawables.clear();
     tickables.clear();
     hittables.clear();
-    actorsToRemove.clear();
-    actorsToAddToCache.clear();
+
     nextFreeID = 0;
 }

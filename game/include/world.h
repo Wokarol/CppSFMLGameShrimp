@@ -19,24 +19,24 @@ namespace wok
     class world
     {
         // Objects in world
-        static std::map<actor_id, std::unique_ptr<Actor>> actors;
-        static std::vector<std::shared_ptr<Tweener>> tweeners;
+        static inline std::unordered_map<actor_id, std::unique_ptr<Actor>> actors;
+        static inline std::vector<std::shared_ptr<Tweener>> tweeners;
 
-        // Short Cache
-        static std::vector<Actor*> actorsToCallStartOn;
-        static std::vector<Actor*> actorsToAddToCache;
-        static std::vector<actor_id> actorsToRemove;
+        // One-Frame Cache
+        static inline std::vector<Actor*> actorsToCallStartOn;
+        static inline std::vector<Actor*> actorsToAddToCache;
+        static inline std::vector<actor_id> actorsToRemove;
 
         // Long Cache
-        static std::vector<Drawable*> drawables;
-        static std::vector<Tickable*> tickables;
-        static std::vector<Hittable*> hittables;
+        static inline std::vector<Drawable*> drawables;
+        static inline std::vector<Tickable*> tickables;
+        static inline std::vector<Hittable*> hittables;
 
 
-        static actor_id nextFreeID;
+        static inline actor_id nextFreeID = 0;
 
     public:
-        static bool shouldLog;
+        static inline bool shouldLog = false;
 
         template< class T, class... Args >
         static ActorHandle<T> createNamedActor(std::string_view name, Args&&... args)
@@ -124,6 +124,9 @@ namespace wok
 
         static void destroyActor(actor_id id)
         {
+            if (!isActorAlive(id))
+                return;
+
             actorsToRemove.push_back(id);
         }
 
@@ -144,7 +147,6 @@ namespace wok
         static void dumpActors(bool details = false);
         static void clear();
 
-
     private:
         static void updateActors(const GameClock& time);
         static void updateTweeners(const GameClock& time);
@@ -153,5 +155,10 @@ namespace wok
         static void fillCacheIfNeeded();
         static void addActorToCache(Actor*);
         static void clearActorFromCache(Actor*);
+
+        static bool isActorAlive(actor_id id)
+        {
+            return actors.find(id) != actors.end();
+        }
     };
 }
