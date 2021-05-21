@@ -82,7 +82,7 @@ public:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
     virtual float getSortingYPos() { return crateSprite.getPosition().y; }
 
-	virtual void update(const GameClock& time) override;
+    virtual void update(const GameClock& time) override;
 
 private:
     sf::Sprite crateSprite;
