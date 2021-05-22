@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <console.h>
+#include <resources.h>
 #include <world.h>
 #include <input.h>
 
@@ -42,10 +43,15 @@ inline void handleDebugKeys(const sf::Event& event)
         wok::world::dumpActors(!event.key.shift);
         wok::DebugPopup::create("Actors dumped");
     }
-    if (event.key.code == sf::Keyboard::F5)
+    if (event.key.code == sf::Keyboard::F4)
     {
         wok::input::slowMode ^= true;
         wok::DebugPopup::create("Slow mode ", (wok::input::slowMode ? "ON" : "OFF"));
+    }
+    if (event.key.code == sf::Keyboard::F5)
+    {
+        wok::res::reloadAll();
+        wok::DebugPopup::create("Reloaded assets");
     }
     if (event.key.code == sf::Keyboard::F2)
     {

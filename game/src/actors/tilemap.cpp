@@ -6,15 +6,15 @@
 void wok::Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
 {
     sf::IntRect tileRect(
-        (int)(tilesetCoord.x * ppu),
-        (int)(tilesetCoord.y * ppu),
-        ppu,
-        ppu
+        (int)(tilesetCoord.x * data->tileSize),
+        (int)(tilesetCoord.y * data->tileSize),
+        data->tileSize,
+        data->tileSize
     );
 
     // We use basic sprites for now, could be changed to mesh generation later
     sf::Sprite tile = sf::Sprite(*tileset, sf::IntRect(tileRect));
-    tile.setPosition(tilePos * (float)ppu);
+    tile.setPosition(tilePos * (float)data->tileSize);
 
     tiles.push_back(tile);
 }

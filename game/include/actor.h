@@ -17,6 +17,7 @@ namespace wok
         std::string name;
 
         virtual void start() {};
+        virtual void assetsReloaded() {};
         virtual ~Actor() = default;
         ActorHandle<Actor> getHandle() { return handle; }
 

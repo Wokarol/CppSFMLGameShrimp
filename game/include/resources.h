@@ -22,7 +22,7 @@ namespace wok
 
     public:
         template <typename T>
-        static inline std::shared_ptr<T> get(std::string name)
+        static std::shared_ptr<T> get(std::string name)
         {
             auto id = std::type_index(typeid(T));
             auto& asset = loadedAssets[id][name];
@@ -34,7 +34,7 @@ namespace wok
                 castedAsset = std::make_shared<T>();
                 try
                 {
-                    create<T>(name, castedAsset);
+                    create<T>(name, *castedAsset);
                 }
                 catch (const std::exception& e)
                 {
@@ -46,11 +46,28 @@ namespace wok
             return castedAsset;
         }
 
+        template <class T>
+        static void reloadIfTypeExists()
+        {
+            auto id = std::type_index(typeid(T));
+            auto found = loadedAssets.find(id);
+            if (found != loadedAssets.end())
+            {
+                for (auto& pair : (*found).second)
+                {
+                    auto castedAsset = std::static_pointer_cast<T>(pair.second);
+                    create<T>(pair.first, *castedAsset);
+                }
+            }
+        }
+
+        static void reloadAll();
+
 
         template <typename T>
-        static void create(const std::string& name, std::shared_ptr<T>& asset);
+        static void create(const std::string& name, T& asset);
 
-        static inline void clear()
+        static void clear()
         {
             loadedAssets.clear();
         }
@@ -66,7 +83,6 @@ namespace wok
             {
                 console::error("Cannot find specified file: ", path);
                 abort();
-                return {};
             }
 
             std::ifstream levelFile(path);
