@@ -1,29 +1,25 @@
 #include <resources.h>
 #include <assets/cactusPreset.h>
 #include <json.hpp>
+#include <utils/jsonHelpers.h>
 #include <jsonImporters.h>
 #include <sstream>
 #include <fstream>
 
 template<>
-static void wok::res::create(const std::string& name, std::shared_ptr<CactusPreset>& asset)
+static void wok::res::create(const std::string& name, CactusPreset& asset)
 {
-    std::string tilesetPath = (std::stringstream()
-        << "assets/" << name << ".jsonc"
-        ).str();
+    auto data = loadJsonFile(name);
 
-    std::ifstream levelFile(tilesetPath);
+    asset.textureName = getAssetPath(name, data["texture_name"]);
+    asset.textureRect = data.at("texture_rect").get<sf::IntRect>();
 
-    nlohmann::json data = nlohmann::json::parse(levelFile, nullptr, true, true);
+    asset.animationScale = data.at("animation_scale").get<float>();
+    asset.startingHealth = data.at("starting_health").get<int>();
 
-    asset->textureName = data.at("texture_name").get<std::string>();
-    asset->textureRect = data.at("texture_rect").get<sf::IntRect>();
-
-    asset->animationScale = data.at("animation_scale").get<float>();
-    asset->startingHealth = data.at("starting_health").get<float>();
-
+    asset.fractures.clear();
     for (auto& fracture : data.at("fractures"))
     {
-        asset->fractures.push_back(fracture.get<sf::IntRect>());
+        asset.fractures.push_back(fracture.get<sf::IntRect>());
     }
 }

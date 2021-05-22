@@ -10,6 +10,7 @@
 
 #include <tweeners.h>
 #include <resources.h>
+#include <projectSettings.h>
 
 #include <assets/tilesetData.h>
 #include <assets/cactusPreset.h>
@@ -20,7 +21,7 @@ constexpr auto ppu = 16;
 using namespace wok;
 
 void createTilemap(nlohmann::json& json, std::string_view name,
-    TilesetData tileset, std::shared_ptr<Group>& group)
+    std::shared_ptr<TilesetData> tileset, std::shared_ptr<Group>& group)
 {
     auto& tilemap = *world::createNamedActor<Tilemap>(name, tileset);
     tilemap.group = group;
@@ -42,7 +43,7 @@ void createTilemap(nlohmann::json& json, std::string_view name,
     }
 }
 
-void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const CactusPreset& preset, std::string_view name)
+void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const std::shared_ptr<CactusPreset>& preset, std::string_view name)
 {
     if (json.is_array())
     {
@@ -60,17 +61,17 @@ void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const Ca
 
 void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 {
-    CactusPreset smallCactus = *res::get<CactusPreset>("actors/smallCactus");
+    auto smallCactus = res::get<CactusPreset>(project::actorPaths["small_cactus"]);
     generateCacti(json["Cacti"], group, smallCactus, "Cactus");
 
 
-    CactusPreset bigCactus = *res::get<CactusPreset>("actors/tallCactus");
+    auto bigCactus = res::get<CactusPreset>(project::actorPaths["tall_cactus"]);
     generateCacti(json["Tall_Cacti"], group, bigCactus, "Tall Cactus");
 
     nlohmann::json& player = json["Player"];
     if (player.is_object())
     {
-        PlayerSettings settings = *res::get<PlayerSettings>("actors/player");
+        auto settings = res::get<PlayerSettings>(project::actorPaths["player"]);
         auto& playerActor = *world::createNamedActor<Player>("Player", settings);
         playerActor.group = group;
 
@@ -106,9 +107,9 @@ void wok::levels::load(std::string_view levelPath)
 
     try
     {
-        auto groundTileset = res::get<TilesetData>("actors/tilesets/desert");
-        createTilemap(level["Ground"], "Ground Tilemap", *groundTileset, group);
-        createTilemap(level["Tiles"], "Free Tile Tilemap", *groundTileset, group);
+        auto groundTileset = res::get<TilesetData>(project::actorPaths["desert"]);
+        createTilemap(level["Ground"], "Ground Tilemap", groundTileset, group);
+        createTilemap(level["Tiles"], "Free Tile Tilemap", groundTileset, group);
         createActors(level["Actors"], group);
     }
     catch (const std::exception& e)

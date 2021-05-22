@@ -4,6 +4,7 @@
 #include <actor.h>
 #include <sstream>
 #include <world.h>
+#include <map>
 
 namespace wok::levels
 {

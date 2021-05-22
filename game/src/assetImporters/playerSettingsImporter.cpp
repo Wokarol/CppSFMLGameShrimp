@@ -3,36 +3,31 @@
 
 #include <json.hpp>
 #include <jsonImporters.h>
+#include <utils/jsonHelpers.h>
 #include <sstream>
 #include <fstream>
 
 template<>
-static void wok::res::create(const std::string& name, std::shared_ptr<PlayerSettings>& asset)
+static void wok::res::create(const std::string& name, PlayerSettings& asset)
 {
-    std::string tilesetPath = (std::stringstream()
-        << "assets/" << name << ".jsonc"
-        ).str();
+    auto j = loadJsonFile(name);
 
-    std::ifstream levelFile(tilesetPath);
+    asset.shootInterval = j["shoot_interval"];
+    asset.bulletSpread = j["bullet_spread"];
+    asset.muzzleFlashTime = j["muzzle_flash_time"];
 
-    nlohmann::json j = nlohmann::json::parse(levelFile, nullptr, true, true);
+    asset.flipTime = j["flip_time"];
 
-    asset->shootInterval = j["shoot_interval"];
-    asset->bulletSpread = j["bullet_spread"];
-    asset->muzzleFlashTime = j["muzzle_flash_time"];
+    asset.movementSpeed = j["movement_speed"];
 
-    asset->flipTime = j["flip_time"];
+    asset.bulletName = getAssetPath(name, j["bullet_name"]);
 
-    asset->movementSpeed = j["movement_speed"];
+    asset.textureName = getAssetPath(name, j["texture_name"]);
+    asset.bodyTextureRect = j["body_texture_rect"];
+    asset.gunTextureRect = j["gun_texture_rect"];
+    asset.muzzleFlashTextureRect = j["muzzle_flash_texture_rect"];
 
-    asset->bulletName = j["bullet_name"];
-
-    asset->textureName = j["texture_name"];
-    asset->bodyTextureRect = j["body_texture_rect"];
-    asset->gunTextureRect = j["gun_texture_rect"];
-    asset->muzzleFlashTextureRect = j["muzzle_flash_texture_rect"];
-
-    asset->gunOffset = j["gun_offset"];
-    asset->gunOrigin = j["gun_origin"];
-    asset->muzzleFlashOffset = j["muzzle_flash_offset"];
+    asset.gunOffset = j["gun_offset"];
+    asset.gunOrigin = j["gun_origin"];
+    asset.muzzleFlashOffset = j["muzzle_flash_offset"];
 }

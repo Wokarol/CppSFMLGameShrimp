@@ -1,4 +1,4 @@
 {
-    "path": "actors/tilesets/desert_tiles",
+    "path": "./desert_tiles",
     "tile_size": 16
 }

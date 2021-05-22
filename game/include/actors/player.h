@@ -12,8 +12,9 @@ namespace wok
     class Player : public Actor, public wok::Drawable, public Tickable
     {
     public:
-        Player(PlayerSettings settings);
+        Player(std::shared_ptr<PlayerSettings> settings);
         virtual void update(const GameClock& time) override;
+        virtual void assetsReloaded() override;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
 
         virtual float getSortingYPos() override { return body.getPosition().y; }
@@ -30,7 +31,7 @@ namespace wok
         void shoot(sf::Vector2f globalGunPosition, m::Ray gunRay);
 
     private:
-        const PlayerSettings settings;
+        const std::shared_ptr<PlayerSettings> settings;
         std::shared_ptr<sf::Texture> texture;
 
         sf::Sprite body;

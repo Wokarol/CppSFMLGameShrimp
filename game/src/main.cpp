@@ -12,6 +12,7 @@
 
 #include <levelLoader.h>
 #include <resources.h>
+#include <projectSettings.h>
 
 struct Pallete
 {
@@ -45,6 +46,8 @@ bool startGame()
             console::error("Key 'start_level' was not found");
             return false;
         }
+
+        wok::project::init(config);
 
         wok::levels::load(levelToLoad);
     }
