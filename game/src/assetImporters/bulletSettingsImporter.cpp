@@ -2,6 +2,7 @@
 #include <assets/bulletSettings.h>
 
 #include <json.hpp>
+#include <utils/jsonHelpers.h>
 #include <jsonImporters.h>
 #include <sstream>
 #include <fstream>
@@ -18,7 +19,7 @@ static void wok::res::create(const std::string& name, std::shared_ptr<BulletSett
     nlohmann::json j = nlohmann::json::parse(levelFile, nullptr, true, true);
 
     asset->textureRect = j["texture_rect"];
-    asset->textureName = j["texture_name"];
+    asset->textureName = getAssetPath(name, j["texture_name"]);
 
     asset->damage = j["damage"];
     asset->velocity = j["velocity"];

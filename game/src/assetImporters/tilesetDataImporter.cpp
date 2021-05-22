@@ -1,6 +1,7 @@
 #include <resources.h>
 #include <assets/tilesetData.h>
 #include <json.hpp>
+#include <utils/jsonHelpers.h>
 #include <sstream>
 #include <fstream>
 
@@ -17,6 +18,6 @@ static void wok::res::create(const std::string& name, std::shared_ptr<TilesetDat
 
     nlohmann::json data = nlohmann::json::parse(levelFile, nullptr, true, true);
 
-    asset->path = data.at("path").get<std::string>();
+    asset->path = getAssetPath(name, data["path"]);
     asset->tileSize = data.at("tile_size").get<int>();
 }
