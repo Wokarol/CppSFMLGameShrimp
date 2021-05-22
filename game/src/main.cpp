@@ -46,6 +46,8 @@ bool startGame()
             return false;
         }
 
+        wok::levels::init(config["actor_paths"]);
+
         wok::levels::load(levelToLoad);
     }
     catch (const std::exception& e)

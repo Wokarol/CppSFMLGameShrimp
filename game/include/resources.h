@@ -65,6 +65,7 @@ namespace wok
             if (!std::filesystem::exists(path))
             {
                 console::error("Cannot find specified file: ", path);
+                abort();
                 return {};
             }
 
