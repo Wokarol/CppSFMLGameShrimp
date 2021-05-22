@@ -12,6 +12,7 @@
 
 #include <levelLoader.h>
 #include <resources.h>
+#include <projectSettings.h>
 
 struct Pallete
 {
@@ -46,7 +47,7 @@ bool startGame()
             return false;
         }
 
-        wok::levels::init(config["actor_paths"]);
+        wok::project::init(config);
 
         wok::levels::load(levelToLoad);
     }

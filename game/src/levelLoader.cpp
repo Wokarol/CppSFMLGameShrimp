@@ -10,6 +10,7 @@
 
 #include <tweeners.h>
 #include <resources.h>
+#include <projectSettings.h>
 
 #include <assets/tilesetData.h>
 #include <assets/cactusPreset.h>
@@ -60,17 +61,17 @@ void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const Ca
 
 void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 {
-    CactusPreset smallCactus = *res::get<CactusPreset>(levels::actorPaths["small_cactus"]);
+    CactusPreset smallCactus = *res::get<CactusPreset>(project::actorPaths["small_cactus"]);
     generateCacti(json["Cacti"], group, smallCactus, "Cactus");
 
 
-    CactusPreset bigCactus = *res::get<CactusPreset>(levels::actorPaths["tall_cactus"]);
+    CactusPreset bigCactus = *res::get<CactusPreset>(project::actorPaths["tall_cactus"]);
     generateCacti(json["Tall_Cacti"], group, bigCactus, "Tall Cactus");
 
     nlohmann::json& player = json["Player"];
     if (player.is_object())
     {
-        PlayerSettings settings = *res::get<PlayerSettings>(levels::actorPaths["player"]);
+        PlayerSettings settings = *res::get<PlayerSettings>(project::actorPaths["player"]);
         auto& playerActor = *world::createNamedActor<Player>("Player", settings);
         playerActor.group = group;
 
@@ -106,7 +107,7 @@ void wok::levels::load(std::string_view levelPath)
 
     try
     {
-        auto groundTileset = res::get<TilesetData>(levels::actorPaths["desert"]);
+        auto groundTileset = res::get<TilesetData>(project::actorPaths["desert"]);
         createTilemap(level["Ground"], "Ground Tilemap", *groundTileset, group);
         createTilemap(level["Tiles"], "Free Tile Tilemap", *groundTileset, group);
         createActors(level["Actors"], group);
