@@ -10,16 +10,10 @@ namespace wok
 {
     class Tilemap : public Actor, public wok::Drawable
     {
-    private:
-        std::shared_ptr<sf::Texture> tileset;
-        int ppu;
-
-        std::vector<sf::Sprite> tiles;
-
     public:
-        Tilemap(const TilesetData& tileset) :
-            tileset(res::get<sf::Texture>(tileset.path)),
-            ppu(tileset.tileSize)
+        Tilemap(const std::shared_ptr<TilesetData>& tileset) :
+            tileset(res::get<sf::Texture>(tileset->path)),
+            data(tileset)
         {}
 
         void add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord);
@@ -27,5 +21,11 @@ namespace wok
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
 
         virtual int getSortingOrder() override;
+
+
+    private:
+        std::shared_ptr<sf::Texture> tileset;
+        std::vector<sf::Sprite> tiles;
+        std::shared_ptr<TilesetData> data;
     };
 }

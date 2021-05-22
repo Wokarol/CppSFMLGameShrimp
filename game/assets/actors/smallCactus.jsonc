@@ -1,5 +1,5 @@
 {
-    "texture_name": "actors/sprites/cacti",
+    "texture_name": "./sprites/cacti",
     "texture_rect": [0, 16, 16, 16],
     "animation_scale": 5,
     "starting_health": 3,

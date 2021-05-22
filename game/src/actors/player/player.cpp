@@ -9,24 +9,32 @@
 
 using namespace wok;
 
-Player::Player(PlayerSettings settings) :
+Player::Player(std::shared_ptr<PlayerSettings> settings) :
     settings(settings)
 {
-    texture = res::get<sf::Texture>(settings.textureName);
-    body = sf::Sprite(*texture, settings.bodyTextureRect);
-    gun = sf::Sprite(*texture, settings.gunTextureRect);
-    muzzleFlash = sf::Sprite(*texture, settings.muzzleFlashTextureRect);
+    texture = res::get<sf::Texture>(settings->textureName);
+    assetsReloaded();
+}
+
+
+void wok::Player::assetsReloaded()
+{
+    body.setTexture(*texture);
+    body.setTextureRect(settings->bodyTextureRect);
+
+    gun = sf::Sprite(*texture, settings->gunTextureRect);
+    muzzleFlash = sf::Sprite(*texture, settings->muzzleFlashTextureRect);
 
     // Bottom-Middle
     sf::Vector2f bodyPivot(
-        (float)(settings.bodyTextureRect.width / 2),
-        (float)(settings.bodyTextureRect.height)
+        (float)(settings->bodyTextureRect.width / 2),
+        (float)(settings->bodyTextureRect.height)
     );
 
-    gunOffsetInRelationToPivot = settings.gunOffset - bodyPivot;
+    gunOffsetInRelationToPivot = settings->gunOffset - bodyPivot;
 
     body.setOrigin(bodyPivot);
-    gun.setOrigin(settings.gunOrigin);
+    gun.setOrigin(settings->gunOrigin);
     muzzleFlash.setOrigin(0, muzzleFlash.getTextureRect().height / 2.f); // Middle-Left
 }
 
@@ -49,7 +57,7 @@ void Player::flip()
 
     flipTween = std::make_shared<LerpTweener<float>>(handle,
         [this]() { return body.getScale().x; }, [this](float v) { body.setScale(v, 1); },
-        nextScale, settings.flipTime
+        nextScale, settings->flipTime
         );
 
     world::addTween(flipTween);
@@ -77,7 +85,7 @@ m::Ray wok::Player::getGunRay()
 
 void Player::shoot(sf::Vector2f globalGunPosition, m::Ray gunRay)
 {
-    muzzleFlash.setPosition(globalGunPosition + m::rotate(settings.muzzleFlashOffset, m::angle(gunRay.direction)));
+    muzzleFlash.setPosition(globalGunPosition + m::rotate(settings->muzzleFlashOffset, m::angle(gunRay.direction)));
     muzzleFlash.setRotation(gun.getRotation());
     muzzleFlash.setScale(body.getScale());
 
@@ -86,16 +94,16 @@ void Player::shoot(sf::Vector2f globalGunPosition, m::Ray gunRay)
 
     auto muzzleFlashAnimation = std::make_shared<LerpTweener<sf::Color>>(handle,
         [this]() { return muzzleFlash.getColor(); }, [this](auto v) { muzzleFlash.setColor(v); },
-        sf::Color(0xFFFFFF00), settings.muzzleFlashTime
+        sf::Color(0xFFFFFF00), settings->muzzleFlashTime
         );
     muzzleFlashAnimation->setAfterKilled([this]() { shouldRenderMuzzleFlash = false; });
 
     world::addTween(muzzleFlashAnimation);
 
     sf::Vector2f position = muzzleFlash.getPosition();
-    sf::Vector2f direction = m::rotate(gunRay.direction, ((rand() / (float)RAND_MAX) - 0.5f) * settings.bulletSpread * 2.f);
+    sf::Vector2f direction = m::rotate(gunRay.direction, ((rand() / (float)RAND_MAX) - 0.5f) * settings->bulletSpread * 2.f);
 
-    world::createNamedActor<Bullet>("Bullet", position, direction, *res::get<BulletSettings>(settings.bulletName));
+    world::createNamedActor<Bullet>("Bullet", position, direction, res::get<BulletSettings>(settings->bulletName));
 }
 
 void Player::updateShootingLogic(sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time)
@@ -104,7 +112,7 @@ void Player::updateShootingLogic(sf::Vector2f globalGunPosition, m::Ray gunRay, 
     {
         if (input::attack.isPressed)
         {
-            shootCooldown += settings.shootInterval;
+            shootCooldown += settings->shootInterval;
             shoot(globalGunPosition, gunRay);
         }
     }
@@ -118,7 +126,7 @@ void wok::Player::update(const GameClock& time)
 {
     auto mousePosition = input::mousePositionInWorld;
 
-    body.move(m::normalize(input::movement) * time.delta * settings.movementSpeed);
+    body.move(m::normalize(input::movement) * time.delta * settings->movementSpeed);
     flipIfNeeded(mousePosition);
 
     auto gunPlacement = updateGunPositionAndRotation(mousePosition);

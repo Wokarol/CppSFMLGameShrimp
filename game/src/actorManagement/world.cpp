@@ -26,6 +26,14 @@ void world::updateActors(const GameClock& time)
     }
 }
 
+void wok::world::onAssetsReloaded()
+{
+    for (auto& actor : actors)
+    {
+        actor.second->assetsReloaded();
+    }
+}
+
 void world::updateTweeners(const GameClock& time)
 {
     for (auto& tweener : tweeners)

@@ -7,9 +7,9 @@
 
     "movement_speed": 50.0,
 
-    "bullet_name": "actors/bullet",
+    "bullet_name": "./bullet",
 
-    "texture_name": "actors/sprites/shrimp",
+    "texture_name": "./sprites/shrimp",
     "body_texture_rect": [0, 0, 13, 14],
     "gun_texture_rect": [0, 17, 6, 4],
     "muzzle_flash_texture_rect": [7, 15, 7, 8],

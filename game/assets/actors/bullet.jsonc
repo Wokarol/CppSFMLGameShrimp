@@ -1,5 +1,5 @@
 {
-    "texture_name": "actors/sprites/shrimp",
+    "texture_name": "./sprites/shrimp",
     "texture_rect": [ 0, 23, 4, 3],
 
     "lifespan": 2,
