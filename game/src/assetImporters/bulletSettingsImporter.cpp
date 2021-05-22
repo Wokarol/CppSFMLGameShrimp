@@ -10,13 +10,7 @@
 template<>
 static void wok::res::create(const std::string& name, std::shared_ptr<BulletSettings>& asset)
 {
-    std::string tilesetPath = (std::stringstream()
-        << "assets/" << name << ".jsonc"
-        ).str();
-
-    std::ifstream levelFile(tilesetPath);
-
-    nlohmann::json j = nlohmann::json::parse(levelFile, nullptr, true, true);
+    auto j = loadJsonFile(name);
 
     asset->textureRect = j["texture_rect"];
     asset->textureName = getAssetPath(name, j["texture_name"]);

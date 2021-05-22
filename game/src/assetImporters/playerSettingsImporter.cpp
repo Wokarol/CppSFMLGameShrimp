@@ -10,13 +10,7 @@
 template<>
 static void wok::res::create(const std::string& name, std::shared_ptr<PlayerSettings>& asset)
 {
-    std::string tilesetPath = (std::stringstream()
-        << "assets/" << name << ".jsonc"
-        ).str();
-
-    std::ifstream levelFile(tilesetPath);
-
-    nlohmann::json j = nlohmann::json::parse(levelFile, nullptr, true, true);
+    auto j = loadJsonFile(name);
 
     asset->shootInterval = j["shoot_interval"];
     asset->bulletSpread = j["bullet_spread"];

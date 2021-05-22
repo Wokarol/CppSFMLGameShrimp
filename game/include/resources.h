@@ -6,6 +6,10 @@
 #include <SFML/Graphics/Font.hpp>
 #include <console.h>
 #include <typeindex>
+#include <json.hpp>
+#include <jsonImporters.h>
+#include <fstream>
+#include <filesystem>
 
 namespace wok
 {
@@ -49,6 +53,24 @@ namespace wok
         static inline void clear()
         {
             loadedAssets.clear();
+        }
+
+    private:
+        static nlohmann::json loadJsonFile(std::string name)
+        {
+            std::string path = (std::stringstream()
+                << "assets/" << name << ".jsonc"
+                ).str();
+
+            if (!std::filesystem::exists(path))
+            {
+                console::error("Cannot find specified file: ", path);
+                return {};
+            }
+
+            std::ifstream levelFile(path);
+
+            return nlohmann::json::parse(levelFile, nullptr, true, true);
         }
     };
 }
