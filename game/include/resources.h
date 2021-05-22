@@ -1,5 +1,5 @@
 #pragma once
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <sstream>
 #include <memory>
@@ -10,6 +10,7 @@
 #include <jsonImporters.h>
 #include <fstream>
 #include <filesystem>
+#include <algorithm>
 
 namespace wok
 {
@@ -17,7 +18,7 @@ namespace wok
     {
         static inline std::map<
             std::type_index,
-            std::map<std::string, std::shared_ptr<void>>
+            std::unordered_map<std::string, std::shared_ptr<void>>
         > loadedAssets{};
 
     public:
@@ -56,7 +57,14 @@ namespace wok
                 for (auto& pair : (*found).second)
                 {
                     auto castedAsset = std::static_pointer_cast<T>(pair.second);
-                    create<T>(pair.first, *castedAsset);
+                    try
+                    {
+                        create<T>(pair.first, *castedAsset);
+                    }
+                    catch (const std::exception& e)
+                    {
+                        console::error(e.what());
+                    }
                 }
             }
         }
@@ -72,6 +80,25 @@ namespace wok
             loadedAssets.clear();
         }
 
+        static void clearUnused()
+        {
+            for (auto& assetsByType : loadedAssets)
+            {
+                auto& map = assetsByType.second;
+                for (auto iter = map.begin(); iter != map.end(); )
+                {
+                    if (iter->second.use_count() <= 1)
+                    {
+                        iter = map.erase(iter);
+                    }
+                    else
+                    {
+                        ++iter;
+                    }
+                }
+            }
+        }
+
     private:
         static nlohmann::json loadJsonFile(std::string name)
         {
@@ -82,7 +109,7 @@ namespace wok
             if (!std::filesystem::exists(path))
             {
                 console::error("Cannot find specified file: ", path);
-                abort();
+                throw std::runtime_error("File could not be loaded");
             }
 
             std::ifstream levelFile(path);

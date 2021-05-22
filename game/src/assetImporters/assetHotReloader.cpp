@@ -12,6 +12,8 @@
 
 void wok::res::reloadAll()
 {
+    res::clearUnused();
+
     reload(sf::Texture);
     reload(sf::Font);
     reload(wok::CactusPreset);
