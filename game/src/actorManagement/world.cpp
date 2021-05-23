@@ -212,16 +212,16 @@ void world::dumpActors(bool detailed)
         actorsByGroups[actor->group].push_back(actor);
     }
 
-    console::log("---------------- Actor Dump ----------------");
+    console::error("---------------- Actor Dump ----------------");
     for (auto& group : actorsByGroups)
     {
         if (group.first)
         {
-            console::log(group.first->getName());
+            console::error(group.first->getName());
         }
         else
         {
-            console::log("[global]");
+            console::error("[global]");
         }
 
         std::vector<std::pair<Actor*, std::string>> namedActors;
@@ -242,18 +242,18 @@ void world::dumpActors(bool detailed)
 
             for (auto& namedActor : namedActors)
             {
-                console::log("    ", std::left, std::setw(padding), namedActor.second, typeid(*namedActor.first).name());
+                console::error("    ", std::left, std::setw(padding), namedActor.second, typeid(*namedActor.first).name());
             }
     }
     if (detailed)
     {
-        console::log("----------------- Details ------------------");
-        console::log("   Hittables: ", hittables.size());
-        console::log("   Tickables: ", tickables.size());
-        console::log("   Drawables: ", drawables.size());
-        console::log("   Tweeners:  ", tweeners.size());
+        console::error("----------------- Details ------------------");
+        console::error("   Hittables: ", hittables.size());
+        console::error("   Tickables: ", tickables.size());
+        console::error("   Drawables: ", drawables.size());
+        console::error("   Tweeners:  ", tweeners.size());
     }
-    console::log("--------------------------------------------");
+    console::error("--------------------------------------------");
 }
 
 void world::clear()
