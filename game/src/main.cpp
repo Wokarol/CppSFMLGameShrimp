@@ -91,6 +91,7 @@ int main()
         window.clear(colors.background);
         auto states = sf::RenderStates();
         wok::world::draw(window, states);
+
         window.display();
     }
 

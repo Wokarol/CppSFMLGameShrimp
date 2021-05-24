@@ -17,7 +17,7 @@ wok::Bullet::Bullet(sf::Vector2f position, sf::Vector2f direction, std::shared_p
 void wok::Bullet::assetsReloaded()
 {
     setTextureRect(settings->textureRect);
-    setOrigin(getTextureRect().width / 2.f, getTextureRect().width / 2.f); // Centre
+    setOrigin(getTextureRect().width / 2.f, getTextureRect().height / 2.f); // Centre
 }
 
 void wok::Bullet::update(const GameClock& time)
@@ -44,4 +44,15 @@ void wok::Bullet::update(const GameClock& time)
 void wok::Bullet::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
     target.draw(*this, states);
+}
+
+void wok::Bullet::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
+{
+    sf::CircleShape circle(1.f);
+    circle.setFillColor(sf::Color::Green);
+    circle.setOrigin({ 1.f, 1.f });
+
+    circle.setPosition(getPosition());
+
+    target.draw(circle, states);
 }

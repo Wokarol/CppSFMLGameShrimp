@@ -37,6 +37,8 @@ namespace wok
 
     public:
         static inline bool shouldLog = false;
+        static inline bool shouldDrawActors = true;
+        static inline bool shouldDrawGizmos = false;
 
         template< class T, class... Args >
         static ActorHandle<T> createNamedActor(std::string_view name, Args&&... args)
@@ -149,6 +151,8 @@ namespace wok
         static void clear();
 
     private:
+        static void drawActors(sf::RenderTarget& target, sf::RenderStates& states);
+        static void drawGizmos(sf::RenderTarget& target, sf::RenderStates& states);
         static void updateActors(const GameClock& time);
         static void updateTweeners(const GameClock& time);
         static void removeDeadTweens();

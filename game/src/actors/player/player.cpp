@@ -144,3 +144,17 @@ void wok::Player::draw(sf::RenderTarget& target, sf::RenderStates& states)
         target.draw(muzzleFlash);
     }
 }
+
+void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
+{
+    auto rect = body.getGlobalBounds();
+
+    sf::RectangleShape collider({ rect.width, rect.height });
+    collider.setPosition(rect.left, rect.top);
+
+    collider.setFillColor(sf::Color(0));
+    collider.setOutlineColor(sf::Color::Blue);
+    collider.setOutlineThickness(-1);
+
+    target.draw(collider, states);
+}

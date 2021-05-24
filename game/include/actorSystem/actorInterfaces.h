@@ -12,6 +12,7 @@ namespace wok
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) = 0;
         virtual int getSortingOrder() { return 0; }
         virtual float getSortingYPos() { return 0; }
+        virtual bool shouldDrawAlways() { return false; } // This overrites "Gizmo Only" mode
     };
 
     class Tickable

@@ -149,6 +149,16 @@ void world::update(const GameClock& time)
 
 void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
+    drawActors(target, states);
+
+    if (shouldDrawGizmos)
+    {
+        drawGizmos(target, states);
+    }
+}
+
+void world::drawActors(sf::RenderTarget& target, sf::RenderStates& states)
+{
     std::sort(drawables.begin(), drawables.end(), [](const auto& a, const auto& b)
         {
             auto orderOfA = std::make_tuple(a->getSortingOrder(), a->getSortingYPos());
@@ -159,7 +169,20 @@ void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
     for (auto& drawable : drawables)
     {
         assert(drawable);
+
+        if (!shouldDrawActors && !drawable->shouldDrawAlways())
+            continue;
+
         drawable->draw(target, states);
+    }
+}
+
+void world::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
+{
+    for (auto& actor : actors)
+    {
+        assert(actor.second.get());
+        actor.second->drawGizmos(target, states);
     }
 }
 
