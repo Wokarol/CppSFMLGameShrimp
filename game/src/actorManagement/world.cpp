@@ -66,8 +66,12 @@ void world::removeDeadTweens()
 
 void world::removeDeadActors()
 {
-    for (auto& id : actorsToRemove)
+    std::sort(actorsToRemove.begin(), actorsToRemove.end());
+    auto end = std::unique(actorsToRemove.begin(), actorsToRemove.end());
+
+    for (auto it = actorsToRemove.begin(); it != end; it++)
     {
+        auto id = *it;
         Actor* actor = getActorPointer<Actor>(id);
         assert(actor);
 
