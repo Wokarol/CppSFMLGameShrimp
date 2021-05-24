@@ -115,6 +115,12 @@ void wok::world::addActorToCache(Actor* actor)
         if (shouldLog) console::log("    ", "Actor is hittable");
         hittables.push_back(hittable);
     }
+
+    if (auto collideable = dynamic_cast<Collideable*>(actor))
+    {
+        if (shouldLog) console::log("    ", "Actor is collideable");
+        collideables.push_back(collideable);
+    }
 }
 
 void wok::world::clearActorFromCache(Actor* actor)
@@ -132,6 +138,12 @@ void wok::world::clearActorFromCache(Actor* actor)
     if (auto hittable = dynamic_cast<Hittable*>(actor))
     {
         hittables.erase(std::find(hittables.begin(), hittables.end(), hittable));
+    }
+
+
+    if (auto collideable = dynamic_cast<Collideable*>(actor))
+    {
+        collideables.erase(std::find(collideables.begin(), collideables.end(), collideable));
     }
 }
 
@@ -228,6 +240,15 @@ physics::RaycastResult world::raycast(const m::Ray& ray, float maxRaycastDistanc
 
 }
 
+void wok::world::collide(const sf::FloatRect& rect, std::vector<collide::Reaction>& reactions)
+{
+    for (auto& col : collideables)
+    {
+        assert(col);
+        col->getReactionsFromCollision(rect, reactions);
+    }
+}
+
 void world::dumpActors(bool detailed)
 {
     std::map<std::shared_ptr<Group>, std::vector<Actor*>> actorsByGroups;
@@ -278,6 +299,7 @@ void world::dumpActors(bool detailed)
         console::error("   Hittables: ", hittables.size());
         console::error("   Tickables: ", tickables.size());
         console::error("   Drawables: ", drawables.size());
+        console::error("   Collideables:  ", collideables.size());
         console::error("   Tweeners:  ", tweeners.size());
     }
     console::error("--------------------------------------------");

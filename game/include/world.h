@@ -31,6 +31,7 @@ namespace wok
         static inline std::vector<Drawable*> drawables;
         static inline std::vector<Tickable*> tickables;
         static inline std::vector<Hittable*> hittables;
+        static inline std::vector<Collideable*> collideables;
 
 
         static inline actor_id nextFreeID = 0;
@@ -145,6 +146,7 @@ namespace wok
         }
 
         static physics::RaycastResult raycast(const m::Ray& ray, float maxDist = -1);
+        static void collide(const sf::FloatRect& rect, std::vector<collide::Reaction>& reactions);
 
         static void dumpActors(bool details = false);
         static void onAssetsReloaded();

@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <gameClock.h>
 #include <physics/intersections.h>
+#include <physics/collisions.h>
 
 namespace wok
 {
@@ -26,5 +27,11 @@ namespace wok
     public:
         virtual intersect::Intersection getClosestHit(const m::Ray& ray) = 0;
         virtual void reactToHit([[maybe_unused]] const intersect::Intersection& intersection, [[maybe_unused]] int damage) {};
+    };
+
+    class Collideable
+    {
+    public:
+        virtual void getReactionsFromCollision(const sf::FloatRect&, std::vector<collide::Reaction>&) = 0;
     };
 }

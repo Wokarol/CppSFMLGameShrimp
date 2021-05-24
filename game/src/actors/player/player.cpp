@@ -127,6 +127,15 @@ void wok::Player::update(const GameClock& time)
     auto mousePosition = input::mousePositionInWorld;
 
     body.move(m::normalize(input::movement) * time.delta * settings->movementSpeed);
+
+    std::vector<collide::Reaction> reactions;
+    world::collide(body.getGlobalBounds(), reactions);
+
+    for (auto& r : reactions)
+    {
+        body.move(-r.penetration);
+    }
+
     flipIfNeeded(mousePosition);
 
     auto gunPlacement = updateGunPositionAndRotation(mousePosition);

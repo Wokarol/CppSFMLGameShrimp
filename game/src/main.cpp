@@ -9,6 +9,7 @@
 
 #include "windowManagement.h"
 #include <world.h>
+#include <actors/staticBox.h>
 
 #include <levelLoader.h>
 #include <resources.h>
@@ -80,6 +81,10 @@ int main()
         std::cout << std::endl;
         system("pause");
     }
+
+    wok::world::createNamedActor<wok::StaticBox>("Box", 
+        sf::Vector2f(100, 100), 
+        sf::Vector2f(36, 36));
 
     while (window.isOpen())
     {
