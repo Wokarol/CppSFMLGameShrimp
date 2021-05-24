@@ -1,0 +1,41 @@
+#include <physics\collisions.h>
+
+auto wok::collide::AABBWithAABB(sf::FloatRect penetrator, sf::FloatRect receiver) -> Reaction
+{
+    sf::FloatRect intersection;
+    if (!penetrator.intersects(receiver, intersection))
+        return {};
+
+    sf::Vector2f penetratorCentre(
+        penetrator.left + penetrator.width / 2.f,
+        penetrator.top + penetrator.height / 2.f
+    );
+
+    sf::Vector2f receiverCentre(
+        receiver.left + receiver.width / 2.f,
+        receiver.top + receiver.height / 2.f
+    );
+
+    sf::Vector2f targetsOffset = penetratorCentre - receiverCentre;
+
+    if (intersection == penetrator || intersection == receiver)
+    {
+        // We check on what side of the object the penetrator is on
+        if (targetsOffset.x < targetsOffset.y == -targetsOffset.x < targetsOffset.y)
+        {
+            // Top/Bottom
+            float dir = m::sign(targetsOffset.y);
+            float depth = std::abs(targetsOffset.y) + (penetrator.height / 2.f);
+            return { {0, -depth * dir} };
+        }
+        else
+        {
+            // Left/Right
+            float dir = m::sign(targetsOffset.x);
+            float depth = std::abs(targetsOffset.x) + (penetrator.width / 2.f);
+            return { {-depth * dir, 0} };
+        }
+    }
+
+    return {};
+}
