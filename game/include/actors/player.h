@@ -16,6 +16,7 @@ namespace wok
         virtual void update(const GameClock& time) override;
         virtual void assetsReloaded() override;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
+        virtual void drawGizmos(sf::RenderTarget& target, sf::RenderStates& states) override;
 
         virtual float getSortingYPos() override { return body.getPosition().y; }
 
@@ -27,6 +28,7 @@ namespace wok
         void flip();
         std::pair<sf::Vector2f, float> updateGunPositionAndRotation(sf::Vector2f mousePosition);
         m::Ray getGunRay();
+        void moveActor(float delta);
         void updateShootingLogic(sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time);
         void shoot(sf::Vector2f globalGunPosition, m::Ray gunRay);
 

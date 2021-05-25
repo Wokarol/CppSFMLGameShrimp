@@ -12,6 +12,8 @@ namespace wok
         virtual void assetsReloaded() override;
         virtual void update(const GameClock& time) override;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
+        virtual void drawGizmos(sf::RenderTarget& target, sf::RenderStates& states) override;
+
         virtual float getSortingYPos() { return getPosition().y; }
 
     private:

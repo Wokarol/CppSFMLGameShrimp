@@ -115,6 +115,12 @@ void wok::world::addActorToCache(Actor* actor)
         if (shouldLog) console::log("    ", "Actor is hittable");
         hittables.push_back(hittable);
     }
+
+    if (auto collideable = dynamic_cast<Collideable*>(actor))
+    {
+        if (shouldLog) console::log("    ", "Actor is collideable");
+        collideables.push_back(collideable);
+    }
 }
 
 void wok::world::clearActorFromCache(Actor* actor)
@@ -133,6 +139,12 @@ void wok::world::clearActorFromCache(Actor* actor)
     {
         hittables.erase(std::find(hittables.begin(), hittables.end(), hittable));
     }
+
+
+    if (auto collideable = dynamic_cast<Collideable*>(actor))
+    {
+        collideables.erase(std::find(collideables.begin(), collideables.end(), collideable));
+    }
 }
 
 void world::update(const GameClock& time)
@@ -149,6 +161,16 @@ void world::update(const GameClock& time)
 
 void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
+    drawActors(target, states);
+
+    if (shouldDrawGizmos)
+    {
+        drawGizmos(target, states);
+    }
+}
+
+void world::drawActors(sf::RenderTarget& target, sf::RenderStates& states)
+{
     std::sort(drawables.begin(), drawables.end(), [](const auto& a, const auto& b)
         {
             auto orderOfA = std::make_tuple(a->getSortingOrder(), a->getSortingYPos());
@@ -159,7 +181,20 @@ void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
     for (auto& drawable : drawables)
     {
         assert(drawable);
+
+        if (!shouldDrawActors && !drawable->shouldDrawAlways())
+            continue;
+
         drawable->draw(target, states);
+    }
+}
+
+void world::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
+{
+    for (auto& actor : actors)
+    {
+        assert(actor.second.get());
+        actor.second->drawGizmos(target, states);
     }
 }
 
@@ -203,6 +238,15 @@ physics::RaycastResult world::raycast(const m::Ray& ray, float maxRaycastDistanc
         return { };
     }
 
+}
+
+void wok::world::checkForCollisions(const sf::FloatRect& rect, std::vector<collide::Reaction>& reactions)
+{
+    for (auto& col : collideables)
+    {
+        assert(col);
+        col->getReactionsFromCollision(rect, reactions);
+    }
 }
 
 void world::dumpActors(bool detailed)
@@ -255,6 +299,7 @@ void world::dumpActors(bool detailed)
         console::error("   Hittables: ", hittables.size());
         console::error("   Tickables: ", tickables.size());
         console::error("   Drawables: ", drawables.size());
+        console::error("   Collideables:  ", collideables.size());
         console::error("   Tweeners:  ", tweeners.size());
     }
     console::error("--------------------------------------------");

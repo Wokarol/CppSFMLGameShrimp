@@ -20,6 +20,7 @@ namespace wok
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
         virtual int getSortingOrder() override;
+        virtual bool shouldDrawAlways() override { return true; }
         virtual ~DebugPopup();
 
     private:
