@@ -82,25 +82,18 @@ int main()
         system("pause");
     }
 
-    wok::world::createNamedActor<wok::StaticBox>("Box 1", 
-        sf::Vector2f(100, 100), 
+    wok::world::createNamedActor<wok::StaticBox>("Box 1",
+        sf::Vector2f(100, 100),
         sf::Vector2f(36, 36));
 
 
     wok::world::createNamedActor<wok::StaticBox>("Box 3",
         sf::Vector2f(120, 120),
         sf::Vector2f(36, 36));
+
     wok::world::createNamedActor<wok::StaticBox>("Box 4",
         sf::Vector2f(156, 156),
         sf::Vector2f(36, 36));
-
-
-    for (size_t i = 0; i < 200; i++)
-    {
-        wok::world::createNamedActor<wok::StaticBox>("Box",
-            sf::Vector2f(200, 100),
-            sf::Vector2f(20, 20));
-    }
 
     while (window.isOpen())
     {
@@ -113,6 +106,35 @@ int main()
         auto states = sf::RenderStates();
         wok::world::draw(window, states);
 
+        auto view = window.getView();
+        window.setView(window.getDefaultView());
+
+        sf::Color pressed(0xFF0000FF);
+        sf::Color notPressed(0xFF000066);
+        sf::Vector2f bottomLeft(30, window.getSize().y - 30);
+        sf::Vector2f cellSize(50, 50);
+        float spacing = 10;
+
+        sf::RectangleShape rect(cellSize);
+        rect.setOrigin(0, cellSize.y);
+
+        rect.setPosition(bottomLeft.x, bottomLeft.y);
+        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::A) ? pressed : notPressed);
+        window.draw(rect);
+
+        rect.setPosition(bottomLeft.x + (spacing + cellSize.x) * 2.f, bottomLeft.y);
+        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::D) ? pressed : notPressed);
+        window.draw(rect);
+
+        rect.setPosition(bottomLeft.x + spacing + cellSize.x, bottomLeft.y - spacing - cellSize.y);
+        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::W) ? pressed : notPressed);
+        window.draw(rect);
+
+        rect.setPosition(bottomLeft.x + spacing + cellSize.x, bottomLeft.y);
+        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::S) ? pressed : notPressed);
+        window.draw(rect);
+
+        window.setView(view);
         window.display();
     }
 
