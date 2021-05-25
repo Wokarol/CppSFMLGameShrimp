@@ -82,9 +82,25 @@ int main()
         system("pause");
     }
 
-    wok::world::createNamedActor<wok::StaticBox>("Box", 
+    wok::world::createNamedActor<wok::StaticBox>("Box 1", 
         sf::Vector2f(100, 100), 
         sf::Vector2f(36, 36));
+
+
+    wok::world::createNamedActor<wok::StaticBox>("Box 3",
+        sf::Vector2f(120, 120),
+        sf::Vector2f(36, 36));
+    wok::world::createNamedActor<wok::StaticBox>("Box 4",
+        sf::Vector2f(156, 156),
+        sf::Vector2f(36, 36));
+
+
+    for (size_t i = 0; i < 200; i++)
+    {
+        wok::world::createNamedActor<wok::StaticBox>("Box",
+            sf::Vector2f(200, 100),
+            sf::Vector2f(20, 20));
+    }
 
     while (window.isOpen())
     {

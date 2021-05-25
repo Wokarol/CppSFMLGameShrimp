@@ -28,6 +28,7 @@ namespace wok
         void flip();
         std::pair<sf::Vector2f, float> updateGunPositionAndRotation(sf::Vector2f mousePosition);
         m::Ray getGunRay();
+        void moveActor(float delta);
         void updateShootingLogic(sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time);
         void shoot(sf::Vector2f globalGunPosition, m::Ray gunRay);
 

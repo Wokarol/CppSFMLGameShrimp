@@ -240,7 +240,7 @@ physics::RaycastResult world::raycast(const m::Ray& ray, float maxRaycastDistanc
 
 }
 
-void wok::world::collide(const sf::FloatRect& rect, std::vector<collide::Reaction>& reactions)
+void wok::world::checkForCollisions(const sf::FloatRect& rect, std::vector<collide::Reaction>& reactions)
 {
     for (auto& col : collideables)
     {

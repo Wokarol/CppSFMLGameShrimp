@@ -122,19 +122,42 @@ void Player::updateShootingLogic(sf::Vector2f globalGunPosition, m::Ray gunRay, 
     }
 }
 
+void wok::Player::moveActor(float delta)
+{
+    body.move(m::normalize(input::movement) * delta * settings->movementSpeed);
+
+    // Rection to world geometry
+    std::vector<collide::Reaction> reactions;
+    world::checkForCollisions(body.getGlobalBounds(), reactions);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        return;
+
+    sf::Vector2f accumulatedReaction;
+    for (const auto& r : reactions)
+    {
+        auto p = -r.penetration;
+        if (p.x != 0 && p.y != 0)
+        {
+            if (std::abs(p.x) < std::abs(p.y))
+                p.y = 0;
+            else if (std::abs(p.x) > std::abs(p.y))
+                p.x = 0;
+        }
+
+        if (std::abs(p.x) > std::abs(accumulatedReaction.x))
+            accumulatedReaction.x = p.x;
+        if (std::abs(p.y) > std::abs(accumulatedReaction.y))
+            accumulatedReaction.y = p.y;
+    }
+    body.move(accumulatedReaction);
+}
+
 void wok::Player::update(const GameClock& time)
 {
     auto mousePosition = input::mousePositionInWorld;
 
-    body.move(m::normalize(input::movement) * time.delta * settings->movementSpeed);
-
-    std::vector<collide::Reaction> reactions;
-    world::collide(body.getGlobalBounds(), reactions);
-
-    for (auto& r : reactions)
-    {
-        body.move(-r.penetration);
-    }
+    moveActor(time.delta);
 
     flipIfNeeded(mousePosition);
 
@@ -163,6 +186,10 @@ void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
 
     collider.setFillColor(sf::Color(0));
     collider.setOutlineColor(sf::Color::Blue);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        collider.setOutlineColor(collider.getOutlineColor() * sf::Color(255, 255, 255, 128));
+
     collider.setOutlineThickness(-1);
 
     target.draw(collider, states);
