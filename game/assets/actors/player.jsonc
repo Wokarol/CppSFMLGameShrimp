@@ -10,11 +10,11 @@
     "bullet_name": "./bullet",
 
     "texture_name": "./sprites/shrimp",
-    "body_texture_rect": [0, 0, 13, 14],
+    "body_texture_rect": [0, 0, 12, 14],
     "gun_texture_rect": [0, 17, 6, 4],
     "muzzle_flash_texture_rect": [7, 15, 7, 8],
 
-    "gun_offset": [8, 10],
+    "gun_offset": [7, 10],
     "gun_origin": [1, 1],
     "muzzle_flash_offset": [5, 0]
 }
