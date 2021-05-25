@@ -28,7 +28,8 @@ namespace wok
         void flip();
         std::pair<sf::Vector2f, float> updateGunPositionAndRotation(sf::Vector2f mousePosition);
         m::Ray getGunRay();
-        void moveActor(float delta);
+        void moveActor(sf::Vector2f delta);
+        void applyInputToVelocity(sf::Vector2f, float dt);
         void updateShootingLogic(sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time);
         void shoot(sf::Vector2f globalGunPosition, m::Ray gunRay);
 
@@ -46,5 +47,6 @@ namespace wok
         bool isFacingRight = true;
         bool shouldRenderMuzzleFlash = false;
         float shootCooldown = 0;
+        sf::Vector2f velocity;
     };
 }

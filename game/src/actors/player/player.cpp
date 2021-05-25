@@ -16,7 +16,59 @@ Player::Player(std::shared_ptr<PlayerSettings> settings) :
     assetsReloaded();
 }
 
+void wok::Player::update(const GameClock& time)
+{
+    auto mousePosition = input::mousePositionInWorld;
+    auto inputDir = m::normalize(input::movement);
 
+    applyInputToVelocity(inputDir, time.delta);
+
+    moveActor(velocity * time.delta);
+
+    flipIfNeeded(mousePosition);
+
+    auto gunPlacement = updateGunPositionAndRotation(mousePosition);
+    auto gunRay = getGunRay();
+
+    updateShootingLogic(gunPlacement.first, gunRay, time);
+
+    if (input::knockback.wasPressedThisFrame)
+    {
+        velocity -= gunRay.direction * 200.f;
+    }
+}
+
+void wok::Player::draw(sf::RenderTarget& target, sf::RenderStates& states)
+{
+    target.draw(body, states);
+    target.draw(gun, states);
+
+    if (shouldRenderMuzzleFlash)
+    {
+        target.draw(muzzleFlash);
+    }
+}
+
+void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
+{
+    auto rect = body.getGlobalBounds();
+
+    sf::RectangleShape collider({ rect.width, rect.height });
+    collider.setPosition(rect.left, rect.top);
+
+    collider.setFillColor(sf::Color(0));
+    collider.setOutlineColor(sf::Color::Blue);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        collider.setOutlineColor(collider.getOutlineColor() * sf::Color(255, 255, 255, 128));
+
+    collider.setOutlineThickness(-1);
+
+    target.draw(collider, states);
+}
+
+
+// =========== PRIVATE ==========
 void wok::Player::assetsReloaded()
 {
     body.setTexture(*texture);
@@ -85,6 +137,8 @@ m::Ray wok::Player::getGunRay()
 
 void Player::shoot(sf::Vector2f globalGunPosition, m::Ray gunRay)
 {
+    velocity -= gunRay.direction * 50.f;
+
     muzzleFlash.setPosition(globalGunPosition + m::rotate(settings->muzzleFlashOffset, m::angle(gunRay.direction)));
     muzzleFlash.setRotation(gun.getRotation());
     muzzleFlash.setScale(body.getScale());
@@ -122,9 +176,9 @@ void Player::updateShootingLogic(sf::Vector2f globalGunPosition, m::Ray gunRay, 
     }
 }
 
-void wok::Player::moveActor(float delta)
+void wok::Player::moveActor(sf::Vector2f delta)
 {
-    body.move(m::normalize(input::movement) * delta * settings->movementSpeed);
+    body.move(delta);
 
     // Rection to world geometry
     std::vector<collide::Reaction> reactions;
@@ -153,44 +207,27 @@ void wok::Player::moveActor(float delta)
     body.move(accumulatedReaction);
 }
 
-void wok::Player::update(const GameClock& time)
+void Player::applyInputToVelocity(sf::Vector2f input, float dt)
 {
-    auto mousePosition = input::mousePositionInWorld;
+    sf::Vector2f desiredVelocity = input * settings->movementSpeed;
 
-    moveActor(time.delta);
-
-    flipIfNeeded(mousePosition);
-
-    auto gunPlacement = updateGunPositionAndRotation(mousePosition);
-    auto gunRay = getGunRay();
-    updateShootingLogic(gunPlacement.first, gunRay, time);
-}
-
-void wok::Player::draw(sf::RenderTarget& target, sf::RenderStates& states)
-{
-    target.draw(body, states);
-    target.draw(gun, states);
-
-    if (shouldRenderMuzzleFlash)
+    if (std::abs(desiredVelocity.x) < std::abs(velocity.x))
     {
-        target.draw(muzzleFlash);
+        float signX = m::sign(velocity.x);
+        velocity.x -= signX * 300.f * dt;
     }
-}
+    else
+    {
+        velocity.x = m::lerp(velocity.x, desiredVelocity.x, 0.7f);
+    }
 
-void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
-{
-    auto rect = body.getGlobalBounds();
-
-    sf::RectangleShape collider({ rect.width, rect.height });
-    collider.setPosition(rect.left, rect.top);
-
-    collider.setFillColor(sf::Color(0));
-    collider.setOutlineColor(sf::Color::Blue);
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        collider.setOutlineColor(collider.getOutlineColor() * sf::Color(255, 255, 255, 128));
-
-    collider.setOutlineThickness(-1);
-
-    target.draw(collider, states);
+    if (std::abs(desiredVelocity.y) < std::abs(velocity.y))
+    {
+        float signY = m::sign(velocity.y);
+        velocity.y -= signY * 300.f * dt;
+    }
+    else
+    {
+        velocity.y = m::lerp(velocity.y, desiredVelocity.y, 0.7f);
+    }
 }
