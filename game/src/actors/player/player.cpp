@@ -178,30 +178,27 @@ void wok::Player::moveActor(sf::Vector2f delta)
 {
     body.move(delta);
 
-    // Rection to world geometry
-    std::vector<collide::Reaction> reactions;
-    world::checkForCollisions(body.getGlobalBounds(), reactions);
-
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         return;
 
+    // Rection to world geometry
     sf::Vector2f accumulatedReaction;
-    for (const auto& r : reactions)
-    {
-        auto p = -r.penetration;
-        if (p.x != 0 && p.y != 0)
+    world::checkForCollisions(body.getGlobalBounds(), [&accumulatedReaction](collide::Reaction r)
         {
-            if (std::abs(p.x) < std::abs(p.y))
-                p.y = 0;
-            else if (std::abs(p.x) > std::abs(p.y))
-                p.x = 0;
-        }
+            auto p = -r.penetration;
+            if (p.x != 0 && p.y != 0)
+            {
+                if (std::abs(p.x) < std::abs(p.y))
+                    p.y = 0;
+                else if (std::abs(p.x) > std::abs(p.y))
+                    p.x = 0;
+            }
 
-        if (std::abs(p.x) > std::abs(accumulatedReaction.x))
-            accumulatedReaction.x = p.x;
-        if (std::abs(p.y) > std::abs(accumulatedReaction.y))
-            accumulatedReaction.y = p.y;
-    }
+            if (std::abs(p.x) > std::abs(accumulatedReaction.x))
+                accumulatedReaction.x = p.x;
+            if (std::abs(p.y) > std::abs(accumulatedReaction.y))
+                accumulatedReaction.y = p.y;
+        });
 
     if (accumulatedReaction.x > 0 != velocity.x > 0 && accumulatedReaction.x != 0)
         velocity.x = 0;

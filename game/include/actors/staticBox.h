@@ -33,13 +33,13 @@ namespace wok
         virtual bool shouldDrawAlways() { return true; }
 
 
-        virtual void getReactionsFromCollision(const sf::FloatRect& rect, std::vector<collide::Reaction>& reactions) override
+        virtual void getReactionsFromCollision(const sf::FloatRect& rect, std::function<void(collide::Reaction)> reactionCallback) override
         {
             auto reaction = wok::collide::AABBWithAABB(rect, getGlobalBounds());
 
             if (reaction.hit)
             {
-                reactions.push_back(reaction);
+                reactionCallback(reaction);
             }
         }
     };

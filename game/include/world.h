@@ -146,7 +146,7 @@ namespace wok
         }
 
         static physics::RaycastResult raycast(const m::Ray& ray, float maxDist = -1);
-        static void checkForCollisions(const sf::FloatRect& rect, std::vector<collide::Reaction>& reactions);
+        static void checkForCollisions(const sf::FloatRect& rect, std::function<void(collide::Reaction)> callback);
 
         static void dumpActors(bool details = false);
         static void onAssetsReloaded();

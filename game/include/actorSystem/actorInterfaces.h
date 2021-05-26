@@ -4,6 +4,7 @@
 #include <gameClock.h>
 #include <physics/intersections.h>
 #include <physics/collisions.h>
+#include <functional>
 
 namespace wok
 {
@@ -32,6 +33,6 @@ namespace wok
     class Collideable
     {
     public:
-        virtual void getReactionsFromCollision(const sf::FloatRect&, std::vector<collide::Reaction>&) = 0;
+        virtual void getReactionsFromCollision(const sf::FloatRect&, std::function<void(collide::Reaction)>) = 0;
     };
 }
