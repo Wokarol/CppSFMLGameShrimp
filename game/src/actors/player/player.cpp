@@ -34,7 +34,7 @@ void wok::Player::update(const GameClock& time)
 
     if (input::knockback.wasPressedThisFrame)
     {
-        velocity -= gunRay.direction * 200.f;
+        velocity -= gunRay.direction * 165.f;
     }
 }
 
@@ -137,8 +137,6 @@ m::Ray wok::Player::getGunRay()
 
 void Player::shoot(sf::Vector2f globalGunPosition, m::Ray gunRay)
 {
-    velocity -= gunRay.direction * 50.f;
-
     muzzleFlash.setPosition(globalGunPosition + m::rotate(settings->muzzleFlashOffset, m::angle(gunRay.direction)));
     muzzleFlash.setRotation(gun.getRotation());
     muzzleFlash.setScale(body.getScale());
@@ -204,6 +202,14 @@ void wok::Player::moveActor(sf::Vector2f delta)
         if (std::abs(p.y) > std::abs(accumulatedReaction.y))
             accumulatedReaction.y = p.y;
     }
+
+    if (accumulatedReaction.x > 0 != velocity.x > 0 && accumulatedReaction.x != 0)
+        velocity.x = 0;
+
+
+    if (accumulatedReaction.y > 0 != velocity.y > 0 && accumulatedReaction.y != 0)
+        velocity.y = 0;
+
     body.move(accumulatedReaction);
 }
 
@@ -211,23 +217,21 @@ void Player::applyInputToVelocity(sf::Vector2f input, float dt)
 {
     sf::Vector2f desiredVelocity = input * settings->movementSpeed;
 
-    if (std::abs(desiredVelocity.x) < std::abs(velocity.x))
+    if (m::length(desiredVelocity) < m::length(velocity))
     {
-        float signX = m::sign(velocity.x);
-        velocity.x -= signX * 300.f * dt;
-    }
-    else
-    {
-        velocity.x = m::lerp(velocity.x, desiredVelocity.x, 0.7f);
-    }
+        // We check if the player tries to go against the velocity
+        float aligment = 1.f - m::dot(input, m::normalize(velocity));
+        if (m::length(input) < 0.2f)
+        {
+            aligment = 0.f;
+        }
 
-    if (std::abs(desiredVelocity.y) < std::abs(velocity.y))
-    {
-        float signY = m::sign(velocity.y);
-        velocity.y -= signY * 300.f * dt;
+        float dec = m::lerp(300.f, 500.f, std::clamp(aligment, 0.f, 1.f));
+
+        velocity -= m::normalize(velocity) * dec * dt;
     }
     else
     {
-        velocity.y = m::lerp(velocity.y, desiredVelocity.y, 0.7f);
+        velocity += m::normalize(desiredVelocity) * 500.f * dt;
     }
 }

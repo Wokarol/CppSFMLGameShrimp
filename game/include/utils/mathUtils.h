@@ -112,6 +112,15 @@ namespace wok::m
     }
 
     template <typename T>
+    inline float inverseLerp(T a, T b, T value)
+    {
+        if (a != b)
+            return std::clamp((value - a) / (b - a), (T)0, (T)1);
+        else
+            return 0.0f;
+    }
+
+    template <typename T>
     inline T sign(const T& a)
     {
         if (a < (T)0)
