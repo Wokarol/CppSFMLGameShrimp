@@ -56,14 +56,15 @@ void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
     sf::RectangleShape collider({ rect.width, rect.height });
     collider.setPosition(rect.left, rect.top);
 
-    collider.setFillColor(sf::Color(0));
-    collider.setOutlineColor(sf::Color(0x3094ffff));
-
-    collider.setOutlineThickness(-1);
+    collider.setFillColor(sf::Color(0x3094ff55));
 
     target.draw(collider, states);
 }
 
+void wok::Player::getHitboxes(const std::function<void(const physics::Hitbox&)> yield)
+{
+    yield(physics::AABB(body.getGlobalBounds()));
+}
 
 // =========== PRIVATE ==========
 void wok::Player::assetsReloaded()

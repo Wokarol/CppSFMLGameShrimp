@@ -44,6 +44,8 @@ void wok::Cactus::addWindTween()
 void wok::Cactus::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
     target.draw(*this, states);
+
+    physics::Circle(getPosition() + sf::Vector2f(0.f, -4.f), 4.f).draw(target, states, sf::Color::Red);
 }
 
 void wok::Cactus::reactToHit(HitData data)

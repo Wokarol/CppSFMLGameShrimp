@@ -9,7 +9,7 @@
 
 namespace wok
 {
-    class Player : public Actor, public wok::Drawable, public Tickable
+    class Player : public Actor, public wok::Drawable, public Tickable, public Collideable
     {
     public:
         Player(std::shared_ptr<PlayerSettings> settings);
@@ -22,6 +22,8 @@ namespace wok
 
         void setPosition(sf::Vector2f v) { body.setPosition(v); }
         sf::Vector2f getPosition() { return body.getPosition(); }
+
+        virtual void getHitboxes(const std::function<void(const physics::Hitbox&)> yield) override;
 
     private:
         void flipIfNeeded(sf::Vector2f mousePosition);
