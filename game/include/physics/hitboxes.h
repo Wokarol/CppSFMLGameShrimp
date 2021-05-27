@@ -1,12 +1,14 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
+#include <utils/mathUtils.h>
+#include <physics/intersection.h>
 
 namespace wok::physics
 {
     struct Hitbox
     {
-        virtual void dummyPolymorphicMethod() {};
+        virtual Intersection getIntersection(m::Ray ray) const = 0;
     };
 
     struct AABB : public Hitbox
@@ -21,6 +23,8 @@ namespace wok::physics
         AABB(sf::FloatRect r) :
             size(r.width, r.height), position(r.left, r.top)
         {}
+
+        virtual Intersection getIntersection(m::Ray ray) const override;
     };
 
     struct OBB : public Hitbox
@@ -32,6 +36,8 @@ namespace wok::physics
         OBB(sf::Vector2f position, sf::Vector2f size, float rotation) :
             size(size), position(position), rotation(rotation)
         {}
+
+        virtual Intersection getIntersection(m::Ray ray) const override;
     };
 
     struct Circle : public Hitbox
@@ -42,5 +48,7 @@ namespace wok::physics
         Circle(sf::Vector2f position, float radius) :
             radius(radius), position(position)
         {}
+
+        virtual Intersection getIntersection(m::Ray ray) const override;
     };
 }

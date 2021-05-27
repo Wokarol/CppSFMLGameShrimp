@@ -11,7 +11,6 @@
 #include <tweener.h>
 #include <cassert>
 
-#include <physics/intersections.h>
 #include <physics/interactions.h>
 #include <physics/collisions.h>
 

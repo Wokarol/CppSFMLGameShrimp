@@ -111,7 +111,7 @@ int main()
 
         sf::Color pressed(0xFF0000FF);
         sf::Color notPressed(0xFF000066);
-        sf::Vector2f bottomLeft(30, window.getSize().y - 30);
+        sf::Vector2f bottomLeft(30.f, window.getSize().y - 30.f);
         sf::Vector2f cellSize(50, 50);
         float spacing = 10;
 

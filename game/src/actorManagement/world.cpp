@@ -200,7 +200,7 @@ void world::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
 
 physics::RaycastResult world::raycastAgainstHitboxes(const m::Ray& ray, float maxRaycastDistance)
 {
-    intersect::Intersection closestHit;
+    physics::Intersection closestHit;
     ActorHandle<Actor> hitActorHandle;
 
     for (auto& collideable : collideables)
@@ -208,7 +208,7 @@ physics::RaycastResult world::raycastAgainstHitboxes(const m::Ray& ray, float ma
         assert(collideable);
         collideable->getHitboxes([&](const physics::Hitbox& hitbox)
             {
-                auto intersection = intersect::rayWithAny(ray, hitbox);
+                auto intersection = hitbox.getIntersection(ray);
 
                 if (!intersection.hit)
                     return;
@@ -240,7 +240,6 @@ physics::RaycastResult world::raycastAgainstHitboxes(const m::Ray& ray, float ma
         // We hit nothing
         return { };
     }
-    return { };
 }
 
 void wok::world::checkForCollisions(const sf::FloatRect& rect, std::function<void(collide::Reaction)> reactionCallback)

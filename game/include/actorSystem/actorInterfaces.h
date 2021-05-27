@@ -28,9 +28,9 @@ namespace wok
         struct HitData
         {
             const sf::Vector2f direction;
-            const float damage;
+            const int damage;
 
-            HitData(sf::Vector2f direction, float damage) : direction(direction), damage(damage) {}
+            HitData(sf::Vector2f direction, int damage) : direction(direction), damage(damage) {}
         };
 
         virtual void reactToHit([[maybe_unused]] HitData) {};
