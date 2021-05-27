@@ -23,7 +23,8 @@ std::vector<DirectionKey> directionKeys{
 
 void wok::input::resetKeyStateBeforeTheFrame()
 {
-    input::attack.resetSingleFrameData();
+    attack.resetSingleFrameData();
+    knockback.resetSingleFrameData();
 }
 
 void wok::input::handleInputKeysPressed(const sf::Event& event)
@@ -53,9 +54,11 @@ void wok::input::handleInputKeysReleased(const sf::Event& event)
 void wok::input::handleMouseButtonsPressed(const sf::Event& event)
 {
     attack.checkForKeyPressed(event.mouseButton.button);
+    knockback.checkForKeyPressed(event.mouseButton.button);
 }
 
 void wok::input::handleMouseButtonsReleased(const sf::Event& event)
 {
     attack.checkForKeyReleased(event.mouseButton.button);
+    knockback.checkForKeyReleased(event.mouseButton.button);
 }

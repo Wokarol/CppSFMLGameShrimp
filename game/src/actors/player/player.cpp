@@ -1,5 +1,6 @@
 #include <actors/player.h>
 #include <actors/bullet.h>
+#include <actors/fracturedSprite.h>
 #include <input.h>
 #include <utils/mathUtils.h>
 #include <world.h>
@@ -16,7 +17,84 @@ Player::Player(std::shared_ptr<PlayerSettings> settings) :
     assetsReloaded();
 }
 
+void wok::Player::update(const GameClock& time)
+{
+    auto mousePosition = input::mousePositionInWorld;
+    auto inputDir = m::normalize(input::movement);
 
+    applyInputToVelocity(inputDir, time.delta);
+
+    moveActor(velocity * time.delta);
+
+    flipIfNeeded(mousePosition);
+
+    auto gunPlacement = updateGunPositionAndRotation(mousePosition);
+    auto gunRay = getGunRay();
+
+    updateShootingLogic(gunPlacement.first, gunRay, time);
+
+    if (invincibilityCooldown > 0.f) invincibilityCooldown -= time.delta;
+}
+
+void wok::Player::draw(sf::RenderTarget& target, sf::RenderStates& states)
+{
+    target.draw(body, states);
+    target.draw(gun, states);
+
+    if (shouldRenderMuzzleFlash)
+    {
+        target.draw(muzzleFlash);
+    }
+}
+
+void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
+{
+    auto rect = body.getGlobalBounds();
+
+    sf::RectangleShape collider({ rect.width, rect.height });
+    collider.setPosition(rect.left, rect.top);
+
+    collider.setFillColor(sf::Color(0x3094ff55));
+
+    target.draw(collider, states);
+}
+
+void wok::Player::getHitboxes(const std::function<void(const physics::Hitbox&)> yield)
+{
+    yield(physics::AABB(body.getGlobalBounds()));
+}
+
+void wok::Player::reactToHit(HitData data)
+{
+    if (invincibilityCooldown >= 0.f)
+        return;
+
+    velocity += data.direction * 165.f;
+    invincibilityCooldown = invincibilityLength;
+
+    health -= data.damage;
+
+    if (health <= 0)
+    {
+        float dir = data.direction.x < 0
+            ? -1.f
+            : 1.f;
+
+        std::vector<sf::IntRect> fractures{
+            {3, 0, 7, 4},
+            {0, 0, 3, 4},
+            {10, 2, 2, 2},
+            {4, 4, 8, 5},
+            {0, 5, 4, 5},
+            {1, 10, 4, 4},
+        };
+
+        world::createNamedActor<FracturedSprite>("Player Fracture", body, texture, fractures, dir);
+        handle.destroy();
+    }
+}
+
+// =========== PRIVATE ==========
 void wok::Player::assetsReloaded()
 {
     body.setTexture(*texture);
@@ -122,75 +200,61 @@ void Player::updateShootingLogic(sf::Vector2f globalGunPosition, m::Ray gunRay, 
     }
 }
 
-void wok::Player::moveActor(float delta)
+void wok::Player::moveActor(sf::Vector2f delta)
 {
-    body.move(m::normalize(input::movement) * delta * settings->movementSpeed);
-
-    // Rection to world geometry
-    std::vector<collide::Reaction> reactions;
-    world::checkForCollisions(body.getGlobalBounds(), reactions);
+    body.move(delta);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         return;
 
+    // Rection to world geometry
     sf::Vector2f accumulatedReaction;
-    for (const auto& r : reactions)
-    {
-        auto p = -r.penetration;
-        if (p.x != 0 && p.y != 0)
+    world::checkForCollisions(body.getGlobalBounds(), [&accumulatedReaction](collide::Reaction r)
         {
-            if (std::abs(p.x) < std::abs(p.y))
-                p.y = 0;
-            else if (std::abs(p.x) > std::abs(p.y))
-                p.x = 0;
-        }
+            auto p = -r.penetration;
+            if (p.x != 0 && p.y != 0)
+            {
+                if (std::abs(p.x) < std::abs(p.y))
+                    p.y = 0;
+                else if (std::abs(p.x) > std::abs(p.y))
+                    p.x = 0;
+            }
 
-        if (std::abs(p.x) > std::abs(accumulatedReaction.x))
-            accumulatedReaction.x = p.x;
-        if (std::abs(p.y) > std::abs(accumulatedReaction.y))
-            accumulatedReaction.y = p.y;
-    }
+            if (std::abs(p.x) > std::abs(accumulatedReaction.x))
+                accumulatedReaction.x = p.x;
+            if (std::abs(p.y) > std::abs(accumulatedReaction.y))
+                accumulatedReaction.y = p.y;
+        });
+
+    if (accumulatedReaction.x > 0 != velocity.x > 0 && accumulatedReaction.x != 0)
+        velocity.x = 0;
+
+
+    if (accumulatedReaction.y > 0 != velocity.y > 0 && accumulatedReaction.y != 0)
+        velocity.y = 0;
+
     body.move(accumulatedReaction);
 }
 
-void wok::Player::update(const GameClock& time)
+void Player::applyInputToVelocity(sf::Vector2f input, float dt)
 {
-    auto mousePosition = input::mousePositionInWorld;
+    sf::Vector2f desiredVelocity = input * settings->movementSpeed;
 
-    moveActor(time.delta);
-
-    flipIfNeeded(mousePosition);
-
-    auto gunPlacement = updateGunPositionAndRotation(mousePosition);
-    auto gunRay = getGunRay();
-    updateShootingLogic(gunPlacement.first, gunRay, time);
-}
-
-void wok::Player::draw(sf::RenderTarget& target, sf::RenderStates& states)
-{
-    target.draw(body, states);
-    target.draw(gun, states);
-
-    if (shouldRenderMuzzleFlash)
+    if (m::length(desiredVelocity) < m::length(velocity))
     {
-        target.draw(muzzleFlash);
+        // We check if the player tries to go against the velocity
+        float aligment = 1.f - m::dot(input, m::normalize(velocity));
+        if (m::length(input) < 0.2f)
+        {
+            aligment = 0.f;
+        }
+
+        float dec = m::lerp(300.f, 500.f, std::clamp(aligment, 0.f, 1.f));
+
+        velocity -= m::normalize(velocity) * dec * dt;
     }
-}
-
-void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
-{
-    auto rect = body.getGlobalBounds();
-
-    sf::RectangleShape collider({ rect.width, rect.height });
-    collider.setPosition(rect.left, rect.top);
-
-    collider.setFillColor(sf::Color(0));
-    collider.setOutlineColor(sf::Color::Blue);
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        collider.setOutlineColor(collider.getOutlineColor() * sf::Color(255, 255, 255, 128));
-
-    collider.setOutlineThickness(-1);
-
-    target.draw(collider, states);
+    else
+    {
+        velocity += m::normalize(desiredVelocity) * 500.f * dt;
+    }
 }

@@ -2,8 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <gameClock.h>
-#include <physics/intersections.h>
-#include <physics/collisions.h>
+#include <functional>
+#include <physics/hitboxes.h>
 
 namespace wok
 {
@@ -25,13 +25,27 @@ namespace wok
     class Hittable
     {
     public:
-        virtual intersect::Intersection getClosestHit(const m::Ray& ray) = 0;
-        virtual void reactToHit([[maybe_unused]] const intersect::Intersection& intersection, [[maybe_unused]] int damage) {};
+        struct HitData
+        {
+            const sf::Vector2f direction;
+            const int damage;
+
+            HitData(sf::Vector2f direction, int damage) : direction(direction), damage(damage) {}
+        };
+
+        virtual void reactToHit([[maybe_unused]] HitData) {};
     };
 
     class Collideable
     {
     public:
-        virtual void getReactionsFromCollision(const sf::FloatRect&, std::vector<collide::Reaction>&) = 0;
+        virtual void getColliders(const std::function<void(sf::FloatRect)> yield) { };
+        virtual void getHitboxes(const std::function<void(const physics::Hitbox&)> yield)
+        {
+            getColliders([&yield](auto rect)
+                {
+                    yield(physics::AABB(rect));
+                });
+        }
     };
 }

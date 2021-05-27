@@ -19,8 +19,8 @@ namespace wok
 
             void resetSingleFrameData()
             {
-                attack.wasPressedThisFrame = false;
-                attack.wasReleasedThisFrame = false;
+                wasPressedThisFrame = false;
+                wasReleasedThisFrame = false;
             }
             void checkForKeyPressed(T key)
             {
@@ -44,6 +44,7 @@ namespace wok
         static inline sf::Vector2f mousePositionInWorld;
 
         static inline key<sf::Mouse::Button> attack{ sf::Mouse::Left };
+        static inline key<sf::Mouse::Button> knockback{ sf::Mouse::Right };
         static inline bool slowMode;
 
         static void handleInputKeysPressed(const sf::Event& event);

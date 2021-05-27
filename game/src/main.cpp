@@ -82,19 +82,6 @@ int main()
         system("pause");
     }
 
-    wok::world::createNamedActor<wok::StaticBox>("Box 1",
-        sf::Vector2f(100, 100),
-        sf::Vector2f(36, 36));
-
-
-    wok::world::createNamedActor<wok::StaticBox>("Box 3",
-        sf::Vector2f(120, 120),
-        sf::Vector2f(36, 36));
-
-    wok::world::createNamedActor<wok::StaticBox>("Box 4",
-        sf::Vector2f(156, 156),
-        sf::Vector2f(36, 36));
-
     while (window.isOpen())
     {
         handleEventsAndInput(window);
@@ -106,12 +93,12 @@ int main()
         auto states = sf::RenderStates();
         wok::world::draw(window, states);
 
-        auto view = window.getView();
+        sf::View view = window.getView();
         window.setView(window.getDefaultView());
 
         sf::Color pressed(0xFF0000FF);
         sf::Color notPressed(0xFF000066);
-        sf::Vector2f bottomLeft(30, window.getSize().y - 30);
+        sf::Vector2f bottomLeft(30.f, window.getSize().y - 30.f);
         sf::Vector2f cellSize(50, 50);
         float spacing = 10;
 

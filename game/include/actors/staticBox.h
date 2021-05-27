@@ -5,7 +5,7 @@
 
 namespace wok
 {
-    class StaticBox : public Actor, public sf::RectangleShape, public wok::Drawable, public Collideable
+    class StaticBox : public Actor2D, public sf::RectangleShape, public wok::Drawable, public Collideable
     {
     private:
         std::shared_ptr<sf::Texture> texture;
@@ -15,9 +15,7 @@ namespace wok
         {
             setOrigin(size / 2.f);
             setPosition(pos);
-            setFillColor(sf::Color(0));
-            setOutlineColor(sf::Color::Cyan);
-            setOutlineThickness(-1.f);
+            setFillColor(sf::Color(255, 0, 0, 120));
         }
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override
@@ -30,17 +28,11 @@ namespace wok
             return -10;
         }
 
-        virtual bool shouldDrawAlways() { return true; }
+        virtual sf::Vector2f getActorPosition() override { return getPosition(); }
 
-
-        virtual void getReactionsFromCollision(const sf::FloatRect& rect, std::vector<collide::Reaction>& reactions) override
+        virtual void getColliders(const std::function<void(sf::FloatRect)> yield) override
         {
-            auto reaction = wok::collide::AABBWithAABB(rect, getGlobalBounds());
-
-            if (reaction.hit)
-            {
-                reactions.push_back(reaction);
-            }
+            yield(getGlobalBounds());
         }
     };
 }

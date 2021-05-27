@@ -31,10 +31,15 @@ void wok::Bullet::update(const GameClock& time)
 
     float distanceDelta = settings->velocity * time.delta;
 
-    auto raycastResult = world::raycast(m::Ray(getPosition(), direction), distanceDelta);
-    if (raycastResult.hitActor.isValid())
+    auto raycastResult = world::raycastAgainstHitboxes(m::Ray(getPosition(), direction), distanceDelta);
+    if (raycastResult.collideable.isValid())
     {
-        raycastResult.hitActor->reactToHit(raycastResult.intersection, settings->damage);
+        auto hitActor = raycastResult.collideable.as<Hittable>();
+
+        if (hitActor.isValid())
+        {
+            hitActor->reactToHit(Hittable::HitData(direction, settings->damage));
+        }
         handle.destroy();
     }
 

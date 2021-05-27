@@ -11,8 +11,8 @@
 #include <tweener.h>
 #include <cassert>
 
-#include <physics/intersections.h>
 #include <physics/interactions.h>
+#include <physics/collisions.h>
 
 namespace wok
 {
@@ -145,8 +145,11 @@ namespace wok
             }
         }
 
-        static physics::RaycastResult raycast(const m::Ray& ray, float maxDist = -1);
-        static void checkForCollisions(const sf::FloatRect& rect, std::vector<collide::Reaction>& reactions);
+        static physics::RaycastResult raycastAgainstHitboxes(const m::Ray& ray, float maxDist = -1);
+        static void checkForCollisions(const sf::FloatRect& rect, std::function<void(collide::Reaction)> callback);
+
+        static ActorHandle<Collideable> checkForOverlaps(Collideable* excluded, const sf::FloatRect& rect);
+        static ActorHandle<Collideable> checkForOverlaps(Collideable* excluded, const sf::Vector2f& circlePosition, float circleRadius);
 
         static void dumpActors(bool details = false);
         static void onAssetsReloaded();
@@ -154,9 +157,11 @@ namespace wok
 
     private:
         static void drawActors(sf::RenderTarget& target, sf::RenderStates& states);
+        static void drawCollisionGizmos(sf::RenderTarget& target, sf::RenderStates& states);
         static void drawGizmos(sf::RenderTarget& target, sf::RenderStates& states);
         static void updateActors(const GameClock& time);
         static void updateTweeners(const GameClock& time);
+        static auto findOverlap(Collideable* excluded, std::function<bool(const physics::Hitbox&)> overlapStrategy)->ActorHandle<Collideable>;
         static void removeDeadTweens();
         static void removeDeadActors();
         static void fillCacheIfNeeded();
