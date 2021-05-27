@@ -58,5 +58,7 @@ namespace wok
 
         float invincibilityCooldown = -1.f;
         float invincibilityLength = 0.2f;
+
+        int health = 5;
     };
 }

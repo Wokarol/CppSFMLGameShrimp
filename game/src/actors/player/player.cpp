@@ -1,5 +1,6 @@
 #include <actors/player.h>
 #include <actors/bullet.h>
+#include <actors/fracturedSprite.h>
 #include <input.h>
 #include <utils/mathUtils.h>
 #include <world.h>
@@ -70,6 +71,27 @@ void wok::Player::reactToHit(HitData data)
 
     velocity += data.direction * 165.f;
     invincibilityCooldown = invincibilityLength;
+
+    health -= data.damage;
+
+    if (health <= 0)
+    {
+        float dir = data.direction.x < 0
+            ? -1.f
+            : 1.f;
+
+        std::vector<sf::IntRect> fractures{
+            {3, 0, 7, 4},
+            {0, 0, 3, 4},
+            {10, 2, 2, 2},
+            {4, 4, 8, 5},
+            {0, 5, 4, 5},
+            {1, 10, 4, 4},
+        };
+
+        world::createNamedActor<FracturedSprite>("Player Fracture", body, texture, fractures, dir);
+        handle.destroy();
+    }
 }
 
 // =========== PRIVATE ==========
