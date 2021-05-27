@@ -9,7 +9,7 @@
 namespace wok
 {
     class Cactus : public sf::Sprite,
-        public Actor, public wok::Drawable, public Hittable, public Collideable
+        public Actor2D, public wok::Drawable, public Hittable, public Collideable, public Tickable
     {
         const std::shared_ptr<CactusPreset> preset;
 
@@ -18,6 +18,7 @@ namespace wok
 
         virtual void assetsReloaded() override;
         virtual void start() override;
+        virtual void update(const GameClock& time) override;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
 
@@ -27,9 +28,11 @@ namespace wok
         virtual void reactToHit([[maybe_unused]] HitData) override;
         virtual void getHitboxes(const std::function<void(const physics::Hitbox&)> yield) override;
 
+        virtual sf::Vector2f getActorPosition() override { return getPosition(); }
+
     private:
         void addWindTween();
-        std::shared_ptr<LerpTweener<float>> createHitTweener(float dir);
+        std::shared_ptr<LerpTweener<float>> createHitTweener(float dir, float duration = 1.f);
 
         int health;
         bool dying = false;

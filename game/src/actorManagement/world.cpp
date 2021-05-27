@@ -285,6 +285,51 @@ void wok::world::checkForCollisions(const sf::FloatRect& rect, std::function<voi
     }
 }
 
+auto wok::world::findOverlap(Collideable* excluded, std::function<bool(const physics::Hitbox&)> overlapStrategy) -> ActorHandle<Collideable>
+{
+    Collideable* collideable = NULL;
+    for (auto& col : collideables)
+    {
+        if (col == excluded)
+        {
+            continue;
+        }
+
+        assert(col);
+        col->getHitboxes([&](const physics::Hitbox& hitbox)
+            {
+                bool isOverlapping = overlapStrategy(hitbox);
+                if (isOverlapping)
+                {
+                    collideable = col;
+                }
+            });
+    }
+
+    if (collideable == NULL)
+        return {};
+
+    // We get handle from the pointer via Actor
+    ActorHandle<Actor> actor = dynamic_cast<Actor*>(collideable)->handle;
+    return actor.as<Collideable>();
+}
+
+ActorHandle<Collideable> wok::world::checkForOverlaps(Collideable* excluded, const sf::FloatRect& rect)
+{
+    return findOverlap(excluded, [&](const physics::Hitbox& hitbox)
+        {
+            return hitbox.overlapsRect(rect);
+        });
+}
+
+ActorHandle<Collideable> wok::world::checkForOverlaps(Collideable* excluded, const sf::Vector2f& circlePosition, float circleRadius)
+{
+    return findOverlap(excluded, [&](const physics::Hitbox& hitbox)
+        {
+            return hitbox.overlapsCircle(circlePosition, circleRadius);
+        });
+}
+
 void world::dumpActors(bool detailed)
 {
     std::map<std::shared_ptr<Group>, std::vector<Actor*>> actorsByGroups;

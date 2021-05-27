@@ -9,7 +9,7 @@
 
 namespace wok
 {
-    class Player : public Actor, public wok::Drawable, public Tickable, public Collideable
+    class Player : public Actor2D, public wok::Drawable, public Tickable, public Collideable, public Hittable
     {
     public:
         Player(std::shared_ptr<PlayerSettings> settings);
@@ -24,6 +24,11 @@ namespace wok
         sf::Vector2f getPosition() { return body.getPosition(); }
 
         virtual void getHitboxes(const std::function<void(const physics::Hitbox&)> yield) override;
+
+        virtual sf::Vector2f getActorPosition() override { return body.getPosition(); }
+
+
+        virtual void reactToHit(HitData) override;
 
     private:
         void flipIfNeeded(sf::Vector2f mousePosition);
@@ -50,5 +55,8 @@ namespace wok
         bool shouldRenderMuzzleFlash = false;
         float shootCooldown = 0;
         sf::Vector2f velocity;
+
+        float invincibilityCooldown = -1.f;
+        float invincibilityLength = 0.2f;
     };
 }

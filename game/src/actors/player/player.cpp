@@ -32,10 +32,7 @@ void wok::Player::update(const GameClock& time)
 
     updateShootingLogic(gunPlacement.first, gunRay, time);
 
-    if (input::knockback.wasPressedThisFrame)
-    {
-        velocity -= gunRay.direction * 165.f;
-    }
+    if (invincibilityCooldown > 0.f) invincibilityCooldown -= time.delta;
 }
 
 void wok::Player::draw(sf::RenderTarget& target, sf::RenderStates& states)
@@ -64,6 +61,15 @@ void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
 void wok::Player::getHitboxes(const std::function<void(const physics::Hitbox&)> yield)
 {
     yield(physics::AABB(body.getGlobalBounds()));
+}
+
+void wok::Player::reactToHit(HitData data)
+{
+    if (invincibilityCooldown >= 0.f)
+        return;
+
+    velocity += data.direction * 165.f;
+    invincibilityCooldown = invincibilityLength;
 }
 
 // =========== PRIVATE ==========

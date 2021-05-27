@@ -5,7 +5,7 @@
 
 namespace wok
 {
-    class StaticBox : public Actor, public sf::RectangleShape, public wok::Drawable, public Collideable
+    class StaticBox : public Actor2D, public sf::RectangleShape, public wok::Drawable, public Collideable
     {
     private:
         std::shared_ptr<sf::Texture> texture;
@@ -27,6 +27,8 @@ namespace wok
         {
             return -10;
         }
+
+        virtual sf::Vector2f getActorPosition() override { return getPosition(); }
 
         virtual void getColliders(const std::function<void(sf::FloatRect)> yield) override
         {

@@ -27,4 +27,10 @@ namespace wok
 
         friend world;
     };
+
+    class Actor2D : public Actor
+    {
+    public:
+        virtual sf::Vector2f getActorPosition() = 0;
+    };
 }

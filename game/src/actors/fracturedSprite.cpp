@@ -14,7 +14,7 @@ wok::FracturedSprite::FracturedSprite(const sf::Sprite& original, std::shared_pt
     sf::IntRect spriteRect = original.getTextureRect();
     sf::Vector2i spriteRectPos = sf::Vector2i(spriteRect.left, spriteRect.top);
 
-    yPos = spritePos.y;
+    pos = spritePos;
 
     // Position in texture space with default pivot
     sf::Vector2i originalInTextureSpace = spriteRectPos + (sf::Vector2i)spriteOrigin;
@@ -32,11 +32,11 @@ wok::FracturedSprite::FracturedSprite(const sf::Sprite& original, std::shared_pt
         sf::Vector2i differenceOnTexture = fractureInTextureSpace - originalInTextureSpace;
 
         // We add original's position and rotated offset to accommodate for possible sprite rotation
-        sf::Vector2f pos;
-        pos += spritePos;
-        pos += m::rotate((sf::Vector2f)differenceOnTexture, rotation);
+        sf::Vector2f fracturePos;
+        fracturePos += spritePos;
+        fracturePos += m::rotate((sf::Vector2f)differenceOnTexture, rotation);
 
-        fracture.setPosition(pos);
+        fracture.setPosition(fracturePos);
         fracture.setRotation(rotation);
 
         // Points right-ish
