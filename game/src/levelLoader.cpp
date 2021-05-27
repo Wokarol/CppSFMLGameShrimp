@@ -109,9 +109,9 @@ void wok::levels::load(std::string_view levelPath)
     {
         auto groundTileset = res::get<TilesetData>(project::actorPaths["desert"]);
         auto wallTileset = res::get<TilesetData>(project::actorPaths["walls"]);
-        createTilemap(level["Ground"], "Ground Tilemap", groundTileset, group, -100, false);
+        createTilemap(level["Ground"], "Ground Tilemap", groundTileset, group, -110, false);
         createTilemap(level["Tiles"], "Free Tile Tilemap", groundTileset, group, -100, false);
-        createTilemap(level["Walls"], "Walls Tilemap", wallTileset, group, 5, true);
+        createTilemap(level["Walls"], "Walls Tilemap", wallTileset, group, -90, true);
         createActors(level["Actors"], group);
     }
     catch (const std::exception& e)
