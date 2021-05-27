@@ -3,8 +3,9 @@
 
 namespace wok
 {
-    auto rayWithCenteredAABB(m::Ray ray, const physics::AABB& aabb) -> physics::Intersection
+    auto physics::AABB::raycast(m::Ray ray) const -> Intersection
     {
+        ray.move(-topLeft);
         ray.direction = m::normalize(ray.direction);
 
         //console::log(ray.origin.x);
@@ -16,20 +17,20 @@ namespace wok
             float distanceToWall = distanceToWallOnXAxis / ray.direction.x;
             float yOnWall = ray.getPoint(distanceToWall).y;
 
-            if (yOnWall >= 0 && yOnWall <= aabb.size.y)
+            if (yOnWall >= 0 && yOnWall <= size.y)
             {
                 return physics::Intersection(distanceToWall, sf::Vector2f(-1.f, 0.f), ray);
             }
         }
 
-        if (ray.direction.x < 0 && ray.origin.x > aabb.size.x)
+        if (ray.direction.x < 0 && ray.origin.x > size.x)
         {
             // Ray from right onto right wall
-            float distanceToWallOnXAxis = ray.origin.x - aabb.size.x;
+            float distanceToWallOnXAxis = ray.origin.x - size.x;
             float distanceToWall = -distanceToWallOnXAxis / ray.direction.x;
             float yOnWall = ray.getPoint(distanceToWall).y;
 
-            if (yOnWall >= 0 && yOnWall <= aabb.size.y)
+            if (yOnWall >= 0 && yOnWall <= size.y)
             {
                 return physics::Intersection(distanceToWall, sf::Vector2f(1.f, 0.f), ray);
             }
@@ -42,20 +43,20 @@ namespace wok
             float distanceToWall = distanceOnWallOnYAxis / ray.direction.y;
             float xOnWall = ray.getPoint(distanceToWall).x;
 
-            if (xOnWall >= 0 && xOnWall <= aabb.size.x)
+            if (xOnWall >= 0 && xOnWall <= size.x)
             {
                 return physics::Intersection(distanceToWall, sf::Vector2f(0.f, -1.f), ray);
             }
         }
 
-        if (ray.direction.y < 0 && ray.origin.y > aabb.size.y)
+        if (ray.direction.y < 0 && ray.origin.y > size.y)
         {
             // Ray from down onto bottom wall
-            float distanceOnWallOnYAxis = ray.origin.y - aabb.size.y;
+            float distanceOnWallOnYAxis = ray.origin.y - size.y;
             float distanceToWall = -distanceOnWallOnYAxis / ray.direction.y;
             float xOnWall = ray.getPoint(distanceToWall).x;
 
-            if (xOnWall >= 0 && xOnWall <= aabb.size.x)
+            if (xOnWall >= 0 && xOnWall <= size.x)
             {
                 return physics::Intersection(distanceToWall, sf::Vector2f(0.f, 1.f), ray);
             }
@@ -64,24 +65,17 @@ namespace wok
         return {};
     }
 
-    auto physics::AABB::raycast(m::Ray ray) const -> Intersection
-    {
-        ray.move(-position);
-        return rayWithCenteredAABB(ray, *this);
-    }
-
     auto physics::OBB::raycast(m::Ray ray) const -> Intersection
     {
         // We convert this scenario into Ray and AABB to simplify calculations
-        ray.move(-position);
+        ray.rotateAround(position, rotation);
 
-        auto angle = -rotation;
-        ray.rotateAround(sf::Vector2f(0, 0), angle);
+        //auto res = rayWithCenteredAABB(ray, physics::AABB(position, size).centered());
 
-        auto res = rayWithCenteredAABB(ray, physics::AABB(position, size));
-        res.normal = m::rotate(res.normal, -angle);
 
-        return res;
+        auto result = physics::AABB(position, size).centered().raycast(ray);
+        result.normal = m::rotate(result.normal, -rotation);
+        return result;
     }
 
     auto physics::Circle::raycast(m::Ray ray) const -> Intersection
