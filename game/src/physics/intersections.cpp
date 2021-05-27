@@ -1,19 +1,15 @@
-#include <physics\intersections.h>
+#include <physics/intersections.h>
 
-auto wok::intersect::rayWithCircle(m::Ray ray, const sf::CircleShape& circle) -> Intersection
+auto wok::intersect::rayWithCircle(m::Ray ray, const physics::Circle& circle) -> Intersection
 {
-
     // We offset it so the centre of the circle is in the middle
-    sf::Vector2f optimalPivot = sf::Vector2f(1.f, 1.f) * circle.getRadius();
-    sf::Vector2f pivotOffset = circle.getOrigin() - optimalPivot;
-
-    ray.move(-circle.getPosition() + pivotOffset);
+    ray.move(-circle.position);
     ray.direction = m::normalize(ray.direction);
 
     // Algorithm is based on this article:
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
     sf::Vector2f L = -ray.origin;
-    float r = circle.getRadius();
+    float r = circle.radius;
 
     if (m::sqrLength(L) < (r * r))
     {
@@ -44,13 +40,9 @@ auto wok::intersect::rayWithCircle(m::Ray ray, const sf::CircleShape& circle) ->
     return Intersection(distToHit, normal, ray);
 }
 
-/// <param name="AABB"> Rectangle's rotation and position will be ignored </param>
-auto wok::intersect::rayWithCenteredAABB(m::Ray ray, const sf::RectangleShape& aabb) -> Intersection
+auto wok::intersect::rayWithCenteredAABB(m::Ray ray, const physics::AABB& aabb) -> Intersection
 {
-    // We offset it so the aabb's top left corner is at [0, 0]
-    ray.move(aabb.getOrigin());
     ray.direction = m::normalize(ray.direction);
-    auto size = aabb.getSize();
 
     //console::log(ray.origin.x);
 
@@ -61,20 +53,20 @@ auto wok::intersect::rayWithCenteredAABB(m::Ray ray, const sf::RectangleShape& a
         float distanceToWall = distanceToWallOnXAxis / ray.direction.x;
         float yOnWall = ray.getPoint(distanceToWall).y;
 
-        if (yOnWall >= 0 && yOnWall <= size.y)
+        if (yOnWall >= 0 && yOnWall <= aabb.size.y)
         {
             return Intersection(distanceToWall, sf::Vector2f(-1.f, 0.f), ray);
         }
     }
 
-    if (ray.direction.x < 0 && ray.origin.x > size.x)
+    if (ray.direction.x < 0 && ray.origin.x > aabb.size.x)
     {
         // Ray from right onto right wall
-        float distanceToWallOnXAxis = ray.origin.x - size.x;
+        float distanceToWallOnXAxis = ray.origin.x - aabb.size.x;
         float distanceToWall = -distanceToWallOnXAxis / ray.direction.x;
         float yOnWall = ray.getPoint(distanceToWall).y;
 
-        if (yOnWall >= 0 && yOnWall <= size.y)
+        if (yOnWall >= 0 && yOnWall <= aabb.size.y)
         {
             return Intersection(distanceToWall, sf::Vector2f(1.f, 0.f), ray);
         }
@@ -87,20 +79,20 @@ auto wok::intersect::rayWithCenteredAABB(m::Ray ray, const sf::RectangleShape& a
         float distanceToWall = distanceOnWallOnYAxis / ray.direction.y;
         float xOnWall = ray.getPoint(distanceToWall).x;
 
-        if (xOnWall >= 0 && xOnWall <= size.x)
+        if (xOnWall >= 0 && xOnWall <= aabb.size.x)
         {
             return Intersection(distanceToWall, sf::Vector2f(0.f, -1.f), ray);
         }
     }
 
-    if (ray.direction.y < 0 && ray.origin.y > size.y)
+    if (ray.direction.y < 0 && ray.origin.y > aabb.size.y)
     {
         // Ray from down onto bottom wall
-        float distanceOnWallOnYAxis = ray.origin.y - size.y;
+        float distanceOnWallOnYAxis = ray.origin.y - aabb.size.y;
         float distanceToWall = -distanceOnWallOnYAxis / ray.direction.y;
         float xOnWall = ray.getPoint(distanceToWall).x;
 
-        if (xOnWall >= 0 && xOnWall <= size.x)
+        if (xOnWall >= 0 && xOnWall <= aabb.size.x)
         {
             return Intersection(distanceToWall, sf::Vector2f(0.f, 1.f), ray);
         }
@@ -110,36 +102,41 @@ auto wok::intersect::rayWithCenteredAABB(m::Ray ray, const sf::RectangleShape& a
 }
 
 /// <param name="AABB"> Rectangle's rotation will be ignored </param>
-auto wok::intersect::rayWithAABB(m::Ray ray, const sf::RectangleShape& aabb) -> Intersection
+auto wok::intersect::rayWithAABB(m::Ray ray, const physics::AABB& aabb) -> Intersection
 {
-    ray.move(-aabb.getPosition());
+    ray.move(-aabb.position);
     return rayWithCenteredAABB(ray, aabb);
 }
 
-auto wok::intersect::rayWithOBB(m::Ray ray, const sf::RectangleShape& obb) -> Intersection
+auto wok::intersect::rayWithOBB(m::Ray ray, const physics::OBB& obb) -> Intersection
 {
     // We convert this scenario into Ray and AABB to simplify calculations
-    ray.move(-obb.getPosition());
+    ray.move(-obb.position);
 
-    auto angle = -obb.getRotation();
+    auto angle = -obb.rotation;
     ray.rotateAround(sf::Vector2f(0, 0), angle);
 
-    auto res = rayWithCenteredAABB(ray, obb);
+    auto res = rayWithCenteredAABB(ray, physics::AABB(obb.position, obb.size));
     res.normal = m::rotate(res.normal, -angle);
 
     return res;
 }
 
-auto wok::intersect::rayWithAny(m::Ray ray, const sf::Shape& s) -> Intersection
+auto wok::intersect::rayWithAny(m::Ray ray, const physics::Hitbox& hitbox) -> Intersection
 {
-    if (auto circle = dynamic_cast<const sf::CircleShape*>(&s))
+    if (auto circle = dynamic_cast<const physics::Circle*>(&hitbox))
     {
         return rayWithCircle(ray, *circle);
     }
 
-    if (auto obb = dynamic_cast<const sf::RectangleShape*>(&s))
+    if (auto obb = dynamic_cast<const physics::OBB*>(&hitbox))
     {
         return rayWithOBB(ray, *obb);
+    }
+
+    if (auto aabb = dynamic_cast<const physics::AABB*>(&hitbox))
+    {
+        return rayWithAABB(ray, *aabb);
     }
 
     // Our shape is unsupported

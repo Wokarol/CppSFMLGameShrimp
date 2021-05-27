@@ -8,6 +8,6 @@ namespace wok::physics
     struct RaycastResult
     {
         intersect::Intersection intersection;
-        ActorHandle<Hittable> hitActor;
+        ActorHandle<Collideable> collideable;
     };
 }

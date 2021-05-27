@@ -46,27 +46,15 @@ void wok::Cactus::draw(sf::RenderTarget& target, sf::RenderStates& states)
     target.draw(*this, states);
 }
 
-auto wok::Cactus::getClosestHit(const m::Ray& ray) -> wok::intersect::Intersection
+void wok::Cactus::reactToHit(HitData data)
 {
-    if (dying)
-        return {};
-
-    auto bounds = getGlobalBounds();
-    sf::RectangleShape collider({ bounds.width, bounds.height });
-    collider.setPosition(bounds.left, bounds.top);
-
-    return intersect::rayWithAABB(ray, collider);
-}
-
-void wok::Cactus::reactToHit(const intersect::Intersection& intersection, int damage)
-{
-    float dir = intersection.ray.direction.x < 0
+    float dir = data.direction.x < 0
         ? -1.f
-        :  1.f;
-    
-    health -= damage;
+        : 1.f;
+
+    health -= data.damage;
     bool shouldDie = health <= 0;
-    
+
     if (shouldDie)
     {
         world::createNamedActor<FracturedSprite>("Cactus Fracture", *this, texture, preset->fractures, dir);
@@ -85,6 +73,23 @@ void wok::Cactus::reactToHit(const intersect::Intersection& intersection, int da
     }
 }
 
+void wok::Cactus::getHitboxes(const std::function<void(const physics::Hitbox&)> yield)
+{
+    yield(physics::AABB(getGlobalBounds()));
+}
+
+//auto wok::Cactus::getClosestHit(const m::Ray& ray) -> wok::intersect::Intersection
+//{
+//    if (dying)
+//        return {};
+//
+//    auto bounds = getGlobalBounds();
+//    sf::RectangleShape collider({ bounds.width, bounds.height });
+//    collider.setPosition(bounds.left, bounds.top);
+//
+//    return intersect::rayWithAABB(ray, collider);
+//}
+
 auto wok::Cactus::createHitTweener(float dir) -> std::shared_ptr<LerpTweener<float>>
 {
     auto hit = std::make_shared<LerpTweener<float>>(handle,
@@ -102,7 +107,7 @@ auto wok::Cactus::createHitTweener(float dir) -> std::shared_ptr<LerpTweener<flo
 void wok::Cactus::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
 {
     auto rect = getGlobalBounds();
-    
+
     sf::RectangleShape collider({ rect.width, rect.height });
     collider.setPosition(rect.left, rect.top);
 

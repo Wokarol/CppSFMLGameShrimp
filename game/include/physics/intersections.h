@@ -2,6 +2,7 @@
 
 #include <utils/mathUtils.h>
 #include <SFML/Graphics.hpp>
+#include <physics\hitboxes.h>
 
 namespace wok::intersect
 {
@@ -23,38 +24,12 @@ namespace wok::intersect
         {}
     };
 
-    Intersection rayWithCircle(m::Ray ray, const sf::CircleShape& circle);
+    Intersection rayWithCircle(m::Ray ray, const physics::Circle& circle);
 
     /// <param name="AABB"> Rectangle's rotation and position will be ignored </param>
-    Intersection rayWithCenteredAABB(m::Ray ray, const sf::RectangleShape& aabb);
+    Intersection rayWithCenteredAABB(m::Ray ray, const physics::AABB& aabb);
     /// <param name="AABB"> Rectangle's rotation will be ignored </param>
-    Intersection rayWithAABB(m::Ray ray, const sf::RectangleShape& aabb);
-    Intersection rayWithOBB(m::Ray ray, const sf::RectangleShape& obb);
-    Intersection rayWithAny(m::Ray ray, const sf::Shape& s);
-
-
-    /// Expected FwdIt has to be deferencable into sf::Shape* or equivalent and has to support ++ operator
-    template <typename FwdIt>
-    inline Intersection raycastAllShapes(m::Ray ray, FwdIt start, FwdIt end)
-    {
-        Intersection closestIntersection;
-        float smallestDistance = std::numeric_limits<float>::infinity();
-
-        for (auto it = start; it != end; it++)
-        {
-            auto shape = *it;
-            auto raycastResult = rayWithAny(ray, *shape);
-
-            if (!raycastResult.hit)
-                continue;
-
-            if (raycastResult.distance > smallestDistance)
-                continue;
-
-            closestIntersection = raycastResult;
-            smallestDistance = raycastResult.distance;
-        }
-
-        return closestIntersection;
-    }
+    Intersection rayWithAABB(m::Ray ray, const physics::AABB& aabb);
+    Intersection rayWithOBB(m::Ray ray, const physics::OBB& obb);
+    Intersection rayWithAny(m::Ray ray, const physics::Hitbox& s);
 }

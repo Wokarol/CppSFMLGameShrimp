@@ -9,7 +9,7 @@
 namespace wok
 {
     class Cactus : public sf::Sprite,
-        public Actor, public wok::Drawable, public Hittable
+        public Actor, public wok::Drawable, public Hittable, public Collideable
     {
         const std::shared_ptr<CactusPreset> preset;
 
@@ -24,8 +24,9 @@ namespace wok
 
         virtual float getSortingYPos() override { return getPosition().y; }
 
-        virtual intersect::Intersection getClosestHit(const m::Ray& ray) override;
-        virtual void reactToHit(const intersect::Intersection& intersection, int damage) override;
+
+        virtual void reactToHit([[maybe_unused]] HitData) override;
+        virtual void getHitboxes(const std::function<void(const physics::Hitbox&)> yield) override;
 
     private:
         void addWindTween();

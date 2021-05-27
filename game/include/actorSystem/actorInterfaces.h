@@ -44,7 +44,7 @@ namespace wok
         {
             getColliders([&yield](auto rect)
                 {
-                    yield(AABB(rect));
+                    yield(physics::AABB(rect));
                 });
         }
     };

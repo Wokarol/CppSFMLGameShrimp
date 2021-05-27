@@ -198,30 +198,33 @@ void world::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
     }
 }
 
-physics::RaycastResult world::raycast(const m::Ray& ray, float maxRaycastDistance)
+physics::RaycastResult world::raycastAgainstHitboxes(const m::Ray& ray, float maxRaycastDistance)
 {
     intersect::Intersection closestHit;
     ActorHandle<Actor> hitActorHandle;
 
-    for (auto& hittable : hittables)
+    for (auto& collideable : collideables)
     {
-        assert(hittable);
-        auto raycastResult = hittable->getClosestHit(ray);
+        assert(collideable);
+        collideable->getHitboxes([&](const physics::Hitbox& hitbox)
+            {
+                auto intersection = intersect::rayWithAny(ray, hitbox);
 
-        if (!raycastResult.hit)
-            continue;
+                if (!intersection.hit)
+                    return;
 
-        bool thereWasAHitAlread = closestHit.hit;
-        bool myHitIsCloser = raycastResult.distance < closestHit.distance;
+                bool thereWasAHitAlread = closestHit.hit;
+                bool myHitIsCloser = intersection.distance < closestHit.distance;
 
-        if (!thereWasAHitAlread || myHitIsCloser)
-        {
-            auto hitActor = dynamic_cast<Actor*>(hittable);
-            assert(hitActor);
+                if (!thereWasAHitAlread || myHitIsCloser)
+                {
+                    auto hitActor = dynamic_cast<Actor*>(collideable);
+                    assert(hitActor);
 
-            closestHit = raycastResult;
-            hitActorHandle = hitActor->getHandle();
-        }
+                    closestHit = intersection;
+                    hitActorHandle = hitActor->getHandle();
+                }
+            });
     }
 
     bool raycastIsInfinite = maxRaycastDistance < 0;
@@ -230,14 +233,14 @@ physics::RaycastResult world::raycast(const m::Ray& ray, float maxRaycastDistanc
     if (closestHitIsInRange || raycastIsInfinite)
     {
         // We hit something
-        return { closestHit, hitActorHandle.as<Hittable>() };
+        return { closestHit, hitActorHandle.as<Collideable>() };
     }
     else
     {
         // We hit nothing
         return { };
     }
-
+    return { };
 }
 
 void wok::world::checkForCollisions(const sf::FloatRect& rect, std::function<void(collide::Reaction)> reactionCallback)
@@ -245,7 +248,11 @@ void wok::world::checkForCollisions(const sf::FloatRect& rect, std::function<voi
     for (auto& col : collideables)
     {
         assert(col);
-        col->getReactionsFromCollision(rect, reactionCallback);
+        col->getColliders([&](sf::FloatRect collider)
+            {
+                auto reaction = collide::AABBWithAABB(rect, collider);
+                reactionCallback(reaction);
+            });
     }
 }
 
