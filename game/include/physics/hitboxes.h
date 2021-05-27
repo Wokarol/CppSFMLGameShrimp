@@ -9,6 +9,8 @@ namespace wok::physics
     struct Hitbox
     {
         virtual Intersection raycast(m::Ray ray) const = 0;
+        virtual bool overlapsCircle(sf::Vector2f position, float radius) const = 0;
+        virtual bool overlapsRect(sf::FloatRect rect) const = 0;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states, sf::Color color) const = 0;
         virtual ~Hitbox() = default;
     };
@@ -28,6 +30,8 @@ namespace wok::physics
 
         virtual Intersection raycast(m::Ray ray) const final;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states, sf::Color color) const final;
+        virtual bool overlapsCircle(sf::Vector2f position, float radius) const final;
+        virtual bool overlapsRect(sf::FloatRect rect) const final;
 
         // Helpers
         inline AABB centered()
@@ -48,6 +52,8 @@ namespace wok::physics
 
         virtual Intersection raycast(m::Ray ray) const final;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states, sf::Color color) const final;
+        virtual bool overlapsCircle(sf::Vector2f position, float radius) const final;
+        virtual bool overlapsRect(sf::FloatRect rect) const final;
     };
 
     struct Circle : public Hitbox
@@ -61,5 +67,7 @@ namespace wok::physics
 
         virtual Intersection raycast(m::Ray ray) const final;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states, sf::Color color) const final;
+        virtual bool overlapsCircle(sf::Vector2f position, float radius) const final;
+        virtual bool overlapsRect(sf::FloatRect rect) const final;
     };
 }
