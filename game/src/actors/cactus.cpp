@@ -78,18 +78,6 @@ void wok::Cactus::getHitboxes(const std::function<void(const physics::Hitbox&)> 
     yield(physics::AABB(getGlobalBounds()));
 }
 
-//auto wok::Cactus::getClosestHit(const m::Ray& ray) -> wok::intersect::Intersection
-//{
-//    if (dying)
-//        return {};
-//
-//    auto bounds = getGlobalBounds();
-//    sf::RectangleShape collider({ bounds.width, bounds.height });
-//    collider.setPosition(bounds.left, bounds.top);
-//
-//    return intersect::rayWithAABB(ray, collider);
-//}
-
 auto wok::Cactus::createHitTweener(float dir) -> std::shared_ptr<LerpTweener<float>>
 {
     auto hit = std::make_shared<LerpTweener<float>>(handle,
