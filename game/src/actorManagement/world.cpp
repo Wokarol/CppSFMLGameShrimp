@@ -165,6 +165,7 @@ void world::draw(sf::RenderTarget& target, sf::RenderStates& states)
 
     if (shouldDrawGizmos)
     {
+        drawCollisionGizmos(target, states);
         drawGizmos(target, states);
     }
 }
@@ -186,6 +187,35 @@ void world::drawActors(sf::RenderTarget& target, sf::RenderStates& states)
             continue;
 
         drawable->draw(target, states);
+    }
+}
+
+void world::drawCollisionGizmos(sf::RenderTarget& target, sf::RenderStates& states)
+{
+    sf::RectangleShape colliderShape;
+    colliderShape.setOutlineThickness(-1);
+    colliderShape.setFillColor(sf::Color(0));
+    colliderShape.setOutlineColor(sf::Color(0x00ff0088));
+
+
+    for (auto& collideable : collideables)
+    {
+        assert(collideable);
+        collideable->getColliders([&](sf::FloatRect rect)
+            {
+                colliderShape.setPosition(rect.left, rect.top);
+                colliderShape.setSize({ rect.width, rect.height });
+                target.draw(colliderShape, states);
+            });
+    }
+
+    for (auto& collideable : collideables)
+    {
+        assert(collideable);
+        collideable->getHitboxes([&](const physics::Hitbox& hitbox)
+            {
+                hitbox.draw(target, states, sf::Color(0x3094ff88));
+            });
     }
 }
 

@@ -20,7 +20,6 @@ namespace wok
         virtual void start() override;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
-        virtual void drawGizmos(sf::RenderTarget& target, sf::RenderStates& states) override;
 
         virtual float getSortingYPos() override { return getPosition().y; }
 

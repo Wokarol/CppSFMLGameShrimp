@@ -154,6 +154,7 @@ namespace wok
 
     private:
         static void drawActors(sf::RenderTarget& target, sf::RenderStates& states);
+        static void drawCollisionGizmos(sf::RenderTarget& target, sf::RenderStates& states);
         static void drawGizmos(sf::RenderTarget& target, sf::RenderStates& states);
         static void updateActors(const GameClock& time);
         static void updateTweeners(const GameClock& time);

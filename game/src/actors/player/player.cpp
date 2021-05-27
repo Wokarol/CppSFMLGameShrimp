@@ -57,10 +57,7 @@ void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
     collider.setPosition(rect.left, rect.top);
 
     collider.setFillColor(sf::Color(0));
-    collider.setOutlineColor(sf::Color::Blue);
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        collider.setOutlineColor(collider.getOutlineColor() * sf::Color(255, 255, 255, 128));
+    collider.setOutlineColor(sf::Color(0x3094ffff));
 
     collider.setOutlineThickness(-1);
 

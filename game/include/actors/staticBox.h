@@ -15,9 +15,7 @@ namespace wok
         {
             setOrigin(size / 2.f);
             setPosition(pos);
-            setFillColor(sf::Color(0));
-            setOutlineColor(sf::Color::Cyan);
-            setOutlineThickness(-1.f);
+            setFillColor(sf::Color(255, 0, 0, 120));
         }
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override
@@ -29,9 +27,6 @@ namespace wok
         {
             return -10;
         }
-
-        virtual bool shouldDrawAlways() { return true; }
-
 
         virtual void getColliders(const std::function<void(sf::FloatRect)> yield) override
         {

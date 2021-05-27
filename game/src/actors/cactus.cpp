@@ -90,18 +90,3 @@ auto wok::Cactus::createHitTweener(float dir) -> std::shared_ptr<LerpTweener<flo
     world::addTween(hit);
     return hit;
 }
-
-
-void wok::Cactus::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
-{
-    auto rect = getGlobalBounds();
-
-    sf::RectangleShape collider({ rect.width, rect.height });
-    collider.setPosition(rect.left, rect.top);
-
-    collider.setFillColor(sf::Color(0));
-    collider.setOutlineColor(sf::Color::Green);
-    collider.setOutlineThickness(-1);
-
-    target.draw(collider, states);
-}

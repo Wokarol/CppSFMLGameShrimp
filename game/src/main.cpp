@@ -106,7 +106,7 @@ int main()
         auto states = sf::RenderStates();
         wok::world::draw(window, states);
 
-        auto view = window.getView();
+        sf::View view = window.getView();
         window.setView(window.getDefaultView());
 
         sf::Color pressed(0xFF0000FF);
