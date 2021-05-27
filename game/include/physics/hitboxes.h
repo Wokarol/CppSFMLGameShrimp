@@ -25,7 +25,7 @@ namespace wok::physics
             size(r.width, r.height), position(r.left, r.top)
         {}
 
-        virtual Intersection raycast(m::Ray ray) const override;
+        virtual Intersection raycast(m::Ray ray) const final;
     };
 
     struct OBB : public Hitbox
@@ -38,7 +38,7 @@ namespace wok::physics
             size(size), position(position), rotation(rotation)
         {}
 
-        virtual Intersection raycast(m::Ray ray) const override;
+        virtual Intersection raycast(m::Ray ray) const final;
     };
 
     struct Circle : public Hitbox
@@ -50,6 +50,6 @@ namespace wok::physics
             radius(radius), position(position)
         {}
 
-        virtual Intersection raycast(m::Ray ray) const override;
+        virtual Intersection raycast(m::Ray ray) const final;
     };
 }
