@@ -64,13 +64,13 @@ namespace wok
         return {};
     }
 
-    auto physics::AABB::getIntersection(m::Ray ray) const -> Intersection
+    auto physics::AABB::raycast(m::Ray ray) const -> Intersection
     {
         ray.move(-position);
         return rayWithCenteredAABB(ray, *this);
     }
 
-    auto physics::OBB::getIntersection(m::Ray ray) const -> Intersection
+    auto physics::OBB::raycast(m::Ray ray) const -> Intersection
     {
         // We convert this scenario into Ray and AABB to simplify calculations
         ray.move(-position);
@@ -84,7 +84,7 @@ namespace wok
         return res;
     }
 
-    auto physics::Circle::getIntersection(m::Ray ray) const -> Intersection
+    auto physics::Circle::raycast(m::Ray ray) const -> Intersection
     {
         // We offset it so the centre of the circle is in the middle
         ray.move(-position);

@@ -208,7 +208,7 @@ physics::RaycastResult world::raycastAgainstHitboxes(const m::Ray& ray, float ma
         assert(collideable);
         collideable->getHitboxes([&](const physics::Hitbox& hitbox)
             {
-                auto intersection = hitbox.getIntersection(ray);
+                auto intersection = hitbox.raycast(ray);
 
                 if (!intersection.hit)
                     return;
