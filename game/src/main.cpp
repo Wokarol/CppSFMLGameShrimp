@@ -14,6 +14,7 @@
 #include <levelLoader.h>
 #include <resources.h>
 #include <projectSettings.h>
+#include <gameState.h>
 
 struct Pallete
 {
