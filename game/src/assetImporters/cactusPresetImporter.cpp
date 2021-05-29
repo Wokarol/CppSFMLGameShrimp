@@ -17,9 +17,5 @@ static void wok::res::create(const std::string& name, CactusPreset& asset)
     asset.animationScale = data.at("animation_scale").get<float>();
     asset.startingHealth = data.at("starting_health").get<int>();
 
-    asset.fractures.clear();
-    for (auto& fracture : data.at("fractures"))
-    {
-        asset.fractures.push_back(fracture.get<sf::IntRect>());
-    }
+    asset.fractures = data.at("fractures").get<std::vector<sf::IntRect>>();
 }

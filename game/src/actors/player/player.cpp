@@ -1,6 +1,8 @@
 #include <actors/player.h>
 #include <actors/bullet.h>
 #include <actors/fracturedSprite.h>
+#include <actors/iconBar.h>
+
 #include <input.h>
 #include <utils/mathUtils.h>
 #include <world.h>
@@ -15,6 +17,11 @@ Player::Player(std::shared_ptr<PlayerSettings> settings) :
 {
     texture = res::get<sf::Texture>(settings->textureName);
     assetsReloaded();
+}
+
+void wok::Player::start()
+{
+    world::createNamedActor<IconBar>("Player Health", res::get<IconBarSettings>(settings->healthBarName), 5);
 }
 
 void wok::Player::update(const GameClock& time)
