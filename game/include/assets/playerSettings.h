@@ -7,15 +7,13 @@ namespace wok
 {
     struct PlayerSettings
     {
-        float shootInterval = 0.f;
-        float bulletSpread = 0.f;
-        float muzzleFlashTime = 0.f;
-
+        float movementSpeed = 0.f;
         float flipTime = 0.f;
 
-        float movementSpeed = 0.f;
-
         std::string bulletName;
+
+        std::string healthBarName;
+        int maxHealth;
 
         std::string textureName;
         sf::IntRect bodyTextureRect;
@@ -28,5 +26,9 @@ namespace wok
         sf::Vector2f gunOrigin;
         /// In relation to a gun
         sf::Vector2f muzzleFlashOffset;
+
+        float shootInterval = 0.f;
+        float bulletSpread = 0.f;
+        float muzzleFlashTime = 0.f;
     };
 }

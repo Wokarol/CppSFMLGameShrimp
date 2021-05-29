@@ -9,10 +9,12 @@
 
 #include "windowManagement.h"
 #include <world.h>
+#include <actors/staticBox.h>
 
 #include <levelLoader.h>
 #include <resources.h>
 #include <projectSettings.h>
+#include <gameState.h>
 
 struct Pallete
 {
@@ -91,6 +93,36 @@ int main()
         window.clear(colors.background);
         auto states = sf::RenderStates();
         wok::world::draw(window, states);
+
+        sf::View view = window.getView();
+        window.setView(window.getDefaultView());
+
+        sf::Color pressed(0xFF0000FF);
+        sf::Color notPressed(0xFF000066);
+        sf::Vector2f bottomLeft(30.f, window.getSize().y - 30.f);
+        sf::Vector2f cellSize(50, 50);
+        float spacing = 10;
+
+        sf::RectangleShape rect(cellSize);
+        rect.setOrigin(0, cellSize.y);
+
+        rect.setPosition(bottomLeft.x, bottomLeft.y);
+        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::A) ? pressed : notPressed);
+        window.draw(rect);
+
+        rect.setPosition(bottomLeft.x + (spacing + cellSize.x) * 2.f, bottomLeft.y);
+        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::D) ? pressed : notPressed);
+        window.draw(rect);
+
+        rect.setPosition(bottomLeft.x + spacing + cellSize.x, bottomLeft.y - spacing - cellSize.y);
+        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::W) ? pressed : notPressed);
+        window.draw(rect);
+
+        rect.setPosition(bottomLeft.x + spacing + cellSize.x, bottomLeft.y);
+        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::S) ? pressed : notPressed);
+        window.draw(rect);
+
+        window.setView(view);
         window.display();
     }
 

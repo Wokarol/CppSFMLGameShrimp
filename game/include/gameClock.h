@@ -16,6 +16,10 @@ namespace wok
         {
             delta = clock.restart().asSeconds();
 
+            const float maxDelta = 0.1f;
+            if (delta > maxDelta)
+                delta = maxDelta;
+
             if (input::slowMode)
                 delta *= 0.25f;
 

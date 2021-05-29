@@ -6,7 +6,7 @@
 
 namespace wok
 {
-    class FracturedSprite : public Actor, public Drawable, public Tickable
+    class FracturedSprite : public Actor2D, public Drawable, public Tickable
     {
         struct Fracture
         {
@@ -26,11 +26,13 @@ namespace wok
 
         virtual void update(const GameClock& time) override;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
-        virtual float getSortingYPos() { return yPos; }
+        virtual float getSortingYPos() { return pos.y; }
+
+        virtual sf::Vector2f getActorPosition() override { return pos; }
 
     private:
         const std::shared_ptr<sf::Texture> texture;
         std::vector<Fracture> fractures;
-        float yPos;
+        sf::Vector2f pos;
     };
 }

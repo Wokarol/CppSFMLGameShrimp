@@ -111,6 +111,28 @@ namespace wok::m
         return a + (b - a) * t;
     }
 
+    template <typename T>
+    inline float inverseLerp(T a, T b, T value)
+    {
+        if (a != b)
+            return std::clamp((value - a) / (b - a), (T)0, (T)1);
+        else
+            return 0.0f;
+    }
+
+    template <typename T>
+    inline T sign(const T& a)
+    {
+        if (a < (T)0)
+        {
+            return (T)-1;
+        }
+        else
+        {
+            return (T)1;
+        }
+    }
+
     inline sf::Color lerp(const sf::Color& a, const sf::Color& b, float t)
     {
         t = std::clamp(t, 0.f, 1.f);

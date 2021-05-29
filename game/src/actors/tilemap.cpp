@@ -29,7 +29,16 @@ void wok::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates& states)
 
 int wok::Tilemap::getSortingOrder()
 {
-    // Tilemap should be rendered below everything else 
-    // Should be changed to parameter later
-    return -100;
+    return sortingOrder;
+}
+
+void wok::Tilemap::getColliders(const std::function<void(sf::FloatRect)> yield)
+{
+    if (!shouldCollide)
+        return;
+
+    for (auto& sprite : tiles)
+    {
+        yield(sprite.getGlobalBounds());
+    }
 }

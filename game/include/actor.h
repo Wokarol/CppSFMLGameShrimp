@@ -17,6 +17,7 @@ namespace wok
         std::string name;
 
         virtual void start() {};
+        virtual void drawGizmos([[maybe_unused]] sf::RenderTarget& target, [[maybe_unused]] sf::RenderStates& states) {};
         virtual void assetsReloaded() {};
         virtual ~Actor() = default;
         ActorHandle<Actor> getHandle() { return handle; }
@@ -25,5 +26,11 @@ namespace wok
         ActorHandle<Actor> handle;
 
         friend world;
+    };
+
+    class Actor2D : public Actor
+    {
+    public:
+        virtual sf::Vector2f getActorPosition() = 0;
     };
 }

@@ -8,6 +8,8 @@
 
 #include <actors.h>
 
+#include <gameState.h>
+
 inline void initializeBoilerplate()
 {
     console::hide();
@@ -34,25 +36,12 @@ inline void setCornerCam(sf::RenderTarget& target)
     float width = ratio * height;
     sf::View view = sf::View(sf::FloatRect(0, 0, width, height));
     target.setView(view);
+
+    gameState::screenSize = view.getSize();
 }
 
 inline void handleDebugKeys(const sf::Event& event)
 {
-    if (event.key.code == sf::Keyboard::F10)
-    {
-        wok::world::dumpActors(!event.key.shift);
-        wok::DebugPopup::create("Actors dumped");
-    }
-    if (event.key.code == sf::Keyboard::F4)
-    {
-        wok::input::slowMode ^= true;
-        wok::DebugPopup::create("Slow mode ", (wok::input::slowMode ? "ON" : "OFF"));
-    }
-    if (event.key.code == sf::Keyboard::F5)
-    {
-        wok::res::reloadAll();
-        wok::DebugPopup::create("Reloaded assets");
-    }
     if (event.key.code == sf::Keyboard::F2)
     {
         if (console::isVisible())
@@ -91,6 +80,44 @@ inline void handleDebugKeys(const sf::Event& event)
             }
             wok::DebugPopup::create("Console shown");
         }
+    }
+    if (event.key.code == sf::Keyboard::F4)
+    {
+        wok::input::slowMode ^= true;
+        wok::DebugPopup::create("Slow mode ", (wok::input::slowMode ? "ON" : "OFF"));
+    }
+    if (event.key.code == sf::Keyboard::F5)
+    {
+        wok::res::reloadAll();
+        wok::DebugPopup::create("Reloaded assets");
+    }
+    if (event.key.code == sf::Keyboard::F6)
+    {
+        bool& actors = wok::world::shouldDrawActors;
+        bool& gizmos = wok::world::shouldDrawGizmos;
+
+        if (actors && !gizmos)
+        {
+            gizmos = true;
+            wok::DebugPopup::create("Gizmos and Actors");
+        }
+        else if (actors && gizmos)
+        {
+            actors = false;
+            wok::DebugPopup::create("Just Gizmos");
+        }
+        else if (!actors)
+        {
+            actors = true;
+            gizmos = false;
+            wok::DebugPopup::create("Just Actors");
+        }
+    }
+
+    if (event.key.code == sf::Keyboard::F10)
+    {
+        wok::world::dumpActors(!event.key.shift);
+        wok::DebugPopup::create("Actors dumped");
     }
 }
 

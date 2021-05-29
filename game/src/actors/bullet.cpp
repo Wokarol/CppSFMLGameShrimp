@@ -17,7 +17,7 @@ wok::Bullet::Bullet(sf::Vector2f position, sf::Vector2f direction, std::shared_p
 void wok::Bullet::assetsReloaded()
 {
     setTextureRect(settings->textureRect);
-    setOrigin(getTextureRect().width / 2.f, getTextureRect().width / 2.f); // Centre
+    setOrigin(getTextureRect().width / 2.f, getTextureRect().height / 2.f); // Centre
 }
 
 void wok::Bullet::update(const GameClock& time)
@@ -31,10 +31,15 @@ void wok::Bullet::update(const GameClock& time)
 
     float distanceDelta = settings->velocity * time.delta;
 
-    auto raycastResult = world::raycast(m::Ray(getPosition(), direction), distanceDelta);
-    if (raycastResult.hitActor.isValid())
+    auto raycastResult = world::raycastAgainstHitboxes(m::Ray(getPosition(), direction), distanceDelta);
+    if (raycastResult.collideable.isValid())
     {
-        raycastResult.hitActor->reactToHit(raycastResult.intersection, settings->damage);
+        auto hitActor = raycastResult.collideable.as<Hittable>();
+
+        if (hitActor.isValid())
+        {
+            hitActor->reactToHit(Hittable::HitData(direction, settings->damage));
+        }
         handle.destroy();
     }
 
@@ -44,4 +49,15 @@ void wok::Bullet::update(const GameClock& time)
 void wok::Bullet::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
     target.draw(*this, states);
+}
+
+void wok::Bullet::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
+{
+    sf::CircleShape circle(1.f);
+    circle.setFillColor(sf::Color::Green);
+    circle.setOrigin({ 1.f, 1.f });
+
+    circle.setPosition(getPosition());
+
+    target.draw(circle, states);
 }

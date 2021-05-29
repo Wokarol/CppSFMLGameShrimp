@@ -21,9 +21,9 @@ constexpr auto ppu = 16;
 using namespace wok;
 
 void createTilemap(nlohmann::json& json, std::string_view name,
-    std::shared_ptr<TilesetData> tileset, std::shared_ptr<Group>& group)
+    std::shared_ptr<TilesetData> tileset, std::shared_ptr<Group>& group, int sortingOrder, bool shouldCollide)
 {
-    auto& tilemap = *world::createNamedActor<Tilemap>(name, tileset);
+    auto& tilemap = *world::createNamedActor<Tilemap>(name, tileset, sortingOrder, shouldCollide);
     tilemap.group = group;
 
     if (!json.is_array())
@@ -108,8 +108,10 @@ void wok::levels::load(std::string_view levelPath)
     try
     {
         auto groundTileset = res::get<TilesetData>(project::actorPaths["desert"]);
-        createTilemap(level["Ground"], "Ground Tilemap", groundTileset, group);
-        createTilemap(level["Tiles"], "Free Tile Tilemap", groundTileset, group);
+        auto wallTileset = res::get<TilesetData>(project::actorPaths["walls"]);
+        createTilemap(level["Ground"], "Ground Tilemap", groundTileset, group, -110, false);
+        createTilemap(level["Tiles"], "Free Tile Tilemap", groundTileset, group, -100, false);
+        createTilemap(level["Walls"], "Walls Tilemap", wallTileset, group, -90, true);
         createActors(level["Actors"], group);
     }
     catch (const std::exception& e)

@@ -1,0 +1,15 @@
+{
+    "strip": [
+        [ 0, 0],
+        [18, 0],
+        [36, 0],
+        [54, 0],
+        [72, 0],
+        [90, 0]
+    ],
+    "icon_size": [16, 13],
+    "icon_path": "./sprites/heart",
+    "offset": [8, 8],
+    "spacing": 3,
+    "animation_framerate": 10
+}

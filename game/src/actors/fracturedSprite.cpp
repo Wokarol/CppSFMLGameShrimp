@@ -14,7 +14,7 @@ wok::FracturedSprite::FracturedSprite(const sf::Sprite& original, std::shared_pt
     sf::IntRect spriteRect = original.getTextureRect();
     sf::Vector2i spriteRectPos = sf::Vector2i(spriteRect.left, spriteRect.top);
 
-    yPos = spritePos.y;
+    pos = spritePos;
 
     // Position in texture space with default pivot
     sf::Vector2i originalInTextureSpace = spriteRectPos + (sf::Vector2i)spriteOrigin;
@@ -31,13 +31,16 @@ wok::FracturedSprite::FracturedSprite(const sf::Sprite& original, std::shared_pt
         sf::Vector2i fractureInTextureSpace = rectPos + (sf::Vector2i)fracture.getOrigin();
         sf::Vector2i differenceOnTexture = fractureInTextureSpace - originalInTextureSpace;
 
-        // We add original's position and rotated offset to accommodate for possible sprite rotation
-        sf::Vector2f pos;
-        pos += spritePos;
-        pos += m::rotate((sf::Vector2f)differenceOnTexture, rotation);
+        sf::Vector2f scalledDifferenceOntexture = m::scale((sf::Vector2f)differenceOnTexture, original.getScale());
 
-        fracture.setPosition(pos);
+        // We add original's position and rotated offset to accommodate for possible sprite rotation
+        sf::Vector2f fracturePos;
+        fracturePos += spritePos;
+        fracturePos += m::rotate(scalledDifferenceOntexture, rotation);
+
+        fracture.setPosition(fracturePos);
         fracture.setRotation(rotation);
+        fracture.setScale(original.getScale());
 
         // Points right-ish
         sf::Vector2f randomDirection = m::rotate(sf::Vector2f(70.f, 0.f), m::lerp(-30.f, -50.f, rand() / (float)RAND_MAX));
@@ -64,7 +67,10 @@ void wok::FracturedSprite::update(const GameClock& time)
             fract.sprite.move(fract.velocity * time.delta);
             fract.sprite.rotate(fract.angularVelocity * time.delta);
             float scale = -std::pow(1.f - fract.lifetime, 2.f) + 1.f;
-            fract.sprite.setScale(scale, scale);
+
+            auto lastScale = fract.sprite.getScale();
+            fract.sprite.setScale(scale * m::sign(lastScale.x), scale * m::sign(lastScale.y));
+
             anyLives = true;
         }
         else

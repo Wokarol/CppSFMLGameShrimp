@@ -5,7 +5,7 @@
 
 namespace wok
 {
-    class StaticProp : public Actor, public sf::Sprite, public wok::Drawable
+    class StaticProp : public Actor2D, public sf::Sprite, public wok::Drawable
     {
     private:
         std::shared_ptr<sf::Texture> texture;
@@ -30,5 +30,7 @@ namespace wok
         {
             return getPosition().y;
         }
+
+        virtual sf::Vector2f getActorPosition() override { return getPosition(); }
     };
 }
