@@ -5,6 +5,8 @@
 #include <memory>
 #include <limits>
 
+#include <gameState.h>
+
 std::vector<wok::DebugPopup*> popupsActive;
 
 
@@ -19,6 +21,9 @@ wok::DebugPopup::DebugPopup(std::string message)
     // We do scaling to make text sharper
     text.setCharacterSize(8 * 2);
     text.setScale(0.5f, 0.5f);
+
+    auto bounds = text.getLocalBounds();
+    text.setOrigin(bounds.width, 0);
 
     // We store all popups in static vector to use them to calculate this one's position
     popupsActive.push_back(this);
@@ -44,13 +49,15 @@ void wok::DebugPopup::update([[maybe_unused]] const GameClock& time)
     auto it = std::find(popupsActive.begin(), popupsActive.end(), this);
     int pos = (int)(it - popupsActive.begin());
 
+    sf::Vector2f position(gameState::screenSize.x - 5.f, 5.f + pos * 10);
+
     if (lastPos == -1)
     {
-        text.setPosition(5.f, 5.f + pos * 10);
+        text.setPosition(position);
     }
     else if (lastPos != pos)
     {
-        updatePositionTo(sf::Vector2f(5.f, 5.f + pos * 10));
+        updatePositionTo(position);
     }
     lastPos = pos;
 }

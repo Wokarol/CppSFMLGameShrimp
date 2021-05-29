@@ -8,6 +8,8 @@
 
 #include <actors.h>
 
+#include <gameState.h>
+
 inline void initializeBoilerplate()
 {
     console::hide();
@@ -34,6 +36,8 @@ inline void setCornerCam(sf::RenderTarget& target)
     float width = ratio * height;
     sf::View view = sf::View(sf::FloatRect(0, 0, width, height));
     target.setView(view);
+
+    gameState::screenSize = view.getSize();
 }
 
 inline void handleDebugKeys(const sf::Event& event)
@@ -86,7 +90,7 @@ inline void handleDebugKeys(const sf::Event& event)
     {
         wok::res::reloadAll();
         wok::DebugPopup::create("Reloaded assets");
-    }    
+    }
     if (event.key.code == sf::Keyboard::F6)
     {
         bool& actors = wok::world::shouldDrawActors;

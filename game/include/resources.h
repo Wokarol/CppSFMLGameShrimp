@@ -11,6 +11,8 @@
 #include <fstream>
 #include <filesystem>
 #include <algorithm>
+#include <json.hpp>
+#include <typeinfo>
 
 namespace wok
 {
@@ -39,7 +41,8 @@ namespace wok
                 }
                 catch (const std::exception& e)
                 {
-                    console::error(e.what());
+                    auto type = typeid(T).name();
+                    console::error("Exception thrown while trying to load ", type, ":\n", "   ", e.what());
                 }
                 asset = std::static_pointer_cast<void>(castedAsset);
             }

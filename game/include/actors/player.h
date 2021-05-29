@@ -7,12 +7,15 @@
 #include <customShapes/line.h>
 #include <assets/playerSettings.h>
 
+#include <actors/iconBar.h>
+
 namespace wok
 {
     class Player : public Actor2D, public wok::Drawable, public Tickable, public Collideable, public Hittable
     {
     public:
         Player(std::shared_ptr<PlayerSettings> settings);
+        virtual void start() override;
         virtual void update(const GameClock& time) override;
         virtual void assetsReloaded() override;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
@@ -59,6 +62,7 @@ namespace wok
         float invincibilityCooldown = -1.f;
         float invincibilityLength = 0.2f;
 
-        int health = 5;
+        int health;
+        ActorHandle<IconBar> healthBar;
     };
 }
