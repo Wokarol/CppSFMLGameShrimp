@@ -1,7 +1,6 @@
 #include <actors/player.h>
 #include <actors/bullet.h>
 #include <actors/fracturedSprite.h>
-#include <actors/iconBar.h>
 
 #include <input.h>
 #include <utils/mathUtils.h>
@@ -17,11 +16,13 @@ Player::Player(std::shared_ptr<PlayerSettings> settings) :
 {
     texture = res::get<sf::Texture>(settings->textureName);
     assetsReloaded();
+    health = settings->maxHealth;
 }
 
 void wok::Player::start()
 {
-    world::createNamedActor<IconBar>("Player Health", res::get<IconBarSettings>(settings->healthBarName), 5);
+    healthBar = world::createNamedActor<IconBar>("Player Health",
+        res::get<IconBarSettings>(settings->healthBarName), settings->maxHealth);
 }
 
 void wok::Player::update(const GameClock& time)
@@ -80,6 +81,7 @@ void wok::Player::reactToHit(HitData data)
     invincibilityCooldown = invincibilityLength;
 
     health -= data.damage;
+    if (healthBar.isValid()) healthBar->setValue(health);
 
     if (health <= 0)
     {

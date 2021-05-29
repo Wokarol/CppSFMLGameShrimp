@@ -13,6 +13,7 @@ namespace wok
         std::string bulletName;
 
         std::string healthBarName;
+        int maxHealth;
 
         std::string textureName;
         sf::IntRect bodyTextureRect;

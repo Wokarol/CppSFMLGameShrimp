@@ -11,10 +11,10 @@ static void wok::res::create(const std::string& name, IconBarSettings& asset)
 {
     auto j = loadJsonFile(name);
 
-    asset.animationStrip = j["strip"].get<std::vector<sf::Vector2i>>();
-    asset.iconSize = j["icon_size"];
+    j["strip"].get_to<std::vector<sf::Vector2i>>(asset.animationStrip);
+    j["icon_size"].get_to(asset.iconSize);
     asset.iconPath = getAssetPath(name, j["icon_path"]);
-    asset.offset = j["offset"];
-    asset.spacing = j["spacing"];
-    asset.animationFramerate = j["animation_framerate"];
+    j["offset"].get_to(asset.offset);
+    j["spacing"].get_to(asset.spacing);
+    j["animation_framerate"].get_to(asset.animationFramerate);
 }

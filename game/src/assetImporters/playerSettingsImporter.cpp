@@ -22,6 +22,7 @@ static void wok::res::create(const std::string& name, PlayerSettings& asset)
 
     asset.bulletName = getAssetPath(name, j["bullet_name"]);
     asset.healthBarName = getAssetPath(name, j["health_bar_name"]);
+    j["max_health"].get_to(asset.maxHealth);
 
     asset.textureName = getAssetPath(name, j["texture_name"]);
     asset.bodyTextureRect = j["body_texture_rect"];

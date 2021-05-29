@@ -13,17 +13,37 @@ namespace wok
             settings(settings), maxValue(maxValue)
         {
             texture = res::get<sf::Texture>(settings->iconPath);
+            currentValue = maxValue;
+        }
+
+        void setValue(int value)
+        {
+            currentValue = value;
         }
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override
         {
-            sf::IntRect rect(
-                (sf::Vector2i)settings->animationStrip.front(),
-                (sf::Vector2i)settings->iconSize
+            sf::Vector2f iconOffset = sf::Vector2f(
+                (float)settings->iconSize.x + settings->spacing,
+                0
             );
-            sf::Sprite healthIcon(*texture, rect);
-            target.draw(healthIcon, states);
+
+            for (int i = 0; i < maxValue; i++)
+            {
+                sf::Vector2i iconPosOnTexture = currentValue > i
+                    ? settings->animationStrip.front()
+                    : settings->animationStrip.back();
+
+                sf::IntRect rect(
+                    iconPosOnTexture,
+                    settings->iconSize
+                );
+                sf::Sprite healthIcon(*texture, rect);
+                healthIcon.setPosition(settings->offset + iconOffset * (float)i);
+                target.draw(healthIcon, states);
+            }
         }
+        virtual int getSortingOrder() override { return 100000; }
 
     private:
         std::shared_ptr<IconBarSettings> settings;

@@ -7,6 +7,8 @@
 #include <customShapes/line.h>
 #include <assets/playerSettings.h>
 
+#include <actors/iconBar.h>
+
 namespace wok
 {
     class Player : public Actor2D, public wok::Drawable, public Tickable, public Collideable, public Hittable
@@ -60,6 +62,7 @@ namespace wok
         float invincibilityCooldown = -1.f;
         float invincibilityLength = 0.2f;
 
-        int health = 5;
+        int health;
+        ActorHandle<IconBar> healthBar;
     };
 }
