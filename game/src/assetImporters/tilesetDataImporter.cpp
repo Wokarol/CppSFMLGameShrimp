@@ -13,5 +13,5 @@ static void wok::res::create(const std::string& name, TilesetData& asset)
     auto data = loadJsonFile(name);
 
     asset.path = getAssetPath(name, data["path"]);
-    asset.tileSize = data.at("tile_size").get<int>();
+    data.at("tile_size").get_to(asset.tileSize);
 }

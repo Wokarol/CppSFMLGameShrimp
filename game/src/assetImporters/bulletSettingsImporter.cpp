@@ -12,10 +12,10 @@ static void wok::res::create(const std::string& name, BulletSettings& asset)
 {
     auto j = loadJsonFile(name);
 
-    asset.textureRect = j["texture_rect"];
-    asset.textureName = getAssetPath(name, j["texture_name"]);
+    j.at("texture_rect").get_to(asset.textureRect);
+    asset.textureName = getAssetPath(name, j.at("texture_name"));
 
-    asset.damage = j["damage"];
-    asset.velocity = j["velocity"];
-    asset.lifespan = j["lifespan"];
+    j.at("damage").get_to(asset.damage);
+    j.at("velocity").get_to(asset.velocity);
+    j.at("lifespan").get_to(asset.lifespan);
 }
