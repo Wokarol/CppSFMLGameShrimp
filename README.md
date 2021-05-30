@@ -25,6 +25,14 @@ A game made in C++ using SFML for Uni assigment
 - ` .level ` - Generated files containing game levels extracted from LDtk (see below)
 <br><br>
 
+## Debug hotkeys
+- ` F2 ` - Hides and locks the console
+- ` F3 ` - Hides/Shows the console (shift forces console in Release)
+- ` F4 ` - Toggles slowmode
+- ` F5 ` - Reloads all the assets
+- ` F6 ` - Toggles display mode between "Just Actors", "Just Gizmos" and "Gizmos and Actors"
+- ` F10 ` - Shows list of all actors
+
 ## LDtk - Level Designer Toolkit
 ![LDtk logo](https://ldtk.io/wp-content/uploads/2021/05/open-graph.png?width=400&height=121)
 
@@ -65,10 +73,11 @@ This file is then directly read by the game
 ## Game assets
 Game assets are stored in ` .jsonc ` or ` .json ` format and later parsed at runtime
 
-#### Supported custom data types:
-- ` sf::Rect ` - ` [x, y, width, heigh] `
-- ` sf::Vector2 ` - ` [x, y] `
-- ` sf::Vector3 ` - ` [x, y, z] `
+#### Supported custom data types and format:
+- ` sf::Rect<T> ` - ` [x, y, width, heigh] `
+- ` sf::Vector<T> ` - ` [x, y] `
+- ` sf::Vector<T> ` - ` [x, y, z] `
+- ` Asset Path ` - ` foo/bar ` or ` ./bar ` (relative to the asset)
 <br><br>
 
 ## Code architecture
