@@ -7,7 +7,10 @@ namespace wok
 {
     struct IconBarSettings
     {
-        std::vector<sf::Vector2i> animationStrip;
+        sf::Vector2i spriteRectFull;
+        sf::Vector2i spriteRectEmpty;
+        std::vector<sf::Vector2i> animationStripGained;
+        std::vector<sf::Vector2i> animationStripLost;
         sf::Vector2i iconSize;
         std::string iconPath;
         sf::Vector2f offset;
