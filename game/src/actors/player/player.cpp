@@ -42,6 +42,12 @@ void wok::Player::update(const GameClock& time)
     updateShootingLogic(gunPlacement.first, gunRay, time);
 
     if (invincibilityCooldown > 0.f) invincibilityCooldown -= time.delta;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F8))
+    {
+        health = settings->maxHealth;
+        if (healthBar.isValid()) healthBar->setValue(health);
+    }
 }
 
 void wok::Player::draw(sf::RenderTarget& target, sf::RenderStates& states)

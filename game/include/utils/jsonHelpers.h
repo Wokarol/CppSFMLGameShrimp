@@ -30,4 +30,7 @@ namespace wok
         std::string parentFolderPath = parentAssetPath.substr(0, parentAssetPath.find_last_of('/'));
         return parentFolderPath + pathFromJson.substr(1); // [original/folder] + [/json/path]
     }
+
+#define J_LOAD(key, target) j.at(key).get_to(target)
+#define J_PATH_LOAD(key, target) target = getAssetPath(name, j.at(key))
 }

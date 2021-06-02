@@ -11,11 +11,11 @@ static void wok::res::create(const std::string& name, CactusPreset& asset)
 {
     auto data = loadJsonFile(name);
 
-    asset.textureName = getAssetPath(name, data["texture_name"]);
-    asset.textureRect = data.at("texture_rect").get<sf::IntRect>();
+    asset.textureName = getAssetPath(name, data.at("texture_name"));
+    data.at("texture_rect").get_to(asset.textureRect);
 
-    asset.animationScale = data.at("animation_scale").get<float>();
-    asset.startingHealth = data.at("starting_health").get<int>();
+    data.at("animation_scale").get_to(asset.animationScale);
+    data.at("starting_health").get_to(asset.startingHealth);
 
-    asset.fractures = data.at("fractures").get<std::vector<sf::IntRect>>();
+    data.at("fractures").get_to(asset.fractures);
 }
