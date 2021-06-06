@@ -16,9 +16,7 @@ static void wok::res::create(const std::string& name, PlayerSettings& asset)
     j.at("bullet_spread").get_to(asset.bulletSpread);
     j.at("muzzle_flash_time").get_to(asset.muzzleFlashTime);
 
-    j.at("flip_time").get_to(asset.flipTime);
-
-    j.at("movement_speed").get_to(asset.movementSpeed);
+    j.at("movement").get_to(asset.movement);
 
     asset.bulletName = getAssetPath(name, j.at("bullet_name"));
     asset.healthBarName = getAssetPath(name, j.at("health_bar_name"));

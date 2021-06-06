@@ -3,12 +3,13 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
+#include <actors/components/settings/movementSettings.h>
+
 namespace wok
 {
     struct PlayerSettings
     {
-        float movementSpeed = 0.f;
-        float flipTime = 0.f;
+        MovementSettings movement;
 
         std::string bulletName;
 
