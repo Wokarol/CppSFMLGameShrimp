@@ -34,12 +34,6 @@ namespace wok
         virtual auto getActorPosition() -> sf::Vector2f override { return body.getPosition(); }
 
     private:
-        //std::pair<sf::Vector2f, float> updateGunPositionAndRotation(sf::Vector2f mousePosition);
-        //m::Ray getGunRay();
-        //void updateShootingLogic(sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time);
-        //void shoot(sf::Vector2f globalGunPosition, m::Ray gunRay);
-
-    private:
         // Components
         Movement2D movement;
         Gun gun;

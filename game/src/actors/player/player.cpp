@@ -37,7 +37,7 @@ void wok::Player::update(const GameClock& time)
     movement.moveBy(body, inputDir, time.delta);
     movement.setOrientation(body, mousePosition);
 
-    gun.update(body, mousePosition, time);
+    gun.update(body.getPosition(), body.getScale(), mousePosition, time);
 
     if (invincibilityCooldown > 0.f) invincibilityCooldown -= time.delta;
 
@@ -102,7 +102,6 @@ void wok::Player::reactToHit(HitData data)
     }
 }
 
-// =========== PRIVATE ==========
 void wok::Player::assetsReloaded()
 {
     body.setTexture(*texture);

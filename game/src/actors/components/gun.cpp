@@ -6,12 +6,12 @@
 
 #include <actors/bullet.h>
 
-void wok::Gun::update(const sf::Transformable& body, sf::Vector2f aimTarget, GameClock time)
+void wok::Gun::update(sf::Vector2f bodyPos, sf::Vector2f bodyScale, sf::Vector2f aimTarget, GameClock time)
 {
-    auto gunPlacement = updateGunPositionAndRotation(body, aimTarget);
-    auto gunRay = getGunRay(body);
+    auto gunPlacement = updateGunPositionAndRotation(bodyPos, bodyScale, aimTarget);
+    auto gunRay = getGunRay(bodyScale);
 
-    updateShootingLogic(body, gunPlacement.first, gunRay, time);
+    updateShootingLogic(bodyScale, gunPlacement.first, gunRay, time);
 }
 
 void wok::Gun::draw(sf::RenderTarget& target, sf::RenderStates& states)
@@ -35,34 +35,34 @@ void wok::Gun::loadAssets(sf::Vector2f bodyPivot)
     muzzleFlash.setOrigin(0, muzzleFlash.getTextureRect().height / 2.f); // Middle-Left
 }
 
-auto wok::Gun::updateGunPositionAndRotation(const sf::Transformable& body, sf::Vector2f aimTarget) -> std::pair<sf::Vector2f, float>
+auto wok::Gun::updateGunPositionAndRotation(sf::Vector2f bodyPos, sf::Vector2f bodyScale, sf::Vector2f aimTarget) -> std::pair<sf::Vector2f, float>
 {
-    auto globalGunPos = body.getPosition() + m::scale(gunOffsetInRelationToPivot, body.getScale());
-    auto rightDirection = sf::Vector2f(body.getScale().x, 0);
+    auto globalGunPos = bodyPos + m::scale(gunOffsetInRelationToPivot, bodyScale);
+    auto rightDirection = sf::Vector2f(bodyScale.x, 0);
 
     float angleOfGun = m::angle(rightDirection, aimTarget - globalGunPos);
 
     gun.setPosition(globalGunPos);
     gun.setRotation(angleOfGun);
-    gun.setScale(body.getScale());
+    gun.setScale(bodyScale);
 
     return { globalGunPos, angleOfGun };
 }
 
-auto wok::Gun::getGunRay(const sf::Transformable& body) -> m::Ray
+auto wok::Gun::getGunRay(sf::Vector2f bodyScale) -> m::Ray
 {
-    sf::Vector2f gunDirection = m::rotate(sf::Vector2f(body.getScale().x, 0), gun.getRotation());
+    sf::Vector2f gunDirection = m::rotate(sf::Vector2f(bodyScale.x, 0), gun.getRotation());
     return m::Ray(gun.getPosition(), gunDirection);
 }
 
-void wok::Gun::updateShootingLogic(const sf::Transformable& body, sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time)
+void wok::Gun::updateShootingLogic(sf::Vector2f bodyScale, sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time)
 {
     if (shootCooldown <= 0)
     {
         if (input::attack.isPressed)
         {
             shootCooldown += settings->shootInterval;
-            shoot(body, globalGunPosition, gunRay);
+            shoot(bodyScale, globalGunPosition, gunRay);
         }
     }
     else
@@ -71,11 +71,11 @@ void wok::Gun::updateShootingLogic(const sf::Transformable& body, sf::Vector2f g
     }
 }
 
-void wok::Gun::shoot(const sf::Transformable& body, sf::Vector2f globalGunPosition, m::Ray gunRay)
+void wok::Gun::shoot(sf::Vector2f bodyScale, sf::Vector2f globalGunPosition, m::Ray gunRay)
 {
     muzzleFlash.setPosition(globalGunPosition + m::rotate(settings->muzzleFlashOffset, m::angle(gunRay.direction)));
     muzzleFlash.setRotation(gun.getRotation());
-    muzzleFlash.setScale(body.getScale());
+    muzzleFlash.setScale(bodyScale);
 
     shouldRenderMuzzleFlash = true;
     muzzleFlash.setColor(sf::Color(0xFFFFFFFF));
