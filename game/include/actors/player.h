@@ -8,6 +8,7 @@
 #include <assets/playerSettings.h>
 
 #include <actors/components/movement2D.h>
+#include <actors/components/gun.h>
 
 #include <actors/iconBar.h>
 
@@ -33,27 +34,20 @@ namespace wok
         virtual auto getActorPosition() -> sf::Vector2f override { return body.getPosition(); }
 
     private:
-        std::pair<sf::Vector2f, float> updateGunPositionAndRotation(sf::Vector2f mousePosition);
-        m::Ray getGunRay();
-        void updateShootingLogic(sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time);
-        void shoot(sf::Vector2f globalGunPosition, m::Ray gunRay);
+        //std::pair<sf::Vector2f, float> updateGunPositionAndRotation(sf::Vector2f mousePosition);
+        //m::Ray getGunRay();
+        //void updateShootingLogic(sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time);
+        //void shoot(sf::Vector2f globalGunPosition, m::Ray gunRay);
 
     private:
         // Components
         Movement2D movement;
+        Gun gun;
 
         const std::shared_ptr<PlayerSettings> settings;
         std::shared_ptr<sf::Texture> texture;
 
         sf::Sprite body;
-        sf::Sprite gun;
-        sf::Sprite muzzleFlash;
-
-        sf::Vector2f gunOffsetInRelationToPivot;
-
-
-        bool shouldRenderMuzzleFlash = false;
-        float shootCooldown = 0;
 
         float invincibilityCooldown = -1.f;
         float invincibilityLength = 0.2f;
