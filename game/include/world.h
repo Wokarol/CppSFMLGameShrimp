@@ -87,20 +87,6 @@ namespace wok
         static void update(const GameClock& time);
         static void draw(sf::RenderTarget& target, sf::RenderStates& states);
 
-
-        template< class T >
-        static bool isActorAliveAndMatchesType(const actor_id& id)
-        {
-            auto pair = actors.find(id);
-            if (pair == actors.end())
-            {
-                return false;
-            }
-
-            return dynamic_cast<T*>(pair->second.get()) != nullptr;
-        }
-
-
         template< class T >
         static T* getActorPointer(actor_id id)
         {
@@ -111,18 +97,6 @@ namespace wok
             }
 
             return dynamic_cast<T*>(pair->second.get());
-        }
-
-        template< class T >
-        static T& getActor(actor_id id)
-        {
-            auto pair = actors.find(id);
-            if (pair == actors.end())
-            {
-                throw std::out_of_range("There is no actor with given id");
-            }
-
-            return dynamic_cast<T&>(*pair->second.get());
         }
 
         static void destroyActor(actor_id id)
@@ -143,6 +117,11 @@ namespace wok
                     destroyActor(actor.first);
                 }
             }
+        }
+
+        static bool isActorAlive(actor_id id)
+        {
+            return actors.find(id) != actors.end();
         }
 
         static physics::RaycastResult raycastAgainstHitboxes(const m::Ray& ray, float maxDist = -1);
@@ -167,10 +146,5 @@ namespace wok
         static void fillCacheIfNeeded();
         static void addActorToCache(Actor*);
         static void clearActorFromCache(Actor*);
-
-        static bool isActorAlive(actor_id id)
-        {
-            return actors.find(id) != actors.end();
-        }
     };
 }
