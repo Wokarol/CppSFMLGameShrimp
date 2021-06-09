@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"jsonVersion": "0.9.3",
-	"nextUid": 146,
+	"nextUid": 148,
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -2323,6 +2323,31 @@
 			"pivotX": 0.5,
 			"pivotY": 1,
 			"fieldDefs": []
+		},
+		{
+			"identifier": "Enemy",
+			"uid": 146,
+			"tags": [],
+			"width": 10,
+			"height": 16,
+			"resizableX": false,
+			"resizableY": false,
+			"keepAspectRatio": false,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": false,
+			"color": "#94D9B3",
+			"renderMode": "Tile",
+			"showName": false,
+			"tilesetId": 147,
+			"tileId": 0,
+			"tileRenderMode": "Cover",
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0.5,
+			"pivotY": 1,
+			"fieldDefs": []
 		}
 	], "tilesets": [
 		{
@@ -2398,6 +2423,23 @@
 			"customData": [],
 			"savedSelections": [],
 			"cachedPixelData": { "opaqueTiles": "0000", "averageColors": "583100003a760000" }
+		},
+		{
+			"__cWid": 3,
+			"__cHei": 3,
+			"identifier": "Enemy",
+			"uid": 147,
+			"relPath": "game/assets/actors/sprites/basicEnemy.png",
+			"pxWid": 32,
+			"pxHei": 32,
+			"tileGridSize": 13,
+			"spacing": 0,
+			"padding": 0,
+			"tagsSourceEnumUid": null,
+			"enumTags": [],
+			"customData": [],
+			"savedSelections": [],
+			"cachedPixelData": { "opaqueTiles": "001001111", "averageColors": "6e7700000000368d0aae0000000000000000" }
 		}
 	], "enums": [], "externalEnums": [], "levelFields": [] },
 	"levels": [
@@ -2573,6 +2615,17 @@
 							"height": 16,
 							"defUid": 86,
 							"px": [264,208],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Enemy",
+							"__grid": [16,8],
+							"__pivot": [0.5,1],
+							"__tile": { "tilesetUid": 147, "srcRect": [0,0,13,13] },
+							"width": 10,
+							"height": 16,
+							"defUid": 146,
+							"px": [264,144],
 							"fieldInstances": []
 						}
 					]
@@ -2832,7 +2885,6 @@
 						{ "coordId": 253, "v": 0 },
 						{ "coordId": 259, "v": 0 },
 						{ "coordId": 260, "v": 0 },
-						{ "coordId": 268, "v": 0 },
 						{ "coordId": 269, "v": 0 },
 						{ "coordId": 271, "v": 1 },
 						{ "coordId": 272, "v": 1 },
@@ -2893,7 +2945,7 @@
 						0,0,0,0,0,0,2,2,2,2,0,0,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,2,2,0,2,2,2,2,
 						0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,1,2,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,
 						0,0,0,0,1,1,0,1,2,2,1,2,2,2,2,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,2,
-						1,2,2,2,2,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,2,2,2,2,0,1,1,0,0,
+						1,2,2,2,2,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,2,2,2,2,0,1,1,0,0,
 						0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,1,1,0,0,0,1,1,1,0,0,0,0,0,0,1,
 						1,0,0,0,0,2,0,2,2,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,2,2,0,1,2,2,
 						0,1,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,2,2,1,1,2,2,1,1,1,1,0,0,0,0,0,0,
@@ -3081,6 +3133,7 @@
 						{ "px": [240,160], "src": [0,0], "f": 0, "t": 0, "d": [25,265] },
 						{ "px": [256,160], "src": [0,0], "f": 0, "t": 0, "d": [25,266] },
 						{ "px": [272,160], "src": [0,0], "f": 0, "t": 0, "d": [25,267] },
+						{ "px": [288,160], "src": [0,0], "f": 0, "t": 0, "d": [25,268] },
 						{ "px": [320,160], "src": [0,0], "f": 0, "t": 0, "d": [25,270] },
 						{ "px": [0,176], "src": [0,0], "f": 0, "t": 0, "d": [25,275] },
 						{ "px": [48,176], "src": [0,0], "f": 0, "t": 0, "d": [25,278] },
@@ -3233,7 +3286,6 @@
 						{ "px": [240,128], "src": [0,16], "f": 0, "t": 16, "d": [27,215] },
 						{ "px": [272,128], "src": [0,32], "f": 0, "t": 32, "d": [27,217] },
 						{ "px": [144,160], "src": [16,16], "f": 0, "t": 17, "d": [27,259] },
-						{ "px": [288,160], "src": [16,16], "f": 0, "t": 17, "d": [27,268] },
 						{ "px": [96,208], "src": [0,16], "f": 0, "t": 16, "d": [27,331] },
 						{ "px": [48,224], "src": [0,16], "f": 0, "t": 16, "d": [27,353] },
 						{ "px": [48,240], "src": [16,16], "f": 0, "t": 17, "d": [27,378] },
