@@ -17,8 +17,6 @@
 #include <assets/playerSettings.h>
 #include <assets/enemySettings.h>
 
-constexpr auto ppu = 16;
-
 using namespace wok;
 
 void createTilemap(nlohmann::json& json, std::string_view name,
@@ -55,7 +53,7 @@ void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const st
 
             sf::Vector2f pos = cactus["pos"];
 
-            prop.setPosition(pos.x * ppu, pos.y * ppu);
+            prop.setPosition(pos * project::ppu);
         }
     }
 }
@@ -70,7 +68,7 @@ void spawnEnemies(nlohmann::json& json, std::shared_ptr<Group>& group, const std
             basicEnemy.group = group;
 
             sf::Vector2f pos = enemy.at("pos");
-            basicEnemy.setActorPosition(pos * (float)ppu);
+            basicEnemy.setActorPosition(pos * project::ppu);
         }
     }
 }
@@ -95,7 +93,7 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
         playerActor.group = group;
 
         sf::Vector2f pos = player["pos"];
-        playerActor.setActorPosition({ pos.x * ppu, pos.y * ppu });
+        playerActor.setActorPosition(pos * project::ppu);
     }
 }
 
