@@ -14,7 +14,7 @@ using namespace wok;
 Player::Player(std::shared_ptr<PlayerSettings> settings) :
     settings(settings)
 {
-    health = settings->maxHealth;
+    health.healUpTo(settings->maxHealth);
     texture = res::get<sf::Texture>(settings->textureName);
 }
 
@@ -22,9 +22,13 @@ void wok::Player::start()
 {
     movement = Movement2D(handle, settings->movement, [this]() { return body.getGlobalBounds(); });
     gun = Gun(handle, settings->gun, texture);
+    health = Health(handle, settings->maxHealth,
+        [this](auto h) { onDeath(h); }
+    );
 
-    healthBar = world::createNamedActor<IconBar>("Player Health",
+    auto healthBar = world::createNamedActor<IconBar>("Player Health",
         res::get<IconBarSettings>(settings->healthBarName), settings->maxHealth);
+    health.bindBar(healthBar);
 
     assetsReloaded();
 }
@@ -43,8 +47,7 @@ void wok::Player::update(const GameClock& time)
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::F8))
     {
-        health = settings->maxHealth;
-        if (healthBar.isValid()) healthBar->setValue(health);
+        health.healUpTo(settings->maxHealth);
     }
 }
 
@@ -79,27 +82,26 @@ void wok::Player::reactToHit(HitData data)
     movement.applyPushback(data.direction * 165.f);
     invincibilityCooldown = invincibilityLength;
 
-    health -= data.damage;
-    if (healthBar.isValid()) healthBar->setValue(health);
+    health.damage(data);
+}
 
-    if (health <= 0)
-    {
-        float dir = data.direction.x < 0
-            ? -1.f
-            : 1.f;
+void wok::Player::onDeath(HitData data)
+{
+    float dir = data.direction.x < 0
+        ? -1.f
+        : 1.f;
 
-        std::vector<sf::IntRect> fractures{
-            {3, 0, 7, 4},
-            {0, 0, 3, 4},
-            {10, 2, 2, 2},
-            {4, 4, 8, 5},
-            {0, 5, 4, 5},
-            {1, 10, 4, 4},
-        };
+    std::vector<sf::IntRect> fractures{
+        {3, 0, 7, 4},
+        {0, 0, 3, 4},
+        {10, 2, 2, 2},
+        {4, 4, 8, 5},
+        {0, 5, 4, 5},
+        {1, 10, 4, 4},
+    };
 
-        world::createNamedActor<FracturedSprite>("Player Fracture", body, texture, fractures, dir);
-        handle.destroy();
-    }
+    world::createNamedActor<FracturedSprite>("Player Fracture", body, texture, fractures, dir);
+    handle.destroy();
 }
 
 void wok::Player::assetsReloaded()

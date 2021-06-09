@@ -9,8 +9,7 @@
 
 #include <actors/components/movement2D.h>
 #include <actors/components/gun.h>
-
-#include <actors/iconBar.h>
+#include <actors/components/health.h>
 
 namespace wok
 {
@@ -34,9 +33,13 @@ namespace wok
         virtual auto getActorPosition() -> sf::Vector2f override { return body.getPosition(); }
 
     private:
+        void onDeath(HitData);
+
+    private:
         // Components
         Movement2D movement;
         Gun gun;
+        Health health;
 
         const std::shared_ptr<PlayerSettings> settings;
         std::shared_ptr<sf::Texture> texture;
@@ -45,8 +48,5 @@ namespace wok
 
         float invincibilityCooldown = -1.f;
         float invincibilityLength = 0.2f;
-
-        int health;
-        ActorHandle<IconBar> healthBar;
     };
 }
