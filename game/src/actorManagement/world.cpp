@@ -231,7 +231,7 @@ void world::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
 physics::RaycastResult world::raycastAgainstHitboxes(const m::Ray& ray, float maxRaycastDistance)
 {
     physics::Intersection closestHit;
-    ActorHandle<Actor> hitActorHandle;
+    ActorHandle<> hitActorHandle;
 
     for (auto& collideable : collideables)
     {
@@ -310,7 +310,7 @@ auto wok::world::findOverlap(Collideable* excluded, std::function<bool(const phy
         return {};
 
     // We get handle from the pointer via Actor
-    ActorHandle<Actor> actor = dynamic_cast<Actor*>(collideable)->handle;
+    ActorHandle<> actor = dynamic_cast<Actor*>(collideable)->handle;
     return actor.as<Collideable>();
 }
 

@@ -20,10 +20,10 @@ namespace wok
         virtual void drawGizmos([[maybe_unused]] sf::RenderTarget& target, [[maybe_unused]] sf::RenderStates& states) {};
         virtual void assetsReloaded() {};
         virtual ~Actor() = default;
-        ActorHandle<Actor> getHandle() { return handle; }
+        ActorHandle<> getHandle() { return handle; }
 
     protected:
-        ActorHandle<Actor> handle;
+        ActorHandle<> handle;
 
         friend world;
     };

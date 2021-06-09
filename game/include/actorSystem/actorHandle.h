@@ -5,10 +5,11 @@
 namespace wok
 {
     class world;
+    class Actor;
 
     typedef uint32_t actor_id;
 
-    template <class T>
+    template <class T = Actor>
     class ActorHandle
     {
         actor_id id;

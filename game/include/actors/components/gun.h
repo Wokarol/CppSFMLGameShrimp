@@ -10,7 +10,7 @@ namespace wok
     {
     public:
         Gun() : settings(nullptr) {}
-        Gun(ActorHandle<Actor> owner, GunSettings& settings, std::shared_ptr<sf::Texture> texture) :
+        Gun(ActorHandle<> owner, GunSettings& settings, std::shared_ptr<sf::Texture> texture) :
             owner(owner), settings(&settings), texture(texture)
         {}
 
@@ -25,7 +25,7 @@ namespace wok
         void shoot(sf::Vector2f bodyScale, sf::Vector2f globalGunPosition, m::Ray gunRay);
 
     private:
-        ActorHandle<Actor> owner;
+        ActorHandle<> owner;
         GunSettings* settings;
 
         sf::Sprite gun;

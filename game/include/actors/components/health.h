@@ -11,7 +11,7 @@ namespace wok
     {
     public:
         Health() = default;
-        Health(ActorHandle<Actor> owner, int startValue, std::function<void(Hittable::HitData)> onDeath = [](auto _) {}) :
+        Health(ActorHandle<> owner, int startValue, std::function<void(Hittable::HitData)> onDeath = [](auto _) {}) :
             owner(owner), value(startValue), onDeath(onDeath)
         {}
 
@@ -21,7 +21,7 @@ namespace wok
         void damage(int value) { damage(Hittable::HitData(sf::Vector2f(), value)); }
 
     private:
-        ActorHandle<Actor> owner;
+        ActorHandle<> owner;
 
         std::function<void(Hittable::HitData)> onDeath;
         int value = 0;

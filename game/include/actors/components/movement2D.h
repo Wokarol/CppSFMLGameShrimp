@@ -12,7 +12,7 @@ namespace wok
     {
     public:
         Movement2D() : settings(nullptr) {}
-        Movement2D(ActorHandle<Actor> owner, MovementSettings& settings, std::function<sf::FloatRect()> colliderGetter)
+        Movement2D(ActorHandle<> owner, MovementSettings& settings, std::function<sf::FloatRect()> colliderGetter)
             : owner(owner), settings(&settings), colliderGetter(colliderGetter)
         {}
 
@@ -26,7 +26,7 @@ namespace wok
         void flip(sf::Transformable& transform);
 
     private:
-        ActorHandle<Actor> owner;
+        ActorHandle<> owner;
         MovementSettings* settings;
 
         bool isFacingRight = true;
