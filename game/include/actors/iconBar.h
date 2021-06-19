@@ -3,7 +3,7 @@
 #include <actor.h>
 #include <resources.h>
 #include <assets/iconBarSettings.h>
-#include <components/twoStateFrameAnimator.h>
+#include <actors/components/twoStateFrameAnimator.h>
 
 namespace wok
 {

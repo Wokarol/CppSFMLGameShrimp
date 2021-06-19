@@ -14,14 +14,16 @@ namespace wok
             owner(owner), settings(&settings), texture(texture)
         {}
 
-        void update(sf::Vector2f bodyPos, sf::Vector2f bodyScale, sf::Vector2f aimTarget, GameClock time);
+        void update(sf::Vector2f bodyPos, sf::Vector2f bodyScale, sf::Vector2f aimTarget, GameClock time, bool isAttackPressed);
         void draw(sf::RenderTarget& target, sf::RenderStates& states);
         void loadAssets(sf::Vector2f bodyPivot);
+
+        sf::Vector2f getPosition() { return gun.getPosition(); }
 
     private:
         auto updateGunPositionAndRotation(sf::Vector2f bodyPos, sf::Vector2f bodyScale, sf::Vector2f mousePosition)->std::pair<sf::Vector2f, float>;
         auto getGunRay(sf::Vector2f bodyScale)->m::Ray;
-        void updateShootingLogic(sf::Vector2f bodyScale, sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time);
+        void updateShootingLogic(sf::Vector2f bodyScale, sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time, bool isAttackPressed);
         void shoot(sf::Vector2f bodyScale, sf::Vector2f globalGunPosition, m::Ray gunRay);
 
     private:

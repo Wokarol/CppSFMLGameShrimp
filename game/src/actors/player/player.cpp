@@ -38,10 +38,12 @@ void wok::Player::update(const GameClock& time)
     auto mousePosition = input::mousePositionInWorld;
     auto inputDir = m::normalize(input::movement);
 
+    auto isAttackPressed = input::attack.isPressed;
+
     movement.moveBy(body, inputDir, time.delta);
     movement.setOrientation(body, mousePosition);
 
-    gun.update(body.getPosition(), body.getScale(), mousePosition, time);
+    gun.update(body.getPosition(), body.getScale(), mousePosition, time, isAttackPressed);
 
     if (invincibilityCooldown > 0.f) invincibilityCooldown -= time.delta;
 

@@ -67,12 +67,7 @@ namespace wok
 
     auto physics::OBB::raycast(m::Ray ray) const -> Intersection
     {
-        // We convert this scenario into Ray and AABB to simplify calculations
         ray.rotateAround(position, rotation);
-
-        //auto res = rayWithCenteredAABB(ray, physics::AABB(position, size).centered());
-
-
         auto result = physics::AABB(position, size).centered().raycast(ray);
         result.normal = m::rotate(result.normal, -rotation);
         return result;

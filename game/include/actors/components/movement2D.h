@@ -18,6 +18,7 @@ namespace wok
 
         void moveBy(sf::Transformable& transform, sf::Vector2f input, float delta);
         void setOrientation(sf::Transformable& transform, sf::Vector2f target);
+        void setOrientation(sf::Transformable& transform, bool shouldFaceRight);
         void applyPushback(sf::Vector2f force);
 
     private:

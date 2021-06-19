@@ -10,13 +10,18 @@ void wok::Movement2D::moveBy(sf::Transformable& transform, sf::Vector2f input, f
     moveWithReaction(transform, delta);
 }
 
-void wok::Movement2D::setOrientation(sf::Transformable& transform, sf::Vector2f target)
+void wok::Movement2D::setOrientation(sf::Transformable& transform, bool shouldFaceRight)
 {
-    bool shouldFaceRight = target.x > transform.getPosition().x;
     if (shouldFaceRight != isFacingRight)
     {
         flip(transform);
     }
+}
+
+void wok::Movement2D::setOrientation(sf::Transformable& transform, sf::Vector2f target)
+{
+    bool shouldFaceRight = target.x > transform.getPosition().x;
+    setOrientation(transform, shouldFaceRight);
 }
 
 void wok::Movement2D::applyPushback(sf::Vector2f force)
@@ -76,7 +81,6 @@ void wok::Movement2D::moveWithReaction(sf::Transformable& transform, float dt)
 
     if (accumulatedReaction.x > 0 != velocity.x > 0 && accumulatedReaction.x != 0)
         velocity.x = 0;
-
 
     if (accumulatedReaction.y > 0 != velocity.y > 0 && accumulatedReaction.y != 0)
         velocity.y = 0;

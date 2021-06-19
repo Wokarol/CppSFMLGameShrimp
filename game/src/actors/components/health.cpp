@@ -2,9 +2,9 @@
 #include <actors/fracturedSprite.h>
 #include <world.h>
 
-void wok::Health::bindBar(ActorHandle<IconBar> healthBar)
+void wok::Health::bindBar(ActorHandle<IconBar> bar)
 {
-    this->healthBar = healthBar;
+    healthBar = bar;
 }
 
 void wok::Health::healUpTo(int newValue)
