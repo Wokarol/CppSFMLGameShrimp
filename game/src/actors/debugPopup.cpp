@@ -44,7 +44,7 @@ void wok::DebugPopup::start()
     world::addTween(fadeOut);
 }
 
-void wok::DebugPopup::update([[maybe_unused]] const GameClock& time)
+void wok::DebugPopup::update(const GameClock&)
 {
     auto it = std::find(popupsActive.begin(), popupsActive.end(), this);
     int pos = (int)(it - popupsActive.begin());

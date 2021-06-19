@@ -25,7 +25,7 @@ namespace wok
         virtual float getSortingYPos() override { return getPosition().y; }
 
 
-        virtual void reactToHit([[maybe_unused]] HitData) override;
+        virtual void reactToHit(HitData) override;
         virtual void getHitboxes(const std::function<void(const physics::Hitbox&)> yield) override;
 
         virtual sf::Vector2f getActorPosition() override { return getPosition(); }

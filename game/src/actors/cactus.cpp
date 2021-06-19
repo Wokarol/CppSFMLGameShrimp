@@ -29,7 +29,7 @@ void wok::Cactus::start()
     addWindTween();
 }
 
-void wok::Cactus::update([[maybe_unused]] const GameClock& time)
+void wok::Cactus::update(const GameClock&)
 {
     auto overlapped = world::checkForOverlaps(handle.as<Collideable>(), getPosition() + sf::Vector2f(0.f, -4.f), 2.f);
     auto hittable = overlapped.as<Hittable>();

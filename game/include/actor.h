@@ -17,7 +17,7 @@ namespace wok
         std::string name;
 
         virtual void start() {};
-        virtual void drawGizmos([[maybe_unused]] sf::RenderTarget& target, [[maybe_unused]] sf::RenderStates& states) {};
+        virtual void drawGizmos(sf::RenderTarget&, sf::RenderStates&) {};
         virtual void assetsReloaded() {};
         virtual ~Actor() = default;
         ActorHandle<> getHandle() { return handle; }

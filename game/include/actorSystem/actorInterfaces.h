@@ -33,7 +33,7 @@ namespace wok
             HitData(sf::Vector2f direction, int damage) : direction(direction), damage(damage) {}
         };
 
-        virtual void reactToHit([[maybe_unused]] HitData) {};
+        virtual void reactToHit(HitData) {};
     };
 
     class Collideable
