@@ -29,7 +29,7 @@ wok::DebugPopup::DebugPopup(std::string message)
     popupsActive.push_back(this);
 }
 
-void wok::DebugPopup::start()
+void wok::DebugPopup::start(const GameClock&)
 {
     auto fadeOut = std::make_shared<LerpTweener<sf::Color>>(handle,
         [this]() { return text.getFillColor(); }, [this](auto v) { return text.setFillColor(v); },

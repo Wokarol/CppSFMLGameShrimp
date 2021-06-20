@@ -19,7 +19,7 @@ namespace wok
         Player(std::shared_ptr<PlayerSettings> settings);
 
         // Callbacks
-        virtual void start() override;
+        virtual void start(const GameClock&) override;
         virtual void update(const GameClock& time) override;
         virtual void assetsReloaded() override;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;

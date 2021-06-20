@@ -16,11 +16,13 @@ wok::BasicEnemy::BasicEnemy(std::shared_ptr<EnemySettings> settings) :
     texture = res::get<sf::Texture>(settings->textureName);
 }
 
-void wok::BasicEnemy::start()
+void wok::BasicEnemy::start(const GameClock& time)
 {
     movement = Movement2D(handle, settings->movement, [this]() { return body.getGlobalBounds(); });
     gun = Gun(handle, settings->gun, texture);
     health = Health(handle, settings->maxHealth, [this](HitData d) { onDeath(d); });
+
+    randomStartTimeForShooting = time.absolute + randomizer::getBetween(0.f, 1.f);
 
     assetsReloaded();
 }
@@ -42,6 +44,9 @@ void wok::BasicEnemy::assetsReloaded()
 
 void wok::BasicEnemy::update(const GameClock& time)
 {
+    if (time.absolute < randomStartTimeForShooting)
+        return;
+
     if (directionChangedGate.executeAfter(.5f, time.delta))
     {
         chosenDirection = m::rotate(sf::Vector2f(1.f, 0.f), randomizer::getBetween(0.f, 360.f));

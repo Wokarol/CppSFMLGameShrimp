@@ -17,7 +17,7 @@ namespace wok
         Cactus(std::shared_ptr<CactusPreset> preset);
 
         virtual void assetsReloaded() override;
-        virtual void start() override;
+        virtual void start(const GameClock&) override;
         virtual void update(const GameClock& time) override;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;

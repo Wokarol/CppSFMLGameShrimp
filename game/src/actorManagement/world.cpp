@@ -15,7 +15,7 @@ void world::updateActors(const GameClock& time)
     {
         if (shouldLog) console::log("WORLD: ", "Starting ", actor->name, " [", actor->handle.id, "]");
 
-        actor->start();
+        actor->start(time);
     }
     actorsToCallStartOn.clear();
 

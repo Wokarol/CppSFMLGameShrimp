@@ -15,7 +15,7 @@ namespace wok
     public:
         BasicEnemy(std::shared_ptr<EnemySettings> settings);
 
-        virtual void start() override;
+        virtual void start(const GameClock&) override;
         virtual void assetsReloaded() override;
 
         virtual void update(const GameClock& time) override;
@@ -41,7 +41,7 @@ namespace wok
         sf::Sprite body;
 
         sf::Vector2f chosenDirection = {};
-        float randomDelay;
+        float randomStartTimeForShooting;
 
         // Gates
         AfterDelayGate directionChangedGate;

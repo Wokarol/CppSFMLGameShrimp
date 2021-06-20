@@ -5,6 +5,7 @@
 #include <actorSystem/group.h>
 #include <string>
 #include <console.h>
+#include <gameClock.h>
 
 namespace wok
 {
@@ -16,7 +17,7 @@ namespace wok
         std::shared_ptr<Group> group;
         std::string name;
 
-        virtual void start() {};
+        virtual void start(const GameClock&) {};
         virtual void drawGizmos(sf::RenderTarget&, sf::RenderStates&) {};
         virtual void assetsReloaded() {};
         virtual ~Actor() = default;

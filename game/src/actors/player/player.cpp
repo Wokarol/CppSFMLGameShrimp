@@ -18,7 +18,7 @@ Player::Player(std::shared_ptr<PlayerSettings> settings) :
     texture = res::get<sf::Texture>(settings->textureName);
 }
 
-void wok::Player::start()
+void wok::Player::start(const GameClock&)
 {
     movement = Movement2D(handle, settings->movement, [this]() { return body.getGlobalBounds(); });
     gun = Gun(handle, settings->gun, texture);

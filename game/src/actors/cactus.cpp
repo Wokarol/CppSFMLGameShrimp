@@ -26,7 +26,7 @@ void wok::Cactus::assetsReloaded()
     );
 }
 
-void wok::Cactus::start()
+void wok::Cactus::start(const GameClock&)
 {
     addWindTween();
 }
