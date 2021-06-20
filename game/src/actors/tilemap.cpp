@@ -32,7 +32,7 @@ int wok::Tilemap::getSortingOrder()
     return sortingOrder;
 }
 
-void wok::Tilemap::getColliders(const std::function<void(sf::FloatRect)> yield)
+void wok::Tilemap::getColliders(const CollisionContext&, const std::function<void(sf::FloatRect)> yield)
 {
     if (!shouldCollide)
         return;

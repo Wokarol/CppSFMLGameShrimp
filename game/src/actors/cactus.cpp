@@ -33,7 +33,9 @@ void wok::Cactus::start(const GameClock&)
 
 void wok::Cactus::update(const GameClock&)
 {
-    auto overlapped = world::checkForOverlaps(handle.as<Collideable>(), getPosition() + sf::Vector2f(0.f, -4.f), 2.f);
+    CollisionContext ctx(CollisionContext::SourceType::Enviroment);
+
+    auto overlapped = world::checkForOverlaps(ctx, handle.as<Collideable>(), getPosition() + sf::Vector2f(0.f, -4.f), 2.f);
     auto hittable = overlapped.as<Hittable>();
     if (hittable.isValid())
     {
@@ -84,7 +86,7 @@ void wok::Cactus::reactToHit(HitData data)
     }
 }
 
-void wok::Cactus::getHitboxes(const std::function<void(const physics::Hitbox&)> yield)
+void wok::Cactus::getHitboxes(const CollisionContext&, const std::function<void(const physics::Hitbox&)> yield)
 {
     yield(physics::AABB(getGlobalBounds()));
 }

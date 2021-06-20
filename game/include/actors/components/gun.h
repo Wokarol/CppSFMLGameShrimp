@@ -10,8 +10,8 @@ namespace wok
     {
     public:
         Gun() : settings(nullptr) {}
-        Gun(ActorHandle<> owner, GunSettings& settings, std::shared_ptr<sf::Texture> texture) :
-            owner(owner), settings(&settings), texture(texture)
+        Gun(ActorHandle<> owner, wok::Collideable::CollisionContext::SourceType sourceType, GunSettings& settings, std::shared_ptr<sf::Texture> texture) :
+            owner(owner), sourceType(sourceType), settings(&settings), texture(texture)
         {}
 
         void update(sf::Vector2f bodyPos, sf::Vector2f bodyScale, sf::Vector2f aimTarget, GameClock time, bool isAttackPressed);
@@ -28,6 +28,7 @@ namespace wok
 
     private:
         ActorHandle<> owner;
+        wok::Collideable::CollisionContext::SourceType sourceType;
         GunSettings* settings;
 
         sf::Sprite gun;

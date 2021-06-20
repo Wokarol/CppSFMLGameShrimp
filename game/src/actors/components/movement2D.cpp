@@ -60,9 +60,11 @@ void wok::Movement2D::moveWithReaction(sf::Transformable& transform, float dt)
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         return;
 
+    wok::Collideable::CollisionContext ctx(sourceType);
+
     // Rection to world geometry
     sf::Vector2f accumulatedReaction;
-    world::checkForCollisions(colliderGetter(), [&accumulatedReaction](collide::Reaction r)
+    world::checkForCollisions(ctx, colliderGetter(), [&accumulatedReaction](collide::Reaction r)
         {
             auto p = -r.penetration;
             if (p.x != 0 && p.y != 0)

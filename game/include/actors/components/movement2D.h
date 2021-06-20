@@ -12,8 +12,8 @@ namespace wok
     {
     public:
         Movement2D() : settings(nullptr) {}
-        Movement2D(ActorHandle<> owner, MovementSettings& settings, std::function<sf::FloatRect()> colliderGetter)
-            : owner(owner), settings(&settings), colliderGetter(colliderGetter)
+        Movement2D(ActorHandle<> owner, wok::Collideable::CollisionContext::SourceType sourceType, MovementSettings& settings, std::function<sf::FloatRect()> colliderGetter)
+            : owner(owner), sourceType(sourceType), settings(&settings), colliderGetter(colliderGetter)
         {}
 
         void moveBy(sf::Transformable& transform, sf::Vector2f input, float delta);
@@ -28,6 +28,7 @@ namespace wok
 
     private:
         ActorHandle<> owner;
+        wok::Collideable::CollisionContext::SourceType sourceType;
         MovementSettings* settings;
 
         bool isFacingRight = true;

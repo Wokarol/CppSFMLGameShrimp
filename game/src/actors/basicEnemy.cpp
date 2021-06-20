@@ -18,8 +18,10 @@ wok::BasicEnemy::BasicEnemy(std::shared_ptr<EnemySettings> settings) :
 
 void wok::BasicEnemy::start(const GameClock& time)
 {
-    movement = Movement2D(handle, settings->movement, [this]() { return body.getGlobalBounds(); });
-    gun = Gun(handle, settings->gun, texture);
+    auto sourceType = CollisionContext::SourceType::Enemy;
+
+    movement = Movement2D(handle, sourceType, settings->movement, [this]() { return body.getGlobalBounds(); });
+    gun = Gun(handle, sourceType, settings->gun, texture);
     health = Health(handle, settings->maxHealth, [this](HitData d) { onDeath(d); });
 
     randomStartTimeForShooting = time.absolute + randomizer::getBetween(0.f, 1.f);
@@ -68,9 +70,12 @@ void wok::BasicEnemy::draw(sf::RenderTarget& target, sf::RenderStates& states)
     gun.draw(target, states);
 }
 
-void wok::BasicEnemy::getHitboxes(const std::function<void(const physics::Hitbox&)> yield)
+void wok::BasicEnemy::getHitboxes(const CollisionContext& ctx, const std::function<void(const physics::Hitbox&)> yield)
 {
-    yield(physics::AABB(body.getGlobalBounds()));
+    if (ctx.sourceType != CollisionContext::SourceType::Enemy)
+    {
+        yield(physics::AABB(body.getGlobalBounds()));
+    }
 }
 
 void wok::BasicEnemy::reactToHit(HitData data)

@@ -26,7 +26,7 @@ namespace wok
 
 
         virtual void reactToHit(HitData) override;
-        virtual void getHitboxes(const std::function<void(const physics::Hitbox&)> yield) override;
+        virtual void getHitboxes(const CollisionContext&, const std::function<void(const physics::Hitbox&)> yield) override;
 
         virtual sf::Vector2f getActorPosition() override { return getPosition(); }
 

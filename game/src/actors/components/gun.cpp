@@ -92,5 +92,5 @@ void wok::Gun::shoot(sf::Vector2f bodyScale, sf::Vector2f globalGunPosition, m::
     sf::Vector2f position = muzzleFlash.getPosition();
     sf::Vector2f direction = m::rotate(gunRay.direction, randomizer::getBetween(-.5f, .5f) * settings->bulletSpread * 2.f);
 
-    world::createNamedActor<Bullet>("Bullet", position, direction, res::get<BulletSettings>(settings->bulletPath));
+    world::createNamedActor<Bullet>("Bullet", position, direction, sourceType, res::get<BulletSettings>(settings->bulletPath));
 }

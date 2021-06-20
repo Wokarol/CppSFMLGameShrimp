@@ -24,7 +24,7 @@ namespace wok
         virtual void assetsReloaded() override;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
         virtual void drawGizmos(sf::RenderTarget& target, sf::RenderStates& states) override;
-        virtual void getHitboxes(const std::function<void(const physics::Hitbox&)> yield) override;
+        virtual void getHitboxes(const CollisionContext&, const std::function<void(const physics::Hitbox&)> yield) override;
         virtual void reactToHit(HitData) override;
 
         // Getters Setters

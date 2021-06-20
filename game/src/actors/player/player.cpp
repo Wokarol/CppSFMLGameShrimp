@@ -20,8 +20,10 @@ Player::Player(std::shared_ptr<PlayerSettings> settings) :
 
 void wok::Player::start(const GameClock&)
 {
-    movement = Movement2D(handle, settings->movement, [this]() { return body.getGlobalBounds(); });
-    gun = Gun(handle, settings->gun, texture);
+    auto sourceType = CollisionContext::SourceType::Player;
+
+    movement = Movement2D(handle, sourceType, settings->movement, [this]() { return body.getGlobalBounds(); });
+    gun = Gun(handle, sourceType, settings->gun, texture);
     health = Health(handle, settings->maxHealth,
         [this](auto h) { onDeath(h); }
     );
@@ -71,8 +73,11 @@ void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
     target.draw(collider, states);
 }
 
-void wok::Player::getHitboxes(const std::function<void(const physics::Hitbox&)> yield)
+void wok::Player::getHitboxes(const CollisionContext& ctx, const std::function<void(const physics::Hitbox&)> yield)
 {
+    if (ctx.sourceType == CollisionContext::SourceType::Player)
+        return;
+
     yield(physics::AABB(body.getGlobalBounds()).scaled(0.5f));
 }
 

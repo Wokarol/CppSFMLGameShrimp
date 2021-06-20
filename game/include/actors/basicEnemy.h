@@ -20,7 +20,7 @@ namespace wok
 
         virtual void update(const GameClock& time) override;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
-        virtual void getHitboxes(const std::function<void(const physics::Hitbox&)> yield) override;
+        virtual void getHitboxes(const CollisionContext&, const std::function<void(const physics::Hitbox&)> yield) override;
         virtual void reactToHit(HitData) override;
 
         void setActorPosition(sf::Vector2f p) { body.setPosition(p); }
