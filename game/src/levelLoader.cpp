@@ -11,6 +11,7 @@
 #include <tweeners.h>
 #include <resources.h>
 #include <projectSettings.h>
+#include <gameState.h>
 
 #include <assets/tilesetData.h>
 #include <assets/cactusPreset.h>
@@ -89,11 +90,14 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
     if (player.is_object())
     {
         auto settings = res::get<PlayerSettings>(project::actorPaths["player"]);
-        auto& playerActor = *world::createNamedActor<Player>("Player", settings);
+        auto playerHandle = world::createNamedActor<Player>("Player", settings);
+        auto& playerActor = *playerHandle;
         playerActor.group = group;
 
         sf::Vector2f pos = player["pos"];
         playerActor.setActorPosition(pos * project::ppu);
+
+        game::player = playerHandle;
     }
 }
 

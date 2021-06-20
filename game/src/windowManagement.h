@@ -9,6 +9,7 @@
 #include <actors.h>
 
 #include <gameState.h>
+#include <rng.h>
 
 inline void initializeBoilerplate()
 {
@@ -37,7 +38,7 @@ inline void setCornerCam(sf::RenderTarget& target)
     sf::View view = sf::View(sf::FloatRect(0, 0, width, height));
     target.setView(view);
 
-    gameState::screenSize = view.getSize();
+    game::screenSize = view.getSize();
 }
 
 inline void handleDebugKeys(const sf::Event& event)

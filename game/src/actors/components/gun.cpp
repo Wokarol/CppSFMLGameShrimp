@@ -3,6 +3,7 @@
 #include <tweeners.h>
 #include <world.h>
 #include <resources.h>
+#include <rng.h>
 
 #include <actors/bullet.h>
 
@@ -89,7 +90,7 @@ void wok::Gun::shoot(sf::Vector2f bodyScale, sf::Vector2f globalGunPosition, m::
     world::addTween(muzzleFlashAnimation);
 
     sf::Vector2f position = muzzleFlash.getPosition();
-    sf::Vector2f direction = m::rotate(gunRay.direction, ((rand() / (float)RAND_MAX) - 0.5f) * settings->bulletSpread * 2.f);
+    sf::Vector2f direction = m::rotate(gunRay.direction, randomizer::getBetween(-.5f, .5f) * settings->bulletSpread * 2.f);
 
     world::createNamedActor<Bullet>("Bullet", position, direction, res::get<BulletSettings>(settings->bulletPath));
 }

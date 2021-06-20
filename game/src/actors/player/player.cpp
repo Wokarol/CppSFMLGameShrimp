@@ -73,7 +73,7 @@ void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
 
 void wok::Player::getHitboxes(const std::function<void(const physics::Hitbox&)> yield)
 {
-    yield(physics::AABB(body.getGlobalBounds()));
+    yield(physics::AABB(body.getGlobalBounds()).scaled(0.5f));
 }
 
 void wok::Player::reactToHit(HitData data)

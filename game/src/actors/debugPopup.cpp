@@ -49,7 +49,7 @@ void wok::DebugPopup::update(const GameClock&)
     auto it = std::find(popupsActive.begin(), popupsActive.end(), this);
     int pos = (int)(it - popupsActive.begin());
 
-    sf::Vector2f position(gameState::screenSize.x - 5.f, 5.f + pos * 10);
+    sf::Vector2f position(game::screenSize.x - 5.f, 5.f + pos * 10);
 
     if (lastPos == -1)
     {

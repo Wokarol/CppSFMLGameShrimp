@@ -4,6 +4,8 @@
 #include <actors.h>
 #include <tweeners.h>
 
+#include <rng.h>
+
 wok::Cactus::Cactus(std::shared_ptr<CactusPreset> preset) :
     preset(preset)
 {
@@ -52,7 +54,7 @@ void wok::Cactus::addWindTween()
         [this](float v) { setRotation(v); },
         -preset->animationScale, preset->animationScale, preset->animationScale
         );
-    windAnimation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
+    windAnimation->addTimeOffset(randomizer::getBetween(0.f, 20.f));
 
     world::addTween(windAnimation);
 }
