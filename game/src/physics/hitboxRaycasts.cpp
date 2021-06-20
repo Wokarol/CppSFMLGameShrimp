@@ -5,6 +5,11 @@ namespace wok
 {
     auto physics::AABB::raycast(m::Ray ray) const -> Intersection
     {
+        if (sf::FloatRect(topLeft, size).contains(ray.origin))
+        {
+            return physics::Intersection(0.f, -ray.direction, ray);
+        }
+
         ray.move(-topLeft);
         ray.direction = m::normalize(ray.direction);
 
@@ -87,7 +92,7 @@ namespace wok
         if (m::sqrLength(L) < (r * r))
         {
             // We are inside the circle
-            return {};
+            return physics::Intersection(0.f, -ray.direction, ray);
         }
 
         float tca = m::dot(L, ray.direction);
