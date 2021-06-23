@@ -7,13 +7,29 @@
 
 #include <actors/bullet.h>
 
-void wok::Gun::update(sf::Vector2f bodyPos, sf::Vector2f bodyScale, sf::Vector2f aimTarget, GameClock time, bool isAttackPressed)
+void wok::Gun::update(sf::Vector2f bodyPos, sf::Vector2f bodyScale, sf::Vector2f aimTarget, GameClock time)
 {
-    auto gunPlacement = updateGunPositionAndRotation(bodyPos, bodyScale, aimTarget);
-    auto gunRay = getGunRay(bodyScale);
+    updateGunPositionAndRotation(bodyPos, bodyScale, aimTarget);
 
-    updateShootingLogic(bodyScale, gunPlacement.first, gunRay, time, isAttackPressed);
+
+    if (shootCooldown > 0)
+    {
+        shootCooldown -= time.delta;
+    }
 }
+
+void wok::Gun::tryToShoot()
+{
+    auto scale = gun.getScale();
+    auto gunRay = getGunRay(scale);
+
+    if (shootCooldown <= 0)
+    {
+        shootCooldown += settings->shootInterval;
+        shoot(scale, gun.getPosition(), gunRay);
+    }
+}
+
 
 void wok::Gun::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
@@ -54,22 +70,6 @@ auto wok::Gun::getGunRay(sf::Vector2f bodyScale) -> m::Ray
 {
     sf::Vector2f gunDirection = m::rotate(sf::Vector2f(bodyScale.x, 0), gun.getRotation());
     return m::Ray(gun.getPosition(), gunDirection);
-}
-
-void wok::Gun::updateShootingLogic(sf::Vector2f bodyScale, sf::Vector2f globalGunPosition, m::Ray gunRay, const GameClock& time, bool isAttackPressed)
-{
-    if (shootCooldown <= 0)
-    {
-        if (isAttackPressed)
-        {
-            shootCooldown += settings->shootInterval;
-            shoot(bodyScale, globalGunPosition, gunRay);
-        }
-    }
-    else
-    {
-        shootCooldown -= time.delta;
-    }
 }
 
 void wok::Gun::shoot(sf::Vector2f bodyScale, sf::Vector2f globalGunPosition, m::Ray gunRay)

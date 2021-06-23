@@ -46,6 +46,8 @@ namespace wok
             {
                 Player, Enemy, Debug, Enviroment
             } sourceType;
+            bool shouldHitTransparent = true;
+            bool shouldHitDestructible = true;
 
             CollisionContext(SourceType sourceType)
                 : sourceType(sourceType)

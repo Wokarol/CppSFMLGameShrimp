@@ -63,6 +63,8 @@ bool startGame()
 
 int main()
 {
+    srand((unsigned int)time(NULL));
+
     initializeBoilerplate();
 
     auto window = createWindow();
@@ -74,9 +76,7 @@ int main()
 
     wok::world::shouldLog = false;
 
-
-    bool gameProperlyStarted = startGame();
-    if (!gameProperlyStarted)
+    if (!startGame())
     {
         window.close();
         std::cout << std::endl;

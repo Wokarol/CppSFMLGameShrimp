@@ -124,7 +124,7 @@ namespace wok
             return actors.find(id) != actors.end();
         }
 
-        static physics::RaycastResult raycastAgainstHitboxes(const wok::Collideable::CollisionContext&, const m::Ray& ray, float maxDist = -1);
+        static physics::RaycastResult raycastAgainstHitboxes(const wok::Collideable::CollisionContext&, const m::Ray& ray, float maxDist = -1); static physics::RaycastResult raycastAgainstColliders(const wok::Collideable::CollisionContext&, const m::Ray& ray, float maxDist = -1);
         static void checkForCollisions(const wok::Collideable::CollisionContext&, const sf::FloatRect& rect, std::function<void(collide::Reaction)> callback);
 
         static ActorHandle<Collideable> checkForOverlaps(const wok::Collideable::CollisionContext&, Collideable* excluded, const sf::FloatRect& rect);

@@ -45,7 +45,10 @@ void wok::Player::update(const GameClock& time)
     movement.moveBy(body, inputDir, time.delta);
     movement.setOrientation(body, mousePosition);
 
-    gun.update(body.getPosition(), body.getScale(), mousePosition, time, isAttackPressed);
+    gun.update(body.getPosition(), body.getScale(), mousePosition, time);
+
+    if (isAttackPressed)
+        gun.tryToShoot();
 
     if (invincibilityCooldown > 0.f) invincibilityCooldown -= time.delta;
 
@@ -75,6 +78,9 @@ void wok::Player::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
 
 void wok::Player::getHitboxes(const CollisionContext& ctx, const std::function<void(const physics::Hitbox&)> yield)
 {
+    if (!ctx.shouldHitTransparent)
+        return;
+
     if (ctx.sourceType == CollisionContext::SourceType::Player)
         return;
 

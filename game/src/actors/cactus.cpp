@@ -86,8 +86,11 @@ void wok::Cactus::reactToHit(HitData data)
     }
 }
 
-void wok::Cactus::getHitboxes(const CollisionContext&, const std::function<void(const physics::Hitbox&)> yield)
+void wok::Cactus::getHitboxes(const CollisionContext& ctx, const std::function<void(const physics::Hitbox&)> yield)
 {
+    if (!ctx.shouldHitDestructible)
+        return;
+
     yield(physics::AABB(getGlobalBounds()));
 }
 
