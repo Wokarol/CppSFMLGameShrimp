@@ -1,26 +1,32 @@
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace wok
 {
-    class Actor;
     class world;
+    class Actor;
 
     typedef uint32_t actor_id;
 
-    template <class T>
+    template <class T = Actor>
     class ActorHandle
     {
         actor_id id;
+        T* ptr;
 
     public:
         ActorHandle() :
-            id((actor_id)(-1))
+            id((actor_id)(-1)), ptr(nullptr)
         {}
 
-        ActorHandle(actor_id id_) :
-            id(id_)
+        ActorHandle(actor_id id) :
+            id(id), ptr(world::getActorPointer<T>(id))
+        {}
+
+        // No type checks are performed here, use with caution
+        ActorHandle(actor_id id, T* newPtr) :
+            id(id), ptr(newPtr)
         {}
 
         bool isValid() const
@@ -28,28 +34,34 @@ namespace wok
             if (id == -1)
                 return false;
 
-            return world::isActorAliveAndMatchesType<T>(id);
+            // If the type check in actor handle constructor or cast failed, our ptr is null
+            if (ptr == nullptr)
+                return false;
+
+            // At this point we should check the type before (while casting/creation), this prevents access to dead actors
+            return world::isActorAlive(id);
         }
 
         operator T* () const
         {
-            return world::getActorPointer<T>(id);
+            return ptr;
         }
 
         T& operator*() const
         {
-            return world::getActor<T>(id);
+            return *ptr;
         }
 
         T* operator->() const
         {
-            return &world::getActor<T>(id);
+            return ptr;
         }
 
         template <class NewT>
         ActorHandle<NewT> as()
         {
-            return ActorHandle<NewT>(id);
+            // We pass the pointer as parameter to avoid world lookup for no reason
+            return ActorHandle<NewT>(id, dynamic_cast<NewT*>(ptr));
         }
 
         void destroy() const

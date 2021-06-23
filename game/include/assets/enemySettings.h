@@ -1,22 +1,21 @@
 #pragma once
 
 #include <string>
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Rect.hpp>
 
 #include <actors/components/settings/movementSettings.h>
 #include <actors/components/settings/gunSettings.h>
 
 namespace wok
 {
-    struct PlayerSettings
+    struct EnemySettings
     {
         MovementSettings movement;
         GunSettings gun;
 
-        std::string healthBarName;
         int maxHealth;
 
         std::string textureName;
-        sf::IntRect bodyTextureRect;
+        sf::IntRect textureRect;
     };
 }

@@ -33,16 +33,34 @@ namespace wok
             HitData(sf::Vector2f direction, int damage) : direction(direction), damage(damage) {}
         };
 
-        virtual void reactToHit([[maybe_unused]] HitData) {};
+        virtual void reactToHit(HitData) {};
     };
 
     class Collideable
     {
     public:
-        virtual void getColliders(const std::function<void(sf::FloatRect)> yield) { };
-        virtual void getHitboxes(const std::function<void(const physics::Hitbox&)> yield)
+        struct CollisionContext
         {
-            getColliders([&yield](auto rect)
+
+            enum class SourceType
+            {
+                Player, Enemy, Debug, Enviroment
+            } sourceType;
+            bool shouldHitTransparent = true;
+            bool shouldHitDestructible = true;
+
+            CollisionContext(SourceType sourceType)
+                : sourceType(sourceType)
+            {}
+
+        };
+
+        inline static const CollisionContext DebuggingContext = CollisionContext(CollisionContext::SourceType::Debug);
+
+        virtual void getColliders(const CollisionContext&, const std::function<void(sf::FloatRect)>) { };
+        virtual void getHitboxes(const CollisionContext& ctx, const std::function<void(const physics::Hitbox&)> yield)
+        {
+            getColliders(ctx, [&yield](auto rect)
                 {
                     yield(physics::AABB(rect));
                 });

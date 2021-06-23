@@ -10,7 +10,7 @@ namespace wok
     class LerpTweener : public Tweener
     {
     public:
-        LerpTweener(ActorHandle<Actor> actor,
+        LerpTweener(ActorHandle<> actor,
             std::function<T()> getter, std::function<void(T)> setter,
             T target, float duration
         ) :

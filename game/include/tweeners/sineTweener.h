@@ -10,7 +10,7 @@ namespace wok
     class SineTweener : public Tweener
     {
     public:
-        SineTweener(ActorHandle<Actor> actor, std::function<void(T)> setter, T min, T max, float speed) :
+        SineTweener(ActorHandle<> actor, std::function<void(T)> setter, T min, T max, float speed) :
             Tweener(actor),
             setter(setter),
             speed(speed),

@@ -11,12 +11,12 @@
 #include <tweeners.h>
 #include <resources.h>
 #include <projectSettings.h>
+#include <gameState.h>
 
 #include <assets/tilesetData.h>
 #include <assets/cactusPreset.h>
 #include <assets/playerSettings.h>
-
-constexpr auto ppu = 16;
+#include <assets/enemySettings.h>
 
 using namespace wok;
 
@@ -54,7 +54,22 @@ void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const st
 
             sf::Vector2f pos = cactus["pos"];
 
-            prop.setPosition(pos.x * ppu, pos.y * ppu);
+            prop.setPosition(pos * project::ppu);
+        }
+    }
+}
+
+void spawnEnemies(nlohmann::json& json, std::shared_ptr<Group>& group, const std::shared_ptr<EnemySettings>& settings)
+{
+    if (json.is_array())
+    {
+        for (auto& enemy : json)
+        {
+            auto& basicEnemy = *world::createNamedActor<BasicEnemy>("Basic Enemy", settings);
+            basicEnemy.group = group;
+
+            sf::Vector2f pos = enemy.at("pos");
+            basicEnemy.setActorPosition(pos * project::ppu);
         }
     }
 }
@@ -68,15 +83,21 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
     auto bigCactus = res::get<CactusPreset>(project::actorPaths["tall_cactus"]);
     generateCacti(json["Tall_Cacti"], group, bigCactus, "Tall Cactus");
 
+    auto basicEnemy = res::get<EnemySettings>(project::actorPaths["basic_enemy"]);
+    spawnEnemies(json.at("Enemy"), group, basicEnemy);
+
     nlohmann::json& player = json["Player"];
     if (player.is_object())
     {
         auto settings = res::get<PlayerSettings>(project::actorPaths["player"]);
-        auto& playerActor = *world::createNamedActor<Player>("Player", settings);
+        auto playerHandle = world::createNamedActor<Player>("Player", settings);
+        auto& playerActor = *playerHandle;
         playerActor.group = group;
 
         sf::Vector2f pos = player["pos"];
-        playerActor.setPosition({ pos.x * ppu, pos.y * ppu });
+        playerActor.setActorPosition(pos * project::ppu);
+
+        game::player = playerHandle;
     }
 }
 

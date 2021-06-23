@@ -4,6 +4,8 @@
 #include <actors.h>
 #include <tweeners.h>
 
+#include <rng.h>
+
 wok::Cactus::Cactus(std::shared_ptr<CactusPreset> preset) :
     preset(preset)
 {
@@ -24,14 +26,16 @@ void wok::Cactus::assetsReloaded()
     );
 }
 
-void wok::Cactus::start()
+void wok::Cactus::start(const GameClock&)
 {
     addWindTween();
 }
 
-void wok::Cactus::update([[maybe_unused]] const GameClock& time)
+void wok::Cactus::update(const GameClock&)
 {
-    auto overlapped = world::checkForOverlaps(handle.as<Collideable>(), getPosition() + sf::Vector2f(0.f, -4.f), 2.f);
+    CollisionContext ctx(CollisionContext::SourceType::Enviroment);
+
+    auto overlapped = world::checkForOverlaps(ctx, handle.as<Collideable>(), getPosition() + sf::Vector2f(0.f, -4.f), 2.f);
     auto hittable = overlapped.as<Hittable>();
     if (hittable.isValid())
     {
@@ -52,7 +56,7 @@ void wok::Cactus::addWindTween()
         [this](float v) { setRotation(v); },
         -preset->animationScale, preset->animationScale, preset->animationScale
         );
-    windAnimation->addTimeOffset((rand() / (float)RAND_MAX) * 20.f);
+    windAnimation->addTimeOffset(randomizer::getBetween(0.f, 20.f));
 
     world::addTween(windAnimation);
 }
@@ -82,8 +86,11 @@ void wok::Cactus::reactToHit(HitData data)
     }
 }
 
-void wok::Cactus::getHitboxes(const std::function<void(const physics::Hitbox&)> yield)
+void wok::Cactus::getHitboxes(const CollisionContext& ctx, const std::function<void(const physics::Hitbox&)> yield)
 {
+    if (!ctx.shouldHitDestructible)
+        return;
+
     yield(physics::AABB(getGlobalBounds()));
 }
 

@@ -5,6 +5,11 @@ namespace wok
 {
     auto physics::AABB::raycast(m::Ray ray) const -> Intersection
     {
+        if (sf::FloatRect(topLeft, size).contains(ray.origin))
+        {
+            return physics::Intersection(0.f, -ray.direction, ray);
+        }
+
         ray.move(-topLeft);
         ray.direction = m::normalize(ray.direction);
 
@@ -67,12 +72,7 @@ namespace wok
 
     auto physics::OBB::raycast(m::Ray ray) const -> Intersection
     {
-        // We convert this scenario into Ray and AABB to simplify calculations
         ray.rotateAround(position, rotation);
-
-        //auto res = rayWithCenteredAABB(ray, physics::AABB(position, size).centered());
-
-
         auto result = physics::AABB(position, size).centered().raycast(ray);
         result.normal = m::rotate(result.normal, -rotation);
         return result;
@@ -92,7 +92,7 @@ namespace wok
         if (m::sqrLength(L) < (r * r))
         {
             // We are inside the circle
-            return {};
+            return physics::Intersection(0.f, -ray.direction, ray);
         }
 
         float tca = m::dot(L, ray.direction);

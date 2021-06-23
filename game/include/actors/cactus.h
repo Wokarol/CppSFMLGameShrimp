@@ -17,7 +17,7 @@ namespace wok
         Cactus(std::shared_ptr<CactusPreset> preset);
 
         virtual void assetsReloaded() override;
-        virtual void start() override;
+        virtual void start(const GameClock&) override;
         virtual void update(const GameClock& time) override;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
@@ -25,8 +25,8 @@ namespace wok
         virtual float getSortingYPos() override { return getPosition().y; }
 
 
-        virtual void reactToHit([[maybe_unused]] HitData) override;
-        virtual void getHitboxes(const std::function<void(const physics::Hitbox&)> yield) override;
+        virtual void reactToHit(HitData) override;
+        virtual void getHitboxes(const CollisionContext&, const std::function<void(const physics::Hitbox&)> yield) override;
 
         virtual sf::Vector2f getActorPosition() override { return getPosition(); }
 

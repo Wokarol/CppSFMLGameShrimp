@@ -30,7 +30,7 @@ namespace wok
 
         virtual sf::Vector2f getActorPosition() override { return getPosition(); }
 
-        virtual void getColliders(const std::function<void(sf::FloatRect)> yield) override
+        virtual void getColliders(const CollisionContext&, const std::function<void(sf::FloatRect)> yield) override
         {
             yield(getGlobalBounds());
         }

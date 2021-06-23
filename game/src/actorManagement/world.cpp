@@ -15,7 +15,7 @@ void world::updateActors(const GameClock& time)
     {
         if (shouldLog) console::log("WORLD: ", "Starting ", actor->name, " [", actor->handle.id, "]");
 
-        actor->start();
+        actor->start(time);
     }
     actorsToCallStartOn.clear();
 
@@ -197,11 +197,12 @@ void world::drawCollisionGizmos(sf::RenderTarget& target, sf::RenderStates& stat
     colliderShape.setFillColor(sf::Color(0));
     colliderShape.setOutlineColor(sf::Color(0x00ff0088));
 
+    wok::Collideable::CollisionContext ctx = wok::Collideable::DebuggingContext;
 
     for (auto& collideable : collideables)
     {
         assert(collideable);
-        collideable->getColliders([&](sf::FloatRect rect)
+        collideable->getColliders(ctx, [&](sf::FloatRect rect)
             {
                 colliderShape.setPosition(rect.left, rect.top);
                 colliderShape.setSize({ rect.width, rect.height });
@@ -212,7 +213,7 @@ void world::drawCollisionGizmos(sf::RenderTarget& target, sf::RenderStates& stat
     for (auto& collideable : collideables)
     {
         assert(collideable);
-        collideable->getHitboxes([&](const physics::Hitbox& hitbox)
+        collideable->getHitboxes(ctx, [&](const physics::Hitbox& hitbox)
             {
                 hitbox.draw(target, states, sf::Color(0x3094ff88));
             });
@@ -228,15 +229,15 @@ void world::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)
     }
 }
 
-physics::RaycastResult world::raycastAgainstHitboxes(const m::Ray& ray, float maxRaycastDistance)
+physics::RaycastResult world::raycastAgainstHitboxes(const wok::Collideable::CollisionContext& ctx, const m::Ray& ray, float maxRaycastDistance)
 {
     physics::Intersection closestHit;
-    ActorHandle<Actor> hitActorHandle;
+    ActorHandle<> hitActorHandle;
 
     for (auto& collideable : collideables)
     {
         assert(collideable);
-        collideable->getHitboxes([&](const physics::Hitbox& hitbox)
+        collideable->getHitboxes(ctx, [&](const physics::Hitbox& hitbox)
             {
                 auto intersection = hitbox.raycast(ray);
 
@@ -272,12 +273,12 @@ physics::RaycastResult world::raycastAgainstHitboxes(const m::Ray& ray, float ma
     }
 }
 
-void wok::world::checkForCollisions(const sf::FloatRect& rect, std::function<void(collide::Reaction)> reactionCallback)
+void wok::world::checkForCollisions(const wok::Collideable::CollisionContext& ctx, const sf::FloatRect& rect, std::function<void(collide::Reaction)> reactionCallback)
 {
     for (auto& col : collideables)
     {
         assert(col);
-        col->getColliders([&](sf::FloatRect collider)
+        col->getColliders(ctx, [&](sf::FloatRect collider)
             {
                 auto reaction = collide::AABBWithAABB(rect, collider);
                 reactionCallback(reaction);
@@ -285,7 +286,7 @@ void wok::world::checkForCollisions(const sf::FloatRect& rect, std::function<voi
     }
 }
 
-auto wok::world::findOverlap(Collideable* excluded, std::function<bool(const physics::Hitbox&)> overlapStrategy) -> ActorHandle<Collideable>
+auto wok::world::findOverlap(const wok::Collideable::CollisionContext& ctx, Collideable* excluded, std::function<bool(const physics::Hitbox&)> overlapStrategy) -> ActorHandle<Collideable>
 {
     Collideable* collideable = NULL;
     for (auto& col : collideables)
@@ -296,7 +297,7 @@ auto wok::world::findOverlap(Collideable* excluded, std::function<bool(const phy
         }
 
         assert(col);
-        col->getHitboxes([&](const physics::Hitbox& hitbox)
+        col->getHitboxes(ctx, [&](const physics::Hitbox& hitbox)
             {
                 bool isOverlapping = overlapStrategy(hitbox);
                 if (isOverlapping)
@@ -310,21 +311,21 @@ auto wok::world::findOverlap(Collideable* excluded, std::function<bool(const phy
         return {};
 
     // We get handle from the pointer via Actor
-    ActorHandle<Actor> actor = dynamic_cast<Actor*>(collideable)->handle;
+    ActorHandle<> actor = dynamic_cast<Actor*>(collideable)->handle;
     return actor.as<Collideable>();
 }
 
-ActorHandle<Collideable> wok::world::checkForOverlaps(Collideable* excluded, const sf::FloatRect& rect)
+ActorHandle<Collideable> wok::world::checkForOverlaps(const wok::Collideable::CollisionContext& ctx, Collideable* excluded, const sf::FloatRect& rect)
 {
-    return findOverlap(excluded, [&](const physics::Hitbox& hitbox)
+    return findOverlap(ctx, excluded, [&](const physics::Hitbox& hitbox)
         {
             return hitbox.overlapsRect(rect);
         });
 }
 
-ActorHandle<Collideable> wok::world::checkForOverlaps(Collideable* excluded, const sf::Vector2f& circlePosition, float circleRadius)
+ActorHandle<Collideable> wok::world::checkForOverlaps(const wok::Collideable::CollisionContext& ctx, Collideable* excluded, const sf::Vector2f& circlePosition, float circleRadius)
 {
-    return findOverlap(excluded, [&](const physics::Hitbox& hitbox)
+    return findOverlap(ctx, excluded, [&](const physics::Hitbox& hitbox)
         {
             return hitbox.overlapsCircle(circlePosition, circleRadius);
         });

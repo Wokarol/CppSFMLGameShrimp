@@ -33,7 +33,14 @@ namespace wok::physics
         virtual bool overlapsCircle(sf::Vector2f position, float radius) const final;
         virtual bool overlapsRect(sf::FloatRect rect) const final;
 
+
         // Helpers
+        inline AABB scaled(float s)
+        {
+            sf::Vector2f deltaSize = size * (1.f - s);
+            return { topLeft + deltaSize / 2.f, size - deltaSize };
+        }
+
         inline AABB centered()
         {
             return { topLeft - size / 2.f, size };
