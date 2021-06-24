@@ -8,3 +8,5 @@
 #include "actors/bullet.h"
 #include "actors/fracturedSprite.h"
 #include "actors/basicEnemy.h"
+
+#include "actors/ui/background.h"

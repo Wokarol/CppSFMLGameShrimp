@@ -1,4 +1,4 @@
-#include <levelLoader.h>
+#include <sceneLoader.h>
 
 #include <filesystem>
 #include <world.h>
@@ -101,7 +101,14 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
     }
 }
 
-void wok::levels::load(std::string_view levelPath)
+void wok::scenes::loadMenu()
+{
+    auto group = Group::create("Menu");
+
+    world::createNamedActor<ui::Background>("Background", sf::Color(0xFEF9DBFF))->withGroup(group);
+}
+
+void wok::scenes::loadScene(std::string_view levelPath)
 {
 
     std::stringstream pathStream;
@@ -124,7 +131,7 @@ void wok::levels::load(std::string_view levelPath)
 
     auto group = Group::create(groupName.str());
 
-    loadedLevels.push_back(group);
+    loadedScenes.push_back(group);
 
     try
     {

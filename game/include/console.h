@@ -53,6 +53,16 @@ namespace console
 #error Unsupported logger platform
 #endif
         }
+
+        inline void pauseImplementation()
+        {
+#if GAME_PLATFORM_WINDOWS
+            std::cout << std::endl;
+            system("pause");
+#else
+#error Unsupported logger platform
+#endif
+        }
     }
 
     template <typename... Params>
@@ -89,5 +99,10 @@ namespace console
     inline bool isVisible()
     {
         return implementation::isConsoleVisible();
+    }
+
+    inline void pause()
+    {
+        implementation::pauseImplementation();
     }
 }

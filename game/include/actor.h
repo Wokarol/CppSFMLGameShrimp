@@ -23,6 +23,12 @@ namespace wok
         virtual ~Actor() = default;
         ActorHandle<> getHandle() { return handle; }
 
+        Actor& withGroup(std::shared_ptr<Group> g)
+        {
+            group = g;
+            return *this;
+        }
+
     protected:
         ActorHandle<> handle;
 
