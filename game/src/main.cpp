@@ -67,7 +67,7 @@ int main()
 
     auto window = createWindow();
     //centreCamera(window);
-    setCornerCam(window);
+    //setCornerCam(window);
 
     Pallete colors;
     wok::GameClock time;
@@ -92,6 +92,9 @@ int main()
     {
         handleEventsAndInput(window);
         time.Tick();
+
+        sf::Vector2f screenSize = (sf::Vector2f)window.getSize();
+        window.setView(sf::View({ 0.f, 0.f, screenSize.x, screenSize.y }));
 
         wok::world::update(time);
 

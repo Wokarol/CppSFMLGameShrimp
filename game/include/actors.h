@@ -10,3 +10,4 @@
 #include "actors/basicEnemy.h"
 
 #include "actors/ui/background.h"
+#include "actors/ui/title.h"

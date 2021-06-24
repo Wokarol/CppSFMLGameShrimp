@@ -106,6 +106,10 @@ void wok::scenes::loadMenu()
     auto group = Group::create("Menu");
 
     world::createNamedActor<ui::Background>("Background", sf::Color(0xFEF9DBFF))->withGroup(group);
+    world::createNamedActor<ui::Title>("Title",
+        sf::Color::Black, 20.f, "Hard Western",
+        "Surviving the Heat", 80u
+        )->withGroup(group);
 }
 
 void wok::scenes::loadScene(std::string_view levelPath)
