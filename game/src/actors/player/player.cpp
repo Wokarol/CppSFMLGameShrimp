@@ -9,6 +9,7 @@
 #include <tweeners.h>
 
 #include <resources.h>
+#include <sceneLoader.h>
 
 using namespace wok;
 
@@ -121,6 +122,8 @@ void wok::Player::onDeath(HitData data)
 
     world::createNamedActor<FracturedSprite>("Player Fracture", body, texture, fractures, dir);
     handle.destroy();
+
+    scenes::switchToMenu();
 }
 
 void wok::Player::assetsReloaded()

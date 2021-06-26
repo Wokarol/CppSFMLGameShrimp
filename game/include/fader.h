@@ -27,7 +27,7 @@ namespace wok
         FadeState state = FadeState::None;
         float t = 0.f;
         float fadeOutDuration = 2.f;
-        float fadeInDuration = 2.f;
+        float fadeInDuration = 1.5f;
 
         bool xDirectionFlipped = false;
         bool yDirectionFlipped = false;

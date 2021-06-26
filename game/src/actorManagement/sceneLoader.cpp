@@ -183,3 +183,17 @@ void wok::scenes::switchToScene(std::string_view name)
             loadScene(name);
         });
 }
+
+void wok::scenes::switchToMenu()
+{
+    game::fader.fade([=]()
+        {
+            for (auto& group : loadedGroups)
+            {
+                world::destroyGroup(group);
+            }
+            loadedGroups.clear();
+
+            loadMenu();
+        });
+}

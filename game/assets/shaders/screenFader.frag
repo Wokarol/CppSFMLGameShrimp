@@ -14,7 +14,7 @@ vec2 rotate(vec2 v, float a) {
 }
 
 void main() {
-    float t = 1. - u_t;
+    float t = u_t;
 
     vec2 pos = gl_FragCoord.xy;
     
@@ -41,9 +41,10 @@ void main() {
         : gID.y;
     
     // Adjusting time to fit
+    float timeDif = 0.08;
     float totalCellsInTime = maxXID + maxYID;
-    t *= 1.1 + 0.05 * totalCellsInTime;
-    t -= dist * 0.05;
+    t *= 1.1 + timeDif * totalCellsInTime;
+    t -= dist * timeDif;
 
     // We clamp t within 0..1 range
     t = clamp(t, 0., 1.);
@@ -75,5 +76,5 @@ void main() {
 
     mask *= alpha;
 
-    gl_FragColor = vec4(vec3(0.), mask);
+    gl_FragColor = vec4(vec3(0.), 1. - mask);
 }

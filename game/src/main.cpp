@@ -94,6 +94,7 @@ int main()
         if (game::awaitsClosing())
         {
             window.close();
+            break;
         }
 
         handleEventsAndInput(window);
@@ -102,10 +103,7 @@ int main()
         sf::Vector2f screenSize = (sf::Vector2f)window.getSize();
         window.setView(game::getCurrentCamera().getView(screenSize));
 
-        if (!game::fader.isFadingOut())
-        {
-            wok::world::update(time);
-        }
+        wok::world::update(time);
         game::fader.update(time);
 
         window.clear(colors.background);
@@ -119,4 +117,5 @@ int main()
 
     wok::world::clear();
     wok::res::clear();
+    game::fader = {};
 }

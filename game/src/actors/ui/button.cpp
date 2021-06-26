@@ -1,4 +1,5 @@
 #include <actors\ui\button.h>
+#include <gameState.h>
 
 void wok::ui::Button::start(const GameClock&)
 {
@@ -44,6 +45,9 @@ void wok::ui::Button::setOnClick(std::function<void()> onClick)
 
 void wok::ui::Button::processMouseEvent(MouseEvent& ctx)
 {
+    if (game::fader.isFading())
+        return;
+
     if (rectangle.getGlobalBounds().contains(ctx.mousePosition))
     {
         isMouseOver = true;
