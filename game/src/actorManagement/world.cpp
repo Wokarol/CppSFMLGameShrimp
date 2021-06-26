@@ -121,6 +121,12 @@ void wok::world::addActorToCache(Actor* actor)
         if (shouldLog) console::log("    ", "Actor is collideable");
         collideables.push_back(collideable);
     }
+
+    if (auto clickable = dynamic_cast<Clickable*>(actor))
+    {
+        if (shouldLog) console::log("    ", "Actor is clickable");
+        clickables.push_back(clickable);
+    }
 }
 
 void wok::world::clearActorFromCache(Actor* actor)
@@ -140,10 +146,14 @@ void wok::world::clearActorFromCache(Actor* actor)
         hittables.erase(std::find(hittables.begin(), hittables.end(), hittable));
     }
 
-
     if (auto collideable = dynamic_cast<Collideable*>(actor))
     {
         collideables.erase(std::find(collideables.begin(), collideables.end(), collideable));
+    }
+
+    if (auto clickable = dynamic_cast<Clickable*>(actor))
+    {
+        clickables.erase(std::find(clickables.begin(), clickables.end(), clickable));
     }
 }
 
@@ -329,6 +339,18 @@ ActorHandle<Collideable> wok::world::checkForOverlaps(const wok::Collideable::Co
         {
             return hitbox.overlapsCircle(circlePosition, circleRadius);
         });
+}
+
+void wok::world::sendUIEvent(sf::Vector2f mousePosition, Clickable::MouseEventType eventType)
+{
+    Clickable::MouseEvent ctx(mousePosition, eventType);
+    for (auto& clickable : clickables)
+    {
+        clickable->processMouseEvent(ctx);
+
+        if (ctx.consumed)
+            break;
+    }
 }
 
 void world::dumpActors(bool detailed)

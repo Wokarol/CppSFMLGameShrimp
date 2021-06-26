@@ -156,6 +156,8 @@ inline void handleEventsAndInput(sf::RenderWindow& window)
             mousePos.x = event.mouseMove.x;
             mousePos.y = event.mouseMove.y;
             wok::input::mousePositionInWorld = window.mapPixelToCoords(mousePos);
+
+            wok::input::onMouseMoved();
         }
     }
 }

@@ -116,20 +116,22 @@ void wok::scenes::loadMenu()
         "Surviving the Heat", 80u
         )->withGroup(group);
 
-    world::createNamedActor<ui::Button>("Start Button", "START", font, 60u,
-        sf::Vector2f(20, -140), sf::Vector2f(0.f, 1.f),
-        sf::Vector2f(300, 100), buttonBackgroundColor, buttonTextColor
-        )->withGroup(group);
+    auto startButton = world::createNamedActor<ui::Button>("Start Button", "START", font, 60u,
+        sf::Vector2f(40, -160), sf::Vector2f(0.f, 1.f),
+        sf::Vector2f(300, 100), buttonBackgroundColor, buttonTextColor);
+    startButton->withGroup(group);
 
-    world::createNamedActor<ui::Button>("Quit Button", "QUIT", font, 60u,
-        sf::Vector2f(20, -20), sf::Vector2f(0.f, 1.f),
-        sf::Vector2f(300, 100), buttonBackgroundColor, buttonTextColor
-        )->withGroup(group);
+    auto quitButton = world::createNamedActor<ui::Button>("Quit Button", "QUIT", font, 60u,
+        sf::Vector2f(40, -40), sf::Vector2f(0.f, 1.f),
+        sf::Vector2f(300, 100), buttonBackgroundColor, buttonTextColor);
+    quitButton->withGroup(group);
+
+    startButton->setOnClick([]() { switchToScene(project::firstLevelScenePath); });
+    quitButton->setOnClick([]() { game::close(); });
 }
 
 void wok::scenes::loadScene(std::string_view levelPath)
 {
-
     std::stringstream pathStream;
     pathStream << "assets/" << levelPath << ".level";
     std::string path = pathStream.str();
@@ -165,4 +167,9 @@ void wok::scenes::loadScene(std::string_view levelPath)
     {
         console::error(e.what());
     }
+}
+
+void wok::scenes::switchToScene(std::string_view name)
+{
+    console::log("Trying my best to switch the scene chief!");
 }

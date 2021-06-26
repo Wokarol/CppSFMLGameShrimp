@@ -14,6 +14,8 @@
 #include <physics/interactions.h>
 #include <physics/collisions.h>
 
+#include <SFML/Graphics.hpp>
+
 namespace wok
 {
     class world
@@ -32,6 +34,7 @@ namespace wok
         static inline std::vector<Tickable*> tickables;
         static inline std::vector<Hittable*> hittables;
         static inline std::vector<Collideable*> collideables;
+        static inline std::vector<Clickable*> clickables;
 
 
         static inline actor_id nextFreeID = 0;
@@ -129,6 +132,8 @@ namespace wok
 
         static ActorHandle<Collideable> checkForOverlaps(const wok::Collideable::CollisionContext&, Collideable* excluded, const sf::FloatRect& rect);
         static ActorHandle<Collideable> checkForOverlaps(const wok::Collideable::CollisionContext&, Collideable* excluded, const sf::Vector2f& circlePosition, float circleRadius);
+
+        static void sendUIEvent(sf::Vector2f mousePosition, Clickable::MouseEventType eventType);
 
         static void dumpActors(bool details = false);
         static void onAssetsReloaded();

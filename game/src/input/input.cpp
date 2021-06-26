@@ -1,4 +1,5 @@
 #include <input.h>
+#include <world.h>
 #include <SFML/Graphics.hpp>
 #include <console.h>
 
@@ -55,10 +56,26 @@ void wok::input::handleMouseButtonsPressed(const sf::Event& event)
 {
     attack.checkForKeyPressed(event.mouseButton.button);
     knockback.checkForKeyPressed(event.mouseButton.button);
+
+    if (event.mouseButton.button == uiMouseButton)
+    {
+        world::sendUIEvent(mousePositionInWorld, wok::Clickable::MouseEventType::Pressed);
+    }
 }
 
 void wok::input::handleMouseButtonsReleased(const sf::Event& event)
 {
     attack.checkForKeyReleased(event.mouseButton.button);
     knockback.checkForKeyReleased(event.mouseButton.button);
+
+
+    if (event.mouseButton.button == uiMouseButton)
+    {
+        world::sendUIEvent(mousePositionInWorld, wok::Clickable::MouseEventType::Released);
+    }
+}
+
+void wok::input::onMouseMoved()
+{
+    world::sendUIEvent(mousePositionInWorld, wok::Clickable::MouseEventType::Moved);
 }
