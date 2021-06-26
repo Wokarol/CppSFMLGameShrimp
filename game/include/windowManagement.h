@@ -19,7 +19,7 @@ inline void initializeBoilerplate()
 inline sf::RenderWindow createWindow()
 {
     auto settings = sf::ContextSettings::ContextSettings(0, 0, 8);
-    return sf::RenderWindow(sf::VideoMode(25 * 32, 16 * 32), "Surviving The Heat", 7U, settings);
+    return sf::RenderWindow(sf::VideoMode(25 * 32, 16 * 32), "Surviving The Heat", sf::Style::Default, settings);
 }
 
 inline void centreCamera(sf::RenderTarget& target)
@@ -156,6 +156,8 @@ inline void handleEventsAndInput(sf::RenderWindow& window)
             mousePos.x = event.mouseMove.x;
             mousePos.y = event.mouseMove.y;
             wok::input::mousePositionInWorld = window.mapPixelToCoords(mousePos);
+
+            wok::input::onMouseMoved();
         }
     }
 }

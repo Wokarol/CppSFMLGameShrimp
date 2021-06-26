@@ -51,6 +51,9 @@ namespace wok
         static void handleInputKeysReleased(const sf::Event& event);
         static void handleMouseButtonsPressed(const sf::Event& event);
         static void handleMouseButtonsReleased(const sf::Event& event);
+        static void onMouseMoved();
         static void resetKeyStateBeforeTheFrame();
+
+        static const sf::Mouse::Button uiMouseButton = sf::Mouse::Button::Left;
     };
 }

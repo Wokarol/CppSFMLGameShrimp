@@ -66,4 +66,27 @@ namespace wok
                 });
         }
     };
+
+    class Clickable
+    {
+    public:
+        enum class MouseEventType
+        {
+            Pressed, Released, Moved
+        };
+
+        struct MouseEvent
+        {
+            const sf::Vector2f mousePosition;
+            const MouseEventType eventType;
+            bool consumed;
+
+            MouseEvent(sf::Vector2f mousePosition, MouseEventType eventType) :
+                mousePosition(mousePosition), eventType(eventType),
+                consumed(false)
+            {}
+        };
+
+        virtual void processMouseEvent(MouseEvent& ctx) = 0;
+    };
 }

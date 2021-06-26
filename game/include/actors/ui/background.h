@@ -1,6 +1,7 @@
 #pragma once
 
 #include <actor.h>
+#include <SFML/Graphics.hpp>
 
 namespace wok::ui
 {
