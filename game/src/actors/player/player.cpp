@@ -31,6 +31,7 @@ void wok::Player::start(const GameClock&)
     auto healthBar = world::createNamedActor<IconBar>("Player Health",
         res::get<IconBarSettings>(settings->healthBarName), settings->maxHealth);
     health.bindBar(healthBar);
+    healthBar->group = group;
 
     assetsReloaded();
 }
