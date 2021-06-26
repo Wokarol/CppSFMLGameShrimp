@@ -41,6 +41,7 @@ namespace wok
         };
 
         static inline sf::Vector2f movement;
+        static inline sf::Vector2i mousePosition;
         static inline sf::Vector2f mousePositionInWorld;
 
         static inline key<sf::Mouse::Button> attack{ sf::Mouse::Left };

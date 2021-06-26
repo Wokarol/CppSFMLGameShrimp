@@ -172,11 +172,28 @@ void wok::scenes::loadScene(std::string_view levelPath)
 
 void wok::scenes::switchToScene(std::string_view name)
 {
-    for (auto& group : loadedGroups)
-    {
-        world::destroyGroup(group);
-    }
-    loadedGroups.clear();
+    game::fader.fade([=]()
+        {
+            for (auto& group : loadedGroups)
+            {
+                world::destroyGroup(group);
+            }
+            loadedGroups.clear();
 
-    loadScene(name);
+            loadScene(name);
+        });
+}
+
+void wok::scenes::switchToMenu()
+{
+    game::fader.fade([=]()
+        {
+            for (auto& group : loadedGroups)
+            {
+                world::destroyGroup(group);
+            }
+            loadedGroups.clear();
+
+            loadMenu();
+        });
 }

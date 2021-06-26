@@ -20,6 +20,7 @@ void wok::res::reloadAll()
 
     reload(sf::Texture);
     reload(sf::Font);
+    reload(sf::Shader);
 
     reload(wok::CactusPreset);
     reload(wok::PlayerSettings);

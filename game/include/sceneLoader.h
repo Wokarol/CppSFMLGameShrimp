@@ -14,4 +14,5 @@ namespace wok::scenes
     void loadScene(std::string_view name);
 
     void switchToScene(std::string_view name);
+    void switchToMenu();
 }
