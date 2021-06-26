@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <queue>
 #include <memory>
 #include <actorSystem/actorHandle.h>
 #include <actor.h>
@@ -25,7 +26,7 @@ namespace wok
         static inline std::vector<std::shared_ptr<Tweener>> tweeners;
 
         // One-Frame Cache
-        static inline std::vector<Actor*> actorsToCallStartOn;
+        static inline std::queue<Actor*> actorsToCallStartOn;
         static inline std::vector<Actor*> actorsToAddToCache;
         static inline std::vector<actor_id> actorsToRemove;
 
@@ -57,7 +58,7 @@ namespace wok
             actor->name = name;
             actor->handle = { id };
 
-            actorsToCallStartOn.push_back(actor);
+            actorsToCallStartOn.push(actor);
 
             if (shouldLog)
             {
