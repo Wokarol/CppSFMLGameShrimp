@@ -104,6 +104,7 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
 void wok::scenes::loadMenu()
 {
     auto group = Group::create("Menu");
+    loadedGroups.push_back(group);
 
     auto font = res::get<sf::Font>("Hard Western");
 
@@ -152,7 +153,7 @@ void wok::scenes::loadScene(std::string_view levelPath)
 
     auto group = Group::create(groupName.str());
 
-    loadedScenes.push_back(group);
+    loadedGroups.push_back(group);
 
     try
     {
@@ -171,5 +172,11 @@ void wok::scenes::loadScene(std::string_view levelPath)
 
 void wok::scenes::switchToScene(std::string_view name)
 {
-    console::log("Trying my best to switch the scene chief!");
+    for (auto& group : loadedGroups)
+    {
+        world::destroyGroup(group);
+    }
+    loadedGroups.clear();
+
+    loadScene(name);
 }
