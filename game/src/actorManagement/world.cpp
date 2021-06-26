@@ -11,13 +11,15 @@ using namespace wok;
 
 void world::updateActors(const GameClock& time)
 {
-    for (auto& actor : actorsToCallStartOn)
+    while (actorsToCallStartOn.size() > 0)
     {
+        auto actor = actorsToCallStartOn.front();
+        actorsToCallStartOn.pop();
+
         if (shouldLog) console::log("WORLD: ", "Starting ", actor->name, " [", actor->handle.id, "]");
 
         actor->start(time);
     }
-    actorsToCallStartOn.clear();
 
     for (auto& actor : tickables)
     {
@@ -414,7 +416,6 @@ void world::clear()
     actors.clear();
     tweeners.clear();
 
-    actorsToCallStartOn.clear();
     actorsToAddToCache.clear();
     actorsToRemove.clear();
 

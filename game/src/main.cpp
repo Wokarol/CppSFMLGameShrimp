@@ -98,7 +98,7 @@ int main()
         time.Tick();
 
         sf::Vector2f screenSize = (sf::Vector2f)window.getSize();
-        window.setView(sf::View({ 0.f, 0.f, screenSize.x, screenSize.y }));
+        window.setView(game::getCurrentCamera().getView(screenSize));
 
         wok::world::update(time);
 

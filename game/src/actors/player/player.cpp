@@ -1,6 +1,7 @@
 #include <actors/player.h>
 #include <actors/bullet.h>
 #include <actors/fracturedSprite.h>
+#include <actors/camera.h>
 
 #include <input.h>
 #include <utils/mathUtils.h>
@@ -28,10 +29,14 @@ void wok::Player::start(const GameClock&)
         [this](auto h) { onDeath(h); }
     );
 
-    auto healthBar = world::createNamedActor<IconBar>("Player Health",
+    auto healthBar = world::createNamedActor<IconBar>("Player's Health",
         res::get<IconBarSettings>(settings->healthBarName), settings->maxHealth);
     health.bindBar(healthBar);
     healthBar->group = group;
+
+    auto camera = world::createNamedActor<Camera>("Player's Camera", res::get<CameraSettings>(settings->cameraPath));
+    camera->group = group;
+    camera->setFollowTarget(handle.as<Actor2D>());
 
     assetsReloaded();
 }

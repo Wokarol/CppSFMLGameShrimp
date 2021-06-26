@@ -19,6 +19,8 @@
         "bullet_path": "./bullet"
     },
 
+    "camera_path": "./playerCamera",
+
     // Health
     "health_bar_name": "./playerHealthBar",
     "max_health": 5,

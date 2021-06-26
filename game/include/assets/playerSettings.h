@@ -13,6 +13,8 @@ namespace wok
         MovementSettings movement;
         GunSettings gun;
 
+        std::string cameraPath;
+
         std::string healthBarName;
         int maxHealth;
 
