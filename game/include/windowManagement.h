@@ -155,9 +155,12 @@ inline void handleEventsAndInput(sf::RenderWindow& window)
             sf::Vector2i mousePos;
             mousePos.x = event.mouseMove.x;
             mousePos.y = event.mouseMove.y;
-            wok::input::mousePositionInWorld = window.mapPixelToCoords(mousePos);
 
+
+            wok::input::mousePosition = mousePos;
             wok::input::onMouseMoved();
         }
     }
+
+    wok::input::mousePositionInWorld = window.mapPixelToCoords(wok::input::mousePosition);
 }

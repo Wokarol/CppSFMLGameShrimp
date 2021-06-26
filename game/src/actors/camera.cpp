@@ -42,7 +42,7 @@ sf::View wok::Camera::getView(sf::Vector2f screenSize) const
     float height = settings->height;
     float width = height * ratio;
 
-    return sf::View(position, sf::Vector2f(width, height));
-
+    lastView = sf::View(position, sf::Vector2f(width, height));
+    return lastView;
     //return sf::View({ std::round(position.x), std::round(position.y) }, screenSize);
 }

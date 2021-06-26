@@ -49,7 +49,7 @@ void wok::DebugPopup::update(const GameClock&)
     auto it = std::find(popupsActive.begin(), popupsActive.end(), this);
     int pos = (int)(it - popupsActive.begin());
 
-    sf::Vector2f position(game::screenSize.x - 5.f, 5.f + pos * 10);
+    sf::Vector2f position = sf::Vector2f(-5.f, 5.f + pos * 10);
 
     if (lastPos == -1)
     {
@@ -72,7 +72,11 @@ void wok::DebugPopup::updatePositionTo(sf::Vector2f pos)
 
 void wok::DebugPopup::draw(sf::RenderTarget& target, sf::RenderStates& states)
 {
+    sf::Vector2f offset = game::getCurrentCamera().viewportToWorld({ 1.f, 0.f });
+
+    text.move(offset);
     target.draw(text, states);
+    text.move(-offset);
 }
 
 int wok::DebugPopup::getSortingOrder()
