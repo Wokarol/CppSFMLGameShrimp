@@ -5,6 +5,7 @@
 #include <actor.h>
 #include <actors/player.h>
 #include <actors/camera.h>
+#include <fader.h>
 #include <viewportCamera.h>
 
 namespace game
@@ -17,6 +18,7 @@ namespace game
 
     inline sf::Vector2f screenSize;
     inline wok::ActorHandle<wok::Player> player;
+    inline wok::Fader fader;
 
     inline void setActiveCamera(wok::ActorHandle<wok::Camera> camera)
     {

@@ -15,6 +15,7 @@
 #include <resources.h>
 #include <projectSettings.h>
 #include <gameState.h>
+#include <fader.h>
 
 struct Pallete
 {
@@ -72,6 +73,7 @@ int main()
     wok::GameClock time;
 
     wok::world::shouldLog = false;
+    game::fader = wok::Fader();
 
     bool configLoadedSuccesfully = loadGameConfig();
     if (!configLoadedSuccesfully)
@@ -100,11 +102,17 @@ int main()
         sf::Vector2f screenSize = (sf::Vector2f)window.getSize();
         window.setView(game::getCurrentCamera().getView(screenSize));
 
-        wok::world::update(time);
+        if (!game::fader.isFadingOut())
+        {
+            wok::world::update(time);
+        }
+        game::fader.update(time);
 
         window.clear(colors.background);
         auto states = sf::RenderStates();
         wok::world::draw(window, states);
+
+        game::fader.draw(window, screenSize);
 
         window.display();
     }

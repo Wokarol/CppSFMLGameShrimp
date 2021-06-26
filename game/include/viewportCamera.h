@@ -15,7 +15,7 @@ namespace wok
     public:
         virtual sf::View getView(sf::Vector2f screenSize) const override
         {
-            return sf::View({ 0.f, 0.f }, screenSize);
+            return sf::View({ 0.f, 0.f, screenSize.x, screenSize.y });
         }
     };
 }
