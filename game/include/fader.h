@@ -26,7 +26,12 @@ namespace wok
 
         FadeState state = FadeState::None;
         float t = 0.f;
-        float fadeOutDuration = 1.f;
-        float fadeInDuration = 1.f;
+        float fadeOutDuration = 2.f;
+        float fadeInDuration = 2.f;
+
+        bool xDirectionFlipped = false;
+        bool yDirectionFlipped = false;
+
+        std::shared_ptr<sf::Shader> shader;
     };
 }

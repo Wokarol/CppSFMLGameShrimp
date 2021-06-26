@@ -26,3 +26,16 @@ static void wok::res::create(const std::string& name, sf::Texture& asset)
         console::showImportant();
     }
 }
+
+template<>
+static void wok::res::create(const std::string& name, sf::Shader& asset)
+{
+    std::string texturePath = (std::stringstream()
+        << "assets/" << name << ".frag"
+        ).str();
+
+    if (!asset.loadFromFile(texturePath, sf::Shader::Type::Fragment))
+    {
+        console::showImportant();
+    }
+}
