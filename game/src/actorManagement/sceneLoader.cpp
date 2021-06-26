@@ -105,10 +105,25 @@ void wok::scenes::loadMenu()
 {
     auto group = Group::create("Menu");
 
+    auto font = res::get<sf::Font>("Hard Western");
+
+    sf::Color buttonBackgroundColor(0x684c3cff);
+    sf::Color buttonTextColor(0xFFFFFFFF);
+
     world::createNamedActor<ui::Background>("Background", sf::Color(0xFEF9DBFF))->withGroup(group);
     world::createNamedActor<ui::Title>("Title",
-        sf::Color::Black, 20.f, "Hard Western",
+        sf::Color::Black, 20.f, font,
         "Surviving the Heat", 80u
+        )->withGroup(group);
+
+    world::createNamedActor<ui::Button>("Start Button", "START", font, 60u,
+        sf::Vector2f(20, -140), sf::Vector2f(0.f, 1.f),
+        sf::Vector2f(300, 100), buttonBackgroundColor, buttonTextColor
+        )->withGroup(group);
+
+    world::createNamedActor<ui::Button>("Quit Button", "QUIT", font, 60u,
+        sf::Vector2f(20, -20), sf::Vector2f(0.f, 1.f),
+        sf::Vector2f(300, 100), buttonBackgroundColor, buttonTextColor
         )->withGroup(group);
 }
 

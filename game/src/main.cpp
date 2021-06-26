@@ -7,7 +7,7 @@
 #include <json.hpp>
 #include <utils/jsonHelpers.h>
 
-#include "windowManagement.h"
+#include <windowManagement.h>
 #include <world.h>
 #include <actors/staticBox.h>
 

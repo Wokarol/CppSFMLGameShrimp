@@ -11,3 +11,4 @@
 
 #include "actors/ui/background.h"
 #include "actors/ui/title.h"
+#include "actors/ui/button.h"
