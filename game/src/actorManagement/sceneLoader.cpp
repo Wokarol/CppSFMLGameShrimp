@@ -18,6 +18,7 @@
 #include <assets/playerSettings.h>
 #include <assets/enemySettings.h>
 #include <assets/spawnerSettings.h>
+#include <assets/dummySettings.h>
 
 using namespace wok;
 
@@ -98,6 +99,17 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
         playerActor.setActorPosition(pos * project::ppu);
 
         game::player = playerHandle;
+    }
+
+    nlohmann::json& dummy = json["Dummy"];
+    if (dummy.is_object())
+    {
+        auto settings = res::get<DummySettings>(project::actorPaths["dummy"]);
+        auto dummyHandle = world::createNamedActor<Dummy>("Training Dummy", settings, dummy.at("message"));
+        dummyHandle->group = group;
+
+        sf::Vector2f pos = dummy["pos"];
+        dummyHandle->setActorPosition(pos * project::ppu);
     }
 }
 

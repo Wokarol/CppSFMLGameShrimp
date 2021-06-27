@@ -25,6 +25,7 @@ void wok::EnemySpawner::update(const GameClock& time)
             }),
         spawnedEnemies.end());
 
+    if (!game::dummyKilled) return;
     if (game::fader.isFading()) return;
     if (currentWave >= settings->waves.size()) return;
 
