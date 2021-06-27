@@ -10,6 +10,8 @@
 #include "assets/iconBarSettings.h"
 #include "assets/enemySettings.h"
 #include "assets/cameraSettings.h"
+#include "assets/spawnerSettings.h"
+#include "assets/dummySettings.h"
 
 
 #define reload(type) reloadIfTypeExists<type>(); console::log("Reloaded: ", #type);
@@ -23,6 +25,7 @@ void wok::res::reloadAll()
     reload(sf::Shader);
 
     reload(wok::CactusPreset);
+    reload(wok::DummySettings);
     reload(wok::PlayerSettings);
     reload(wok::BulletSettings);
     reload(wok::TilesetData);
@@ -30,6 +33,7 @@ void wok::res::reloadAll()
     reload(wok::IconBarSettings);
     reload(wok::EnemySettings);
     reload(wok::CameraSettings);
+    reload(wok::SpawnerSettings);
 
     world::onAssetsReloaded();
 }
