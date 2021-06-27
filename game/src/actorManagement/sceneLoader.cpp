@@ -84,7 +84,7 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
     generateCacti(json["Tall_Cacti"], group, bigCactus, "Tall Cactus");
 
     auto basicEnemy = res::get<EnemySettings>(project::actorPaths["basic_enemy"]);
-    spawnEnemies(json.at("Enemy"), group, basicEnemy);
+    spawnEnemies(json["Enemy"], group, basicEnemy);
 
     nlohmann::json& player = json["Player"];
     if (player.is_object())
