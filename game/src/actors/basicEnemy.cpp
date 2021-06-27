@@ -112,7 +112,7 @@ void wok::BasicEnemy::getHitboxes(const CollisionContext& ctx, const std::functi
 
 void wok::BasicEnemy::reactToHit(HitData data)
 {
-    movement.applyPushback(data.direction * 30.f);
+    movement.applyPushback(data.direction * 60.f);
     health.damage(data);
 }
 

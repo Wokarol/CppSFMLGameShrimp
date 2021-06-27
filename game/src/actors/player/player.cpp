@@ -91,7 +91,7 @@ void wok::Player::getHitboxes(const CollisionContext& ctx, const std::function<v
     if (ctx.sourceType == CollisionContext::SourceType::Player)
         return;
 
-    yield(physics::AABB(body.getGlobalBounds()).scaled(0.5f));
+    yield(physics::AABB(body.getGlobalBounds()).scaled(0.75f));
 }
 
 void wok::Player::reactToHit(HitData data)

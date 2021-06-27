@@ -27,7 +27,6 @@ void wok::EnemySpawner::update(const GameClock& time)
 
     if (!game::dummyKilled) return;
     if (game::fader.isFading()) return;
-    if (currentWave >= settings->waves.size()) return;
 
     timeRemainingUntilEnemySpawned -= time.delta;
 
@@ -38,6 +37,11 @@ void wok::EnemySpawner::update(const GameClock& time)
 
         currentEnemyInWave = 0;
         currentWave++;
+    }
+
+    if (currentWave >= settings->waves.size())
+    {
+        currentWave--;
     }
 
     if (timeRemainingUntilEnemySpawned < 0)
