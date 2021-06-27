@@ -17,6 +17,7 @@
 #include <assets/cactusPreset.h>
 #include <assets/playerSettings.h>
 #include <assets/enemySettings.h>
+#include <assets/spawnerSettings.h>
 
 using namespace wok;
 
@@ -59,17 +60,14 @@ void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const st
     }
 }
 
-void spawnEnemies(nlohmann::json& json, std::shared_ptr<Group>& group, const std::shared_ptr<EnemySettings>& settings)
+void addEnemySpawners(nlohmann::json& json, EnemySpawner& spawner)
 {
     if (json.is_array())
     {
         for (auto& enemy : json)
         {
-            auto& basicEnemy = *world::createNamedActor<BasicEnemy>("Basic Enemy", settings);
-            basicEnemy.group = group;
-
             sf::Vector2f pos = enemy.at("pos");
-            basicEnemy.setActorPosition(pos * project::ppu);
+            spawner.addSpawnPoint(pos * project::ppu);
         }
     }
 }
@@ -83,8 +81,10 @@ void createActors(nlohmann::json& json, std::shared_ptr<Group>& group)
     auto bigCactus = res::get<CactusPreset>(project::actorPaths["tall_cactus"]);
     generateCacti(json["Tall_Cacti"], group, bigCactus, "Tall Cactus");
 
-    auto basicEnemy = res::get<EnemySettings>(project::actorPaths["basic_enemy"]);
-    spawnEnemies(json["Enemy"], group, basicEnemy);
+    auto spawnerSettings = res::get<SpawnerSettings>(project::actorPaths["spawner"]);
+    auto spawner = world::createNamedActor<EnemySpawner>("Enemy Spawner", spawnerSettings);
+    spawner->group = group;
+    addEnemySpawners(json["Enemy"], *spawner);
 
     nlohmann::json& player = json["Player"];
     if (player.is_object())
