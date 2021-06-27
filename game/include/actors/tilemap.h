@@ -21,7 +21,7 @@ namespace wok
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
 
         virtual int getSortingOrder() override;
-        virtual void getColliders(const std::function<void(sf::FloatRect)> yield) override;
+        virtual void getColliders(const CollisionContext&, const std::function<void(sf::FloatRect)> yield) override;
 
 
     private:

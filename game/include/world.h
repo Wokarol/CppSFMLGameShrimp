@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <queue>
 #include <memory>
 #include <actorSystem/actorHandle.h>
 #include <actor.h>
@@ -14,6 +15,8 @@
 #include <physics/interactions.h>
 #include <physics/collisions.h>
 
+#include <SFML/Graphics.hpp>
+
 namespace wok
 {
     class world
@@ -23,7 +26,7 @@ namespace wok
         static inline std::vector<std::shared_ptr<Tweener>> tweeners;
 
         // One-Frame Cache
-        static inline std::vector<Actor*> actorsToCallStartOn;
+        static inline std::queue<Actor*> actorsToCallStartOn;
         static inline std::vector<Actor*> actorsToAddToCache;
         static inline std::vector<actor_id> actorsToRemove;
 
@@ -32,6 +35,7 @@ namespace wok
         static inline std::vector<Tickable*> tickables;
         static inline std::vector<Hittable*> hittables;
         static inline std::vector<Collideable*> collideables;
+        static inline std::vector<Clickable*> clickables;
 
 
         static inline actor_id nextFreeID = 0;
@@ -54,7 +58,7 @@ namespace wok
             actor->name = name;
             actor->handle = { id };
 
-            actorsToCallStartOn.push_back(actor);
+            actorsToCallStartOn.push(actor);
 
             if (shouldLog)
             {
@@ -87,20 +91,6 @@ namespace wok
         static void update(const GameClock& time);
         static void draw(sf::RenderTarget& target, sf::RenderStates& states);
 
-
-        template< class T >
-        static bool isActorAliveAndMatchesType(const actor_id& id)
-        {
-            auto pair = actors.find(id);
-            if (pair == actors.end())
-            {
-                return false;
-            }
-
-            return dynamic_cast<T*>(pair->second.get()) != nullptr;
-        }
-
-
         template< class T >
         static T* getActorPointer(actor_id id)
         {
@@ -111,18 +101,6 @@ namespace wok
             }
 
             return dynamic_cast<T*>(pair->second.get());
-        }
-
-        template< class T >
-        static T& getActor(actor_id id)
-        {
-            auto pair = actors.find(id);
-            if (pair == actors.end())
-            {
-                throw std::out_of_range("There is no actor with given id");
-            }
-
-            return dynamic_cast<T&>(*pair->second.get());
         }
 
         static void destroyActor(actor_id id)
@@ -145,11 +123,18 @@ namespace wok
             }
         }
 
-        static physics::RaycastResult raycastAgainstHitboxes(const m::Ray& ray, float maxDist = -1);
-        static void checkForCollisions(const sf::FloatRect& rect, std::function<void(collide::Reaction)> callback);
+        static bool isActorAlive(actor_id id)
+        {
+            return actors.find(id) != actors.end();
+        }
 
-        static ActorHandle<Collideable> checkForOverlaps(Collideable* excluded, const sf::FloatRect& rect);
-        static ActorHandle<Collideable> checkForOverlaps(Collideable* excluded, const sf::Vector2f& circlePosition, float circleRadius);
+        static physics::RaycastResult raycastAgainstHitboxes(const wok::Collideable::CollisionContext&, const m::Ray& ray, float maxDist = -1); static physics::RaycastResult raycastAgainstColliders(const wok::Collideable::CollisionContext&, const m::Ray& ray, float maxDist = -1);
+        static void checkForCollisions(const wok::Collideable::CollisionContext&, const sf::FloatRect& rect, std::function<void(collide::Reaction)> callback);
+
+        static ActorHandle<Collideable> checkForOverlaps(const wok::Collideable::CollisionContext&, Collideable* excluded, const sf::FloatRect& rect);
+        static ActorHandle<Collideable> checkForOverlaps(const wok::Collideable::CollisionContext&, Collideable* excluded, const sf::Vector2f& circlePosition, float circleRadius);
+
+        static void sendUIEvent(sf::Vector2f mousePosition, Clickable::MouseEventType eventType);
 
         static void dumpActors(bool details = false);
         static void onAssetsReloaded();
@@ -161,16 +146,11 @@ namespace wok
         static void drawGizmos(sf::RenderTarget& target, sf::RenderStates& states);
         static void updateActors(const GameClock& time);
         static void updateTweeners(const GameClock& time);
-        static auto findOverlap(Collideable* excluded, std::function<bool(const physics::Hitbox&)> overlapStrategy)->ActorHandle<Collideable>;
+        static auto findOverlap(const wok::Collideable::CollisionContext&, Collideable* excluded, std::function<bool(const physics::Hitbox&)> overlapStrategy)->ActorHandle<Collideable>;
         static void removeDeadTweens();
         static void removeDeadActors();
         static void fillCacheIfNeeded();
         static void addActorToCache(Actor*);
         static void clearActorFromCache(Actor*);
-
-        static bool isActorAlive(actor_id id)
-        {
-            return actors.find(id) != actors.end();
-        }
     };
 }

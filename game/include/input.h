@@ -41,6 +41,7 @@ namespace wok
         };
 
         static inline sf::Vector2f movement;
+        static inline sf::Vector2i mousePosition;
         static inline sf::Vector2f mousePositionInWorld;
 
         static inline key<sf::Mouse::Button> attack{ sf::Mouse::Left };
@@ -51,6 +52,9 @@ namespace wok
         static void handleInputKeysReleased(const sf::Event& event);
         static void handleMouseButtonsPressed(const sf::Event& event);
         static void handleMouseButtonsReleased(const sf::Event& event);
+        static void onMouseMoved();
         static void resetKeyStateBeforeTheFrame();
+
+        static const sf::Mouse::Button uiMouseButton = sf::Mouse::Button::Left;
     };
 }

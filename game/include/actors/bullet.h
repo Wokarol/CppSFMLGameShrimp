@@ -8,7 +8,7 @@ namespace wok
     class Bullet : public sf::Sprite, public Actor2D, public Drawable, public Tickable
     {
     public:
-        Bullet(sf::Vector2f position, sf::Vector2f direction, std::shared_ptr<BulletSettings> settings);
+        Bullet(sf::Vector2f position, sf::Vector2f direction, Collideable::CollisionContext::SourceType bulletSource, std::shared_ptr<BulletSettings> settings);
         virtual void assetsReloaded() override;
         virtual void update(const GameClock& time) override;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
@@ -24,5 +24,6 @@ namespace wok
         sf::Vector2f direction;
         std::shared_ptr<sf::Texture> texture;
         float timeSinceStart = 0;
+        Collideable::CollisionContext::SourceType bulletSource;
     };
 }

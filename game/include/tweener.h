@@ -15,7 +15,7 @@ namespace wok
     public:
         bool paused = false;
 
-        Tweener(ActorHandle<Actor> actor) :
+        Tweener(ActorHandle<> actor) :
             actor(actor)
         {
             name = actor->name;
@@ -37,7 +37,7 @@ namespace wok
 
     protected:
         bool isRunning = true;
-        ActorHandle<Actor> actor;
+        ActorHandle<> actor;
         std::function<void()> afterKilled = []() {};
         std::string name;
 

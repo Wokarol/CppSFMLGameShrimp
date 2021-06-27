@@ -1,6 +1,7 @@
 #include <actors/fracturedSprite.h>
 
 #include <utils/mathUtils.h>
+#include <rng.h>
 
 wok::FracturedSprite::FracturedSprite(const sf::Sprite& original, std::shared_ptr<sf::Texture> texture, std::vector<sf::IntRect> rects, float direction) :
     texture(texture)
@@ -43,14 +44,14 @@ wok::FracturedSprite::FracturedSprite(const sf::Sprite& original, std::shared_pt
         fracture.setScale(original.getScale());
 
         // Points right-ish
-        sf::Vector2f randomDirection = m::rotate(sf::Vector2f(70.f, 0.f), m::lerp(-30.f, -50.f, rand() / (float)RAND_MAX));
+        sf::Vector2f randomDirection = m::rotate(sf::Vector2f(70.f, 0.f), randomizer::getBetween(-30.f, -50.f));
         randomDirection.x *= direction;
 
         fractures.emplace_back(
             fracture,
             randomDirection,
-            direction * m::lerp(120.f, 240.f, rand() / (float)RAND_MAX),
-            m::lerp(1.3f, 1.6f, rand() / (float)RAND_MAX));
+            direction * randomizer::getBetween(120.f, 240.f),
+            randomizer::getBetween(1.3f, 1.6f));
     }
 }
 

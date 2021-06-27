@@ -9,6 +9,7 @@
 #include <actors.h>
 
 #include <gameState.h>
+#include <rng.h>
 
 inline void initializeBoilerplate()
 {
@@ -17,8 +18,8 @@ inline void initializeBoilerplate()
 
 inline sf::RenderWindow createWindow()
 {
-    auto settings = sf::ContextSettings::ContextSettings(0, 0, 8);
-    return sf::RenderWindow(sf::VideoMode(25 * 32, 16 * 32), "Surviving The Heat", 7U, settings);
+    auto settings = sf::ContextSettings::ContextSettings(0, 0, 0);
+    return sf::RenderWindow(sf::VideoMode(25 * 32, 16 * 32), "Surviving The Heat", sf::Style::Default, settings);
 }
 
 inline void centreCamera(sf::RenderTarget& target)
@@ -37,7 +38,7 @@ inline void setCornerCam(sf::RenderTarget& target)
     sf::View view = sf::View(sf::FloatRect(0, 0, width, height));
     target.setView(view);
 
-    gameState::screenSize = view.getSize();
+    game::screenSize = view.getSize();
 }
 
 inline void handleDebugKeys(const sf::Event& event)
@@ -154,7 +155,12 @@ inline void handleEventsAndInput(sf::RenderWindow& window)
             sf::Vector2i mousePos;
             mousePos.x = event.mouseMove.x;
             mousePos.y = event.mouseMove.y;
-            wok::input::mousePositionInWorld = window.mapPixelToCoords(mousePos);
+
+
+            wok::input::mousePosition = mousePos;
+            wok::input::onMouseMoved();
         }
     }
+
+    wok::input::mousePositionInWorld = window.mapPixelToCoords(wok::input::mousePosition);
 }

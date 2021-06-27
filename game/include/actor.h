@@ -5,6 +5,7 @@
 #include <actorSystem/group.h>
 #include <string>
 #include <console.h>
+#include <gameClock.h>
 
 namespace wok
 {
@@ -16,14 +17,20 @@ namespace wok
         std::shared_ptr<Group> group;
         std::string name;
 
-        virtual void start() {};
-        virtual void drawGizmos([[maybe_unused]] sf::RenderTarget& target, [[maybe_unused]] sf::RenderStates& states) {};
+        virtual void start(const GameClock&) {};
+        virtual void drawGizmos(sf::RenderTarget&, sf::RenderStates&) {};
         virtual void assetsReloaded() {};
         virtual ~Actor() = default;
-        ActorHandle<Actor> getHandle() { return handle; }
+        ActorHandle<> getHandle() { return handle; }
+
+        Actor& withGroup(std::shared_ptr<Group> g)
+        {
+            group = g;
+            return *this;
+        }
 
     protected:
-        ActorHandle<Actor> handle;
+        ActorHandle<> handle;
 
         friend world;
     };

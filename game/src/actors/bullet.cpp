@@ -3,9 +3,10 @@
 #include <utils/mathUtils.h>
 #include <world.h>
 
-wok::Bullet::Bullet(sf::Vector2f position, sf::Vector2f direction, std::shared_ptr<BulletSettings> settings) :
+wok::Bullet::Bullet(sf::Vector2f position, sf::Vector2f direction, Collideable::CollisionContext::SourceType bulletSource, std::shared_ptr<BulletSettings> settings) :
     settings(settings),
-    direction(m::normalize(direction)), texture(res::get<sf::Texture>(settings->textureName))
+    direction(m::normalize(direction)), texture(res::get<sf::Texture>(settings->textureName)),
+    bulletSource(bulletSource)
 {
     setPosition(position);
     setRotation(m::angle(direction));
@@ -31,7 +32,9 @@ void wok::Bullet::update(const GameClock& time)
 
     float distanceDelta = settings->velocity * time.delta;
 
-    auto raycastResult = world::raycastAgainstHitboxes(m::Ray(getPosition(), direction), distanceDelta);
+    Collideable::CollisionContext ctx(bulletSource);
+
+    auto raycastResult = world::raycastAgainstHitboxes(ctx, m::Ray(getPosition(), direction), distanceDelta);
     if (raycastResult.collideable.isValid())
     {
         auto hitActor = raycastResult.collideable.as<Hittable>();

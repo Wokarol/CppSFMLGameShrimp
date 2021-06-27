@@ -15,7 +15,7 @@ namespace wok
     public:
         DebugPopup(std::string message);
 
-        virtual void start() override;
+        virtual void start(const GameClock&) override;
         virtual void update(const GameClock& time) override;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;

@@ -7,14 +7,15 @@
 #include <json.hpp>
 #include <utils/jsonHelpers.h>
 
-#include "windowManagement.h"
+#include <windowManagement.h>
 #include <world.h>
 #include <actors/staticBox.h>
 
-#include <levelLoader.h>
+#include <sceneLoader.h>
 #include <resources.h>
 #include <projectSettings.h>
 #include <gameState.h>
+#include <fader.h>
 
 struct Pallete
 {
@@ -25,7 +26,7 @@ struct Pallete
     sf::Color yellow = sf::Color(0xFFD432FF);
 };
 
-bool startGame()
+bool loadGameConfig()
 {
     std::string configPath = "assets/start.config";
     if (!std::filesystem::exists(configPath))
@@ -42,22 +43,19 @@ bool startGame()
 
     try
     {
-        std::string levelToLoad;
-        if (!wok::tryGetString(config, "start_level", levelToLoad))
-        {
-            console::error("Key 'start_level' was not found");
-            return false;
-        }
-
         wok::project::init(config);
-
-        wok::levels::load(levelToLoad);
     }
     catch (const std::exception& e)
     {
         console::error(e.what());
         return false;
     }
+    return true;
+}
+
+bool startGame()
+{
+    wok::scenes::loadMenu();
     return true;
 }
 
@@ -69,63 +67,55 @@ int main()
 
     auto window = createWindow();
     //centreCamera(window);
-    setCornerCam(window);
+    //setCornerCam(window);
 
     Pallete colors;
     wok::GameClock time;
 
     wok::world::shouldLog = false;
+    game::fader = wok::Fader();
 
-    if (!startGame())
+    bool configLoadedSuccesfully = loadGameConfig();
+    if (!configLoadedSuccesfully)
     {
         window.close();
-        std::cout << std::endl;
-        system("pause");
+        console::pause();
+    }
+
+    bool gameStartedSuccesfully = startGame();
+    if (!gameStartedSuccesfully)
+    {
+        window.close();
+        console::pause();
     }
 
     while (window.isOpen())
     {
+        if (game::awaitsClosing())
+        {
+            window.close();
+            break;
+        }
+
         handleEventsAndInput(window);
         time.Tick();
 
+        sf::Vector2f screenSize = (sf::Vector2f)window.getSize();
+        window.setView(game::getCurrentCamera().getView(screenSize));
+
         wok::world::update(time);
+        game::fader.update(time);
 
         window.clear(colors.background);
         auto states = sf::RenderStates();
         wok::world::draw(window, states);
 
-        sf::View view = window.getView();
-        window.setView(window.getDefaultView());
+        game::fader.draw(window, screenSize);
 
-        sf::Color pressed(0xFF0000FF);
-        sf::Color notPressed(0xFF000066);
-        sf::Vector2f bottomLeft(30.f, window.getSize().y - 30.f);
-        sf::Vector2f cellSize(50, 50);
-        float spacing = 10;
-
-        sf::RectangleShape rect(cellSize);
-        rect.setOrigin(0, cellSize.y);
-
-        rect.setPosition(bottomLeft.x, bottomLeft.y);
-        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::A) ? pressed : notPressed);
-        window.draw(rect);
-
-        rect.setPosition(bottomLeft.x + (spacing + cellSize.x) * 2.f, bottomLeft.y);
-        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::D) ? pressed : notPressed);
-        window.draw(rect);
-
-        rect.setPosition(bottomLeft.x + spacing + cellSize.x, bottomLeft.y - spacing - cellSize.y);
-        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::W) ? pressed : notPressed);
-        window.draw(rect);
-
-        rect.setPosition(bottomLeft.x + spacing + cellSize.x, bottomLeft.y);
-        rect.setFillColor(sf::Keyboard::isKeyPressed(sf::Keyboard::S) ? pressed : notPressed);
-        window.draw(rect);
-
-        window.setView(view);
         window.display();
     }
 
     wok::world::clear();
     wok::res::clear();
+    game::fader = {};
 }

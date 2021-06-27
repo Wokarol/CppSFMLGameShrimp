@@ -1,0 +1,15 @@
+{
+    "waves": [
+        { "count": 4, "path": "./basicEnemy" },
+        { "count": 6, "path": "./basicEnemy" },
+        { "count": 8, "path": "./basicEnemy" },
+        { "count": 10, "path": "./basicEnemy" },
+        { "count": 12, "path": "./basicEnemy" },
+        { "count": 14, "path": "./basicEnemy" },
+        { "count": 16, "path": "./basicEnemy" },
+        { "count": 18, "path": "./basicEnemy" },
+        { "count": 20, "path": "./basicEnemy" }
+    ],
+    "time_between_spawns": 0.5,
+    "spawn_duration": 1
+}
