@@ -10,5 +10,6 @@
         { "count": 18, "path": "./basicEnemy" },
         { "count": 20, "path": "./basicEnemy" }
     ],
-    "time_between_spawns": 0.5
+    "time_between_spawns": 0.5,
+    "spawn_duration": 1
 }

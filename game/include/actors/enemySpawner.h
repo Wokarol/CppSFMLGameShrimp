@@ -31,5 +31,6 @@ namespace wok
         float timeRemainingUntilEnemySpawned = 0;
 
         std::vector<ActorHandle<BasicEnemy>> spawnedEnemies;
+        int awaitedSpawns = 0;
     };
 }

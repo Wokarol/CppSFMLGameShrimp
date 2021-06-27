@@ -15,5 +15,6 @@ namespace wok
     {
         std::vector<EnemyWave> waves;
         float timeBetweenSpawns;
+        float spawnDuration;
     };
 }

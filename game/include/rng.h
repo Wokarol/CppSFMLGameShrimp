@@ -25,7 +25,7 @@ namespace randomizer
     }
 
     // Max is exclusive while min is inclusive, that is (0, 5) will return only 0, 1, 2, 3
-    inline float getBetween(int a, int b)
+    inline int getBetween(int a, int b)
     {
         // We flip the variables to satify uniform_real_distribution's assert
         if (a > b)

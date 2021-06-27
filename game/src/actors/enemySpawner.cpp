@@ -1,5 +1,7 @@
 #include <actors/enemySpawner.h>
 
+#include <actors/enemySpawnMarker.h>
+
 #include <gameState.h>
 
 #include <rng.h>
@@ -31,6 +33,7 @@ void wok::EnemySpawner::update(const GameClock& time)
     if (currentEnemyInWave >= settings->waves[currentWave].count)
     {
         if (spawnedEnemies.size() > 2) return;
+        if (awaitedSpawns > 0) return;
 
         currentEnemyInWave = 0;
         currentWave++;
@@ -47,12 +50,23 @@ void wok::EnemySpawner::update(const GameClock& time)
 
 void wok::EnemySpawner::spawnEnemy(std::string path)
 {
+    auto myHandle = handle;
+
     int spawnIndex = randomizer::getBetween(0, spawnPoints.size());
 
-    auto enemySettings = res::get<EnemySettings>(path);
-    auto enemy = world::createNamedActor<BasicEnemy>("Enemy", enemySettings);
-    enemy->group = group;
-    enemy->setActorPosition(spawnPoints[spawnIndex]);
+    awaitedSpawns++;
+    auto marker = world::createNamedActor<EnemySpawnMarker>("Enemy to be spawned", settings->spawnDuration,
+        spawnPoints[spawnIndex], [this, path, spawnIndex, myHandle]()
+        {
+            if (!myHandle.isValid()) return;
 
-    spawnedEnemies.push_back(enemy);
+            auto enemySettings = res::get<EnemySettings>(path);
+            auto enemy = world::createNamedActor<BasicEnemy>("Enemy", enemySettings);
+            enemy->group = group;
+            enemy->setActorPosition(spawnPoints[spawnIndex]);
+
+            spawnedEnemies.push_back(enemy);
+            awaitedSpawns--;
+        });
+    marker->group = group;
 }

@@ -11,6 +11,7 @@ static void wok::res::create(const std::string& name, SpawnerSettings& asset)
     auto j = loadJsonFile(name);
 
     j.at("time_between_spawns").get_to(asset.timeBetweenSpawns);
+    j.at("spawn_duration").get_to(asset.spawnDuration);
 
     auto waves = j.at("waves");
     if (!waves.is_array()) return;
