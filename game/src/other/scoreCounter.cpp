@@ -7,7 +7,7 @@ wok::ScoreCounter::ScoreCounter(int lastHighscore) :
 { }
 
 wok::ScoreCounter::ScoreCounter() :
-    lastHighscore(0), currentScore(0)
+    lastHighscore(-1), currentScore(-1)
 { }
 
 void wok::ScoreCounter::addPoints(int points)

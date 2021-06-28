@@ -10,6 +10,10 @@
 #include <viewportCamera.h>
 #include <scoreCounter.h>
 
+#include <json.hpp>
+#include <fstream>
+#include <filesystem>
+
 namespace game
 {
     namespace implementation
@@ -49,5 +53,34 @@ namespace game
     inline void close()
     {
         implementation::awaitsClosing = true;
+    }
+
+    inline void saveState()
+    {
+        nlohmann::json gameData;
+        gameData["highscore"] = score.getHighscore();
+
+        {
+            std::ofstream saveFile("save.sav");
+            saveFile << gameData.dump();
+        }
+    }
+
+    inline void loadState()
+    {
+        if (std::filesystem::exists("save.sav"))
+        {
+            nlohmann::json gameData;
+            std::ifstream saveFile("save.sav");
+            saveFile >> gameData;
+
+            console::log("Found file to load!");
+            score = wok::ScoreCounter(gameData.at("highscore"));
+        }
+        else
+        {
+            console::log("No file to load!");
+            score = wok::ScoreCounter(0);
+        }
     }
 }

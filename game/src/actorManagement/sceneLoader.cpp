@@ -175,7 +175,7 @@ void wok::scenes::loadGameOver()
     }
     else
     {
-        message << "Highscore: " << game::score.getPoints() << std::endl;
+        message << "Highscore: " << game::score.getHighscore() << std::endl;
     }
 
     world::createNamedActor<ui::Title>("Run Result",
@@ -224,7 +224,7 @@ void wok::scenes::loadScene(std::string_view levelPath)
     try
     {
         game::mapRect = {};
-        game::score = ScoreCounter(0);
+        game::loadState();
 
         auto groundTileset = res::get<TilesetData>(project::actorPaths["desert"]);
         auto wallTileset = res::get<TilesetData>(project::actorPaths["walls"]);
@@ -252,6 +252,7 @@ void wok::scenes::switchToMenu()
 void wok::scenes::switchToGameOver()
 {
     console::log("Current score: ", game::score.getPoints());
+    game::saveState();
     switchTo([]() { loadGameOver(); });
 }
 
