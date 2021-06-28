@@ -123,7 +123,7 @@ void wok::Player::onDeath(HitData data)
     world::createNamedActor<FracturedSprite>("Player Fracture", body, texture, fractures, dir);
     handle.destroy();
 
-    scenes::switchToMenu();
+    scenes::switchToGameOver();
 }
 
 void wok::Player::assetsReloaded()

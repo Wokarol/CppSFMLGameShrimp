@@ -6,6 +6,7 @@
 #include <json.hpp>
 #include <jsonImporters.h>
 #include <fstream>
+#include <sstream>
 #include <console.h>
 
 #include <tweeners.h>
@@ -145,7 +146,55 @@ void wok::scenes::loadMenu()
     quitButton->withGroup(group);
 
     startButton->setOnClick([]() { switchToScene(project::firstLevelScenePath); });
+    //startButton->setOnClick([]() { switchToGameOver(); });
     quitButton->setOnClick([]() { game::close(); });
+}
+
+void wok::scenes::loadGameOver()
+{
+    auto group = Group::create("Game Over");
+    loadedGroups.push_back(group);
+
+    auto font = res::get<sf::Font>("Hard Western");
+
+    sf::Color buttonBackgroundColor(0x684c3cff);
+    sf::Color buttonTextColor(0xFFFFFFFF);
+
+    world::createNamedActor<ui::Background>("Background", sf::Color(0xFEF9DBFF))->withGroup(group);
+    world::createNamedActor<ui::Title>("Game Over",
+        sf::Color::Black, 20.f, font,
+        "GAME OVER", 60u
+        )->withGroup(group);
+
+    std::stringstream message;
+    message << "Score: " << game::score.getPoints() << std::endl;
+
+    if (game::score.wasHighscoreBeat())
+    {
+        message << "NEW HIGHSCORE!" << std::endl;
+    }
+    else
+    {
+        message << "Highscore: " << game::score.getPoints() << std::endl;
+    }
+
+    world::createNamedActor<ui::Title>("Run Result",
+        sf::Color::Black, 100.f, font,
+        message.str(), 40u
+        )->withGroup(group);
+
+    auto restartButton = world::createNamedActor<ui::Button>("Restart Button", "TRY AGAIN", font, 60u,
+        sf::Vector2f(0, -160), sf::Vector2f(0.5f, 1.f),
+        sf::Vector2f(300, 100), buttonBackgroundColor, buttonTextColor);
+    restartButton->withGroup(group);
+
+    auto quitButton = world::createNamedActor<ui::Button>("Quit Button", "MENU", font, 60u,
+        sf::Vector2f(0, -40), sf::Vector2f(0.5f, 1.f),
+        sf::Vector2f(300, 100), buttonBackgroundColor, buttonTextColor);
+    quitButton->withGroup(group);
+
+    restartButton->setOnClick([]() { switchToScene(project::firstLevelScenePath); });
+    quitButton->setOnClick([]() { switchToMenu(); });
 }
 
 void wok::scenes::loadScene(std::string_view levelPath)
@@ -175,6 +224,7 @@ void wok::scenes::loadScene(std::string_view levelPath)
     try
     {
         game::mapRect = {};
+        game::score = ScoreCounter(0);
 
         auto groundTileset = res::get<TilesetData>(project::actorPaths["desert"]);
         auto wallTileset = res::get<TilesetData>(project::actorPaths["walls"]);
@@ -191,19 +241,21 @@ void wok::scenes::loadScene(std::string_view levelPath)
 
 void wok::scenes::switchToScene(std::string_view name)
 {
-    game::fader.fade([=]()
-        {
-            for (auto& group : loadedGroups)
-            {
-                world::destroyGroup(group);
-            }
-            loadedGroups.clear();
-
-            loadScene(name);
-        });
+    switchTo([name]() { loadScene(name); });
 }
 
 void wok::scenes::switchToMenu()
+{
+    switchTo([]() { loadMenu(); });
+}
+
+void wok::scenes::switchToGameOver()
+{
+    console::log("Current score: ", game::score.getPoints());
+    switchTo([]() { loadGameOver(); });
+}
+
+void wok::scenes::switchTo(std::function<void()> loadingFunction)
 {
     game::fader.fade([=]()
         {
@@ -213,6 +265,6 @@ void wok::scenes::switchToMenu()
             }
             loadedGroups.clear();
 
-            loadMenu();
+            loadingFunction();
         });
 }

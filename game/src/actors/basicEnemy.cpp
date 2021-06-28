@@ -133,6 +133,8 @@ void wok::BasicEnemy::onDeath(HitData data)
 
     world::createNamedActor<FracturedSprite>("Enemy Fracture", body, texture, fractures, dir);
     handle.destroy();
+
+    game::score.addPoints(1);
 }
 
 

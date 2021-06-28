@@ -8,6 +8,7 @@
 
 #include <fader.h>
 #include <viewportCamera.h>
+#include <scoreCounter.h>
 
 namespace game
 {
@@ -21,6 +22,7 @@ namespace game
     inline wok::Fader fader;
     inline bool dummyKilled;
     inline sf::FloatRect mapRect;
+    inline wok::ScoreCounter score;
 
     inline void setActiveCamera(wok::ActorHandle<wok::Camera> camera)
     {
