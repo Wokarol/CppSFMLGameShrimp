@@ -20,9 +20,11 @@
 #include <assets/spawnerSettings.h>
 #include <assets/dummySettings.h>
 
+#include <utils/rectUtils.h>d
+
 using namespace wok;
 
-void createTilemap(nlohmann::json& json, std::string_view name,
+void createTilemapAndAddRect(nlohmann::json& json, std::string_view name,
     std::shared_ptr<TilesetData> tileset, std::shared_ptr<Group>& group, int sortingOrder, bool shouldCollide)
 {
     auto& tilemap = *world::createNamedActor<Tilemap>(name, tileset, sortingOrder, shouldCollide);
@@ -35,14 +37,17 @@ void createTilemap(nlohmann::json& json, std::string_view name,
     }
 
     std::vector<nlohmann::json> tiles = json;
-
+    sf::FloatRect tilemapRect;
     for (auto& tile : tiles)
     {
         sf::Vector2f pos = tile["pos"];
         sf::Vector2f tPos = tile["tPos"];
 
-        tilemap.add_tile(pos, tPos);
+        auto tileRect = tilemap.add_tile(pos, tPos);
+        tilemapRect = ru::combineRects(tileRect, tilemapRect);
     }
+
+    game::mapRect = ru::combineRects(game::mapRect, tilemapRect);
 }
 
 void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const std::shared_ptr<CactusPreset>& preset, std::string_view name)
@@ -169,11 +174,13 @@ void wok::scenes::loadScene(std::string_view levelPath)
 
     try
     {
+        game::mapRect = {};
+
         auto groundTileset = res::get<TilesetData>(project::actorPaths["desert"]);
         auto wallTileset = res::get<TilesetData>(project::actorPaths["walls"]);
-        createTilemap(level["Ground"], "Ground Tilemap", groundTileset, group, -110, false);
-        createTilemap(level["Tiles"], "Free Tile Tilemap", groundTileset, group, -100, false);
-        createTilemap(level["Walls"], "Walls Tilemap", wallTileset, group, -90, true);
+        createTilemapAndAddRect(level["Ground"], "Ground Tilemap", groundTileset, group, -110, false);
+        createTilemapAndAddRect(level["Tiles"], "Free Tile Tilemap", groundTileset, group, -100, false);
+        createTilemapAndAddRect(level["Walls"], "Walls Tilemap", wallTileset, group, -90, true);
         createActors(level["Actors"], group);
     }
     catch (const std::exception& e)

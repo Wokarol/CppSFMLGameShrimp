@@ -22,25 +22,6 @@ inline sf::RenderWindow createWindow()
     return sf::RenderWindow(sf::VideoMode(25 * 32, 16 * 32), "Surviving The Heat", sf::Style::Default, settings);
 }
 
-inline void centreCamera(sf::RenderTarget& target)
-{
-    sf::View view(sf::Vector2f(0, 0), (sf::Vector2f)target.getSize());
-    target.setView(view);
-}
-
-inline void setCornerCam(sf::RenderTarget& target)
-{
-    sf::Vector2f targetSize = (sf::Vector2f)target.getSize();
-    float ratio = targetSize.x / targetSize.y;
-
-    float height = 16 * 16;
-    float width = ratio * height;
-    sf::View view = sf::View(sf::FloatRect(0, 0, width, height));
-    target.setView(view);
-
-    game::screenSize = view.getSize();
-}
-
 inline void handleDebugKeys(const sf::Event& event)
 {
     if (event.key.code == sf::Keyboard::F2)

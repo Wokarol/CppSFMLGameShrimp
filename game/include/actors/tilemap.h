@@ -16,7 +16,7 @@ namespace wok
             data(tileset), sortingOrder(sortingOrder), shouldCollide(shouldCollide)
         {}
 
-        void add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord);
+        sf::FloatRect add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord);
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
 

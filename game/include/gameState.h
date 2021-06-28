@@ -17,10 +17,10 @@ namespace game
         inline wok::ActorHandle<wok::Camera> camera;
     }
 
-    inline sf::Vector2f screenSize;
     inline wok::ActorHandle<wok::Player> player;
     inline wok::Fader fader;
     inline bool dummyKilled;
+    inline sf::FloatRect mapRect;
 
     inline void setActiveCamera(wok::ActorHandle<wok::Camera> camera)
     {
