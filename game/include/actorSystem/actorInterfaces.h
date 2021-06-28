@@ -44,7 +44,7 @@ namespace wok
 
             enum class SourceType
             {
-                Player, Enemy, Debug, Enviroment
+                Player, Enemy, Debug, Enviroment, NONE
             } sourceType;
             bool shouldHitTransparent = true;
             bool shouldHitDestructible = true;

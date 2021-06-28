@@ -14,7 +14,7 @@ namespace wok
         Camera(std::shared_ptr<CameraSettings> settings);
 
         virtual void start(const GameClock&) override;
-        virtual void update(const GameClock& time) override;
+        virtual void update(const GameClock&) override;
         virtual void drawGizmos(sf::RenderTarget&, sf::RenderStates&) override;
 
         virtual sf::View getView(sf::Vector2f screenSize) const override;

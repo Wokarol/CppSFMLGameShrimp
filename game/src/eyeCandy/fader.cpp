@@ -81,10 +81,10 @@ void wok::Fader::renderFade(sf::RenderTarget& target, sf::Vector2f screenSize, f
 
     sf::RectangleShape fade(screenSize);
 
-    shader->setParameter("u_resolution", screenSize);
-    shader->setParameter("u_t", progress);
-    shader->setParameter("u_xDirectionFlipped", xDirectionFlipped);
-    shader->setParameter("u_yDirectionFlipped", yDirectionFlipped);
+    shader->setUniform("u_resolution", screenSize);
+    shader->setUniform("u_t", progress);
+    shader->setUniform("u_xDirectionFlipped", xDirectionFlipped);
+    shader->setUniform("u_yDirectionFlipped", yDirectionFlipped);
 
     target.draw(fade, states);
 

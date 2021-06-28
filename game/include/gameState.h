@@ -41,7 +41,7 @@ namespace game
         }
         else
         {
-            return wok::DefaultViewportCamera();
+            return wok::DefaultViewportCamera::getInstance();
         }
     }
 

@@ -9,7 +9,7 @@ namespace wok
     public:
         ScoreDisplay();
 
-        virtual void update(const GameClock& time) override;
+        virtual void update(const GameClock&) override;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates& states) override;
         virtual int getSortingOrder() override { return 100000; }

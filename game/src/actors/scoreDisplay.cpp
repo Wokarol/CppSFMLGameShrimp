@@ -13,14 +13,14 @@ wok::ScoreDisplay::ScoreDisplay()
 
     text.setFont(*font);
 
-    text.setCharacterSize(8u * scaleFactor);
+    text.setCharacterSize((unsigned int)(8u * scaleFactor));
     text.scale(1.f / scaleFactor, 1.f / scaleFactor);
-    text.setColor(sf::Color::White);
+    text.setFillColor(sf::Color::White);
     text.setOutlineColor(sf::Color(128, 128, 128));
     text.setOutlineThickness(1);
 }
 
-void wok::ScoreDisplay::update(const GameClock& time)
+void wok::ScoreDisplay::update(const GameClock&)
 {
     sf::Vector2f startPos = game::getCurrentCamera().viewportToWorld({ 0.f, 0.f });
     sf::Vector2f textOffset(10, 25);

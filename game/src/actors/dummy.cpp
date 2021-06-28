@@ -17,10 +17,10 @@ wok::Dummy::Dummy(std::shared_ptr<DummySettings> settings, std::string message) 
 
     float scaleFactor = 2.f;
 
-    messageText = sf::Text(message, *font, 8U * scaleFactor);
+    messageText = sf::Text(message, *font, (unsigned int)(8U * scaleFactor));
     messageText.scale(1.f / scaleFactor, 1.f / scaleFactor);
 
-    messageText.setColor(sf::Color::White);
+    messageText.setFillColor(sf::Color::White);
     messageText.setOutlineColor(sf::Color(128, 128, 128));
     messageText.setOutlineThickness(2);
 

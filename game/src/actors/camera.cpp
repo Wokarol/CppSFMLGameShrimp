@@ -12,7 +12,7 @@ void wok::Camera::start(const GameClock&)
     game::setActiveCamera(handle.as<Camera>());
 }
 
-void wok::Camera::update(const GameClock& time)
+void wok::Camera::update(const GameClock&)
 {
     if (!followTarget.isValid())
         return;

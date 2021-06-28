@@ -21,7 +21,7 @@
 #include <assets/spawnerSettings.h>
 #include <assets/dummySettings.h>
 
-#include <utils/rectUtils.h>d
+#include <utils/rectUtils.h>
 
 using namespace wok;
 
