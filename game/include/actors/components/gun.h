@@ -9,7 +9,7 @@ namespace wok
     class Gun
     {
     public:
-        Gun() : settings(nullptr) {}
+        Gun() : settings(nullptr), sourceType(Collideable::CollisionContext::SourceType::NONE) {}
         Gun(ActorHandle<> owner, wok::Collideable::CollisionContext::SourceType sourceType, GunSettings& settings, std::shared_ptr<sf::Texture> texture) :
             owner(owner), sourceType(sourceType), settings(&settings), texture(texture)
         {}

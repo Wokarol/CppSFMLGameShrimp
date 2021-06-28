@@ -1,4 +1,5 @@
 #include <actors/camera.h>
+#include <utils/rectUtils.h>
 
 #include <gameState.h>
 
@@ -11,14 +12,23 @@ void wok::Camera::start(const GameClock&)
     game::setActiveCamera(handle.as<Camera>());
 }
 
-void wok::Camera::update(const GameClock& time)
+void wok::Camera::update(const GameClock&)
 {
     if (!followTarget.isValid())
         return;
 
-    //sf::Vector2f pos = followTarget->getActorPosition();
-    //position = { std::round(pos.x), std::round(pos.y) };
     position = followTarget->getActorPosition();
+
+    sf::Vector2f cameraExtends = lastView.getSize() / 2.f;
+    sf::FloatRect confiner = game::mapRect;
+
+    confiner = ru::addMargin(confiner, 16.f);
+
+    position.x = std::max(position.x, confiner.left + cameraExtends.x); // Clamping when going too far left
+    position.x = std::min(position.x, confiner.left + confiner.width - cameraExtends.x); // Clamping when going too far right
+
+    position.y = std::max(position.y, confiner.top + cameraExtends.y); // Clamping when going too far up
+    position.y = std::min(position.y, confiner.top + confiner.height - cameraExtends.y); // Clamping when going too far down
 }
 
 void wok::Camera::drawGizmos(sf::RenderTarget& target, sf::RenderStates& states)

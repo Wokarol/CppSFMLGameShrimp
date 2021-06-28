@@ -11,7 +11,7 @@ namespace wok
     class Movement2D
     {
     public:
-        Movement2D() : settings(nullptr) {}
+        Movement2D() : settings(nullptr), sourceType(Collideable::CollisionContext::SourceType::NONE) {}
         Movement2D(ActorHandle<> owner, wok::Collideable::CollisionContext::SourceType sourceType, MovementSettings& settings, std::function<sf::FloatRect()> colliderGetter)
             : owner(owner), sourceType(sourceType), settings(&settings), colliderGetter(colliderGetter)
         {}

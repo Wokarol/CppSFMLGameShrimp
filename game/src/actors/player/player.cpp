@@ -2,6 +2,7 @@
 #include <actors/bullet.h>
 #include <actors/fracturedSprite.h>
 #include <actors/camera.h>
+#include <actors/scoreDisplay.h>
 
 #include <input.h>
 #include <utils/mathUtils.h>
@@ -38,6 +39,9 @@ void wok::Player::start(const GameClock&)
     auto camera = world::createNamedActor<Camera>("Player's Camera", res::get<CameraSettings>(settings->cameraPath));
     camera->group = group;
     camera->setFollowTarget(handle.as<Actor2D>());
+
+    auto scoreDisplay = world::createNamedActor<ScoreDisplay>("Player's Score");
+    scoreDisplay->group = group;
 
     assetsReloaded();
 }
@@ -123,7 +127,7 @@ void wok::Player::onDeath(HitData data)
     world::createNamedActor<FracturedSprite>("Player Fracture", body, texture, fractures, dir);
     handle.destroy();
 
-    scenes::switchToMenu();
+    scenes::switchToGameOver();
 }
 
 void wok::Player::assetsReloaded()

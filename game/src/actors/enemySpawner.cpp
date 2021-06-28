@@ -57,7 +57,7 @@ void wok::EnemySpawner::spawnEnemy(std::string path)
 {
     auto myHandle = handle;
 
-    int spawnIndex = randomizer::getBetween(0, spawnPoints.size());
+    int spawnIndex = randomizer::getBetween(0, (int)spawnPoints.size());
 
     awaitedSpawns++;
     auto marker = world::createNamedActor<EnemySpawnMarker>("Enemy to be spawned", settings->spawnDuration,

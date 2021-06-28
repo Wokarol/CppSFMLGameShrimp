@@ -8,6 +8,11 @@
 
 #include <fader.h>
 #include <viewportCamera.h>
+#include <scoreCounter.h>
+
+#include <json.hpp>
+#include <fstream>
+#include <filesystem>
 
 namespace game
 {
@@ -17,10 +22,11 @@ namespace game
         inline wok::ActorHandle<wok::Camera> camera;
     }
 
-    inline sf::Vector2f screenSize;
     inline wok::ActorHandle<wok::Player> player;
     inline wok::Fader fader;
     inline bool dummyKilled;
+    inline sf::FloatRect mapRect;
+    inline wok::ScoreCounter score;
 
     inline void setActiveCamera(wok::ActorHandle<wok::Camera> camera)
     {
@@ -35,7 +41,7 @@ namespace game
         }
         else
         {
-            return wok::DefaultViewportCamera();
+            return wok::DefaultViewportCamera::getInstance();
         }
     }
 
@@ -47,5 +53,34 @@ namespace game
     inline void close()
     {
         implementation::awaitsClosing = true;
+    }
+
+    inline void saveState()
+    {
+        nlohmann::json gameData;
+        gameData["highscore"] = score.getHighscore();
+
+        {
+            std::ofstream saveFile("save.sav");
+            saveFile << gameData.dump();
+        }
+    }
+
+    inline void loadState()
+    {
+        if (std::filesystem::exists("save.sav"))
+        {
+            nlohmann::json gameData;
+            std::ifstream saveFile("save.sav");
+            saveFile >> gameData;
+
+            console::log("Found file to load!");
+            score = wok::ScoreCounter(gameData.at("highscore"));
+        }
+        else
+        {
+            console::log("No file to load!");
+            score = wok::ScoreCounter(0);
+        }
     }
 }

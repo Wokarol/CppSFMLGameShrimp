@@ -46,7 +46,7 @@ bool wok::physics::AABB::overlapsCircle(sf::Vector2f otherPosition, float otherR
 {
     return circleWithAABB(*this, Circle(otherPosition, otherRadius));
 }
-bool wok::physics::OBB::overlapsCircle(sf::Vector2f otherPosition, float otherRadius) const
+bool wok::physics::OBB::overlapsCircle(sf::Vector2f, float) const
 {
     console::log("Unsupported shape overlap <Circle> and <OBB>");
     return false;
@@ -64,7 +64,7 @@ bool wok::physics::AABB::overlapsRect(sf::FloatRect rect) const
 {
     return sf::FloatRect(topLeft, size).intersects(rect);
 }
-bool wok::physics::OBB::overlapsRect(sf::FloatRect rect) const
+bool wok::physics::OBB::overlapsRect(sf::FloatRect) const
 {
     console::log("Unsupported shape overlap <AABB> and <OBB>");
     return false;

@@ -10,7 +10,7 @@ void wok::ui::Button::start(const GameClock&)
     rectangle.setOrigin(m::scale(rectangle.getSize(), anchor));
 
     // Creating label
-    label = sf::Text(content, *font, fontSize * scaleFactor);
+    label = sf::Text(content, *font, (unsigned int)(fontSize * scaleFactor));
     label.scale(1.f / scaleFactor, 1.f / scaleFactor);
 
     auto labelLocalBounds = label.getLocalBounds();
@@ -38,9 +38,9 @@ void wok::ui::Button::draw(sf::RenderTarget& target, sf::RenderStates& states)
     target.draw(label, states);
 }
 
-void wok::ui::Button::setOnClick(std::function<void()> onClick)
+void wok::ui::Button::setOnClick(std::function<void()> callback)
 {
-    this->onClick = onClick;
+    this->onClick = callback;
 }
 
 void wok::ui::Button::processMouseEvent(MouseEvent& ctx)

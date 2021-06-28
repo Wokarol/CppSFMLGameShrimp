@@ -6,6 +6,7 @@
 #include <json.hpp>
 #include <jsonImporters.h>
 #include <fstream>
+#include <sstream>
 #include <console.h>
 
 #include <tweeners.h>
@@ -20,9 +21,11 @@
 #include <assets/spawnerSettings.h>
 #include <assets/dummySettings.h>
 
+#include <utils/rectUtils.h>
+
 using namespace wok;
 
-void createTilemap(nlohmann::json& json, std::string_view name,
+void createTilemapAndAddRect(nlohmann::json& json, std::string_view name,
     std::shared_ptr<TilesetData> tileset, std::shared_ptr<Group>& group, int sortingOrder, bool shouldCollide)
 {
     auto& tilemap = *world::createNamedActor<Tilemap>(name, tileset, sortingOrder, shouldCollide);
@@ -35,14 +38,17 @@ void createTilemap(nlohmann::json& json, std::string_view name,
     }
 
     std::vector<nlohmann::json> tiles = json;
-
+    sf::FloatRect tilemapRect;
     for (auto& tile : tiles)
     {
         sf::Vector2f pos = tile["pos"];
         sf::Vector2f tPos = tile["tPos"];
 
-        tilemap.add_tile(pos, tPos);
+        auto tileRect = tilemap.add_tile(pos, tPos);
+        tilemapRect = ru::combineRects(tileRect, tilemapRect);
     }
+
+    game::mapRect = ru::combineRects(game::mapRect, tilemapRect);
 }
 
 void generateCacti(nlohmann::json& json, std::shared_ptr<Group>& group, const std::shared_ptr<CactusPreset>& preset, std::string_view name)
@@ -140,7 +146,55 @@ void wok::scenes::loadMenu()
     quitButton->withGroup(group);
 
     startButton->setOnClick([]() { switchToScene(project::firstLevelScenePath); });
+    //startButton->setOnClick([]() { switchToGameOver(); });
     quitButton->setOnClick([]() { game::close(); });
+}
+
+void wok::scenes::loadGameOver()
+{
+    auto group = Group::create("Game Over");
+    loadedGroups.push_back(group);
+
+    auto font = res::get<sf::Font>("Hard Western");
+
+    sf::Color buttonBackgroundColor(0x684c3cff);
+    sf::Color buttonTextColor(0xFFFFFFFF);
+
+    world::createNamedActor<ui::Background>("Background", sf::Color(0xFEF9DBFF))->withGroup(group);
+    world::createNamedActor<ui::Title>("Game Over",
+        sf::Color::Black, 20.f, font,
+        "GAME OVER", 60u
+        )->withGroup(group);
+
+    std::stringstream message;
+    message << "Score: " << game::score.getPoints() << std::endl;
+
+    if (game::score.wasHighscoreBeat())
+    {
+        message << "NEW HIGHSCORE!" << std::endl;
+    }
+    else
+    {
+        message << "Highscore: " << game::score.getHighscore() << std::endl;
+    }
+
+    world::createNamedActor<ui::Title>("Run Result",
+        sf::Color::Black, 100.f, font,
+        message.str(), 40u
+        )->withGroup(group);
+
+    auto restartButton = world::createNamedActor<ui::Button>("Restart Button", "TRY AGAIN", font, 60u,
+        sf::Vector2f(0, -160), sf::Vector2f(0.5f, 1.f),
+        sf::Vector2f(300, 100), buttonBackgroundColor, buttonTextColor);
+    restartButton->withGroup(group);
+
+    auto quitButton = world::createNamedActor<ui::Button>("Quit Button", "MENU", font, 60u,
+        sf::Vector2f(0, -40), sf::Vector2f(0.5f, 1.f),
+        sf::Vector2f(300, 100), buttonBackgroundColor, buttonTextColor);
+    quitButton->withGroup(group);
+
+    restartButton->setOnClick([]() { switchToScene(project::firstLevelScenePath); });
+    quitButton->setOnClick([]() { switchToMenu(); });
 }
 
 void wok::scenes::loadScene(std::string_view levelPath)
@@ -169,11 +223,14 @@ void wok::scenes::loadScene(std::string_view levelPath)
 
     try
     {
+        game::mapRect = {};
+        game::loadState();
+
         auto groundTileset = res::get<TilesetData>(project::actorPaths["desert"]);
         auto wallTileset = res::get<TilesetData>(project::actorPaths["walls"]);
-        createTilemap(level["Ground"], "Ground Tilemap", groundTileset, group, -110, false);
-        createTilemap(level["Tiles"], "Free Tile Tilemap", groundTileset, group, -100, false);
-        createTilemap(level["Walls"], "Walls Tilemap", wallTileset, group, -90, true);
+        createTilemapAndAddRect(level["Ground"], "Ground Tilemap", groundTileset, group, -110, false);
+        createTilemapAndAddRect(level["Tiles"], "Free Tile Tilemap", groundTileset, group, -100, false);
+        createTilemapAndAddRect(level["Walls"], "Walls Tilemap", wallTileset, group, -90, true);
         createActors(level["Actors"], group);
     }
     catch (const std::exception& e)
@@ -184,19 +241,22 @@ void wok::scenes::loadScene(std::string_view levelPath)
 
 void wok::scenes::switchToScene(std::string_view name)
 {
-    game::fader.fade([=]()
-        {
-            for (auto& group : loadedGroups)
-            {
-                world::destroyGroup(group);
-            }
-            loadedGroups.clear();
-
-            loadScene(name);
-        });
+    switchTo([name]() { loadScene(name); });
 }
 
 void wok::scenes::switchToMenu()
+{
+    switchTo([]() { loadMenu(); });
+}
+
+void wok::scenes::switchToGameOver()
+{
+    console::log("Current score: ", game::score.getPoints());
+    game::saveState();
+    switchTo([]() { loadGameOver(); });
+}
+
+void wok::scenes::switchTo(std::function<void()> loadingFunction)
 {
     game::fader.fade([=]()
         {
@@ -206,6 +266,6 @@ void wok::scenes::switchToMenu()
             }
             loadedGroups.clear();
 
-            loadMenu();
+            loadingFunction();
         });
 }

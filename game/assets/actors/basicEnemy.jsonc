@@ -5,12 +5,12 @@
     },
 
     "gun": {
-        "gun_texture_rect": [1, 21, 5, 4],
-        "muzzle_flash_texture_rect": [8, 18, 6, 8],
+        "gun_texture_rect": [1, 17, 11, 4],
+        "muzzle_flash_texture_rect": [16, 16, 7, 7],
 
-        "gun_offset": [5, 6],
-        "gun_origin": [1, 1],
-        "muzzle_flash_offset": [4, 0],
+        "gun_offset": [2.5, 4.5],
+        "gun_origin": [3.5, 2.5],
+        "muzzle_flash_offset": [7.5, 1],
     
         "shoot_interval": 1.0,
         "bullet_spread": 3.0,
@@ -24,10 +24,13 @@
 
     // Texture
     "texture_name": "./sprites/basicEnemy",
-    "texture_rect": [0, 0, 8, 12],
+    "texture_rect": [1, 0, 14, 16],
     "fractures": [
-        [0, 0, 7, 6],
-        [0, 6, 3, 6],
-        [5, 6, 3, 6]
+        [1, 2, 4, 6], // Left thruster up
+        [1, 8, 4, 4], // Left thruster down
+        [5, 5, 6, 6], // Body
+        [11, 2, 4, 5], // Shield up
+        [11, 7, 4, 7], // Shield down
+        [7, 0, 4, 5] // Head
     ]
 }

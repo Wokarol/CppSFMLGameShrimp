@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <console.h>
 
-void wok::Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
+sf::FloatRect wok::Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
 {
     sf::IntRect tileRect(
         (int)(tilesetCoord.x * data->tileSize),
@@ -17,6 +17,8 @@ void wok::Tilemap::add_tile(sf::Vector2f tilePos, sf::Vector2f tilesetCoord)
     tile.setPosition(tilePos * (float)data->tileSize);
 
     tiles.push_back(tile);
+
+    return tile.getGlobalBounds();
 }
 
 void wok::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates& states)

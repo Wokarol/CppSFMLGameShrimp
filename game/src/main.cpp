@@ -19,7 +19,7 @@
 
 struct Pallete
 {
-    sf::Color background = sf::Color(0x333333FF);
+    sf::Color background = sf::Color(0xFEF9DBFF);
     sf::Color white = sf::Color(0xFFFFFFFF);
     sf::Color blue = sf::Color(0x90CBFBFF);
     sf::Color darkBlue = sf::Color(0x110066FF);

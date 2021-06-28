@@ -27,6 +27,12 @@ namespace wok
     class DefaultViewportCamera : public ViewportCamera
     {
     public:
+        static auto getInstance() -> DefaultViewportCamera&
+        {
+            static DefaultViewportCamera camera;
+            return camera;
+        }
+
         virtual sf::View getView(sf::Vector2f screenSize) const override
         {
             lastView = sf::View({ 0.f, 0.f, screenSize.x, screenSize.y });
