@@ -14,6 +14,7 @@ project "Game"
     location "game"
     kind "ConsoleApp"
 
+    targetname ("SurvivingTheHeat")
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
