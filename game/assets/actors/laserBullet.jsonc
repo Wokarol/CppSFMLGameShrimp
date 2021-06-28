@@ -1,6 +1,6 @@
 {
     "texture_name": "./sprites/basicEnemy",
-    "texture_rect": [ 1, 27, 5, 3],
+    "texture_rect": [17, 25, 5, 3],
 
     "lifespan": 5,
     "damage": 1,

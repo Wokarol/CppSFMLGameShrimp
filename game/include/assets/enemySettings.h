@@ -17,5 +17,6 @@ namespace wok
 
         std::string textureName;
         sf::IntRect textureRect;
+        std::vector<sf::IntRect> fractures;
     };
 }

@@ -17,4 +17,6 @@ static void wok::res::create(const std::string& name, EnemySettings& asset)
 
     asset.textureName = getAssetPath(name, j.at("texture_name"));
     j.at("texture_rect").get_to(asset.textureRect);
+
+    j.at("fractures").get_to(asset.fractures);
 }
